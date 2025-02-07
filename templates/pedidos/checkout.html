@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedido - Pizzaria</title>
+    <style>
+        body {
+            font-family: "Courier New", Courier, monospace;
+            font-size: 14px;
+            text-align: center;
+            width: 80mm; /* Largura da impressora térmica */
+            margin: auto;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 80mm;
+        }
+
+        .header, .footer {
+            text-align: center;
+            font-weight: bold;
+            border-top: 2px dashed black;
+            border-bottom: 2px dashed black;
+            padding: 5px 0;
+        }
+
+        .items {
+            text-align: left;
+            margin-bottom: 10px;
+        }
+
+        .items li {
+            list-style-type: none;
+            padding: 5px 0;
+            border-bottom: 1px dashed black;
+        }
+
+        .total {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        input, textarea {
+            width: 100%;
+            font-family: "Courier New", Courier, monospace;
+            font-size: 14px;
+            margin-bottom: 5px;
+            padding: 5px;
+            border: 1px solid black;
+        }
+
+        .btn-print {
+            margin-top: 10px;
+            display: block;
+            text-align: center;
+            padding: 10px;
+            background: black;
+            color: white;
+            border: none;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        @media print {
+            .btn-print {
+                display: none;
+            }
+            input, textarea {
+                border: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <p>*** PIZZARIA DO BAIRRO ***</p>
+            <p>CNPJ: 00.000.000/0000-00</p>
+            <p>Data: <span id="data-hora"></span></p>
+            <p>==========================</p>
+        </div>
+
+        <form id="pedido-form">
+            <label for="nome">Nome do Cliente:</label>
+            <input type="text" id="nome" name="nome">
+
+            <label for="endereco1">Condomínio:</label>
+            <input type="text" id="endereco1" name="endereco1">
+
+            <label for="endereco2">Endereço:</label>
+            <textarea id="endereco2" name="endereco2" rows="2"></textarea>
+
+            <label for="observacoes">Observações:</label>
+            <textarea id="observacoes" name="observacoes" rows="2"></textarea>
+
+            <div class="items">
+                <ul id="item-list"></ul>
+            </div>
+
+            <p class="total">Total: R$ <span id="total-pedido">0,00</span></p>
+
+            <div class="footer">
+                <p>Obrigado pela preferência!</p>
+                <p>Volte Sempre!</p>
+                <p>==========================</p>
+            </div>
+
+            <button type="button" class="btn-print" onclick="imprimirNota()">Imprimir</button>
+            <button type="button" class="btn-print"><a class="navbar-brand" onclick="limpaStorage()" href="{% url 'index' %}">Voltar</a></button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let pedido = localStorage.getItem('pedido') ? JSON.parse(localStorage.getItem('pedido')) : {};
+            let total = 0;
+            let itemList = document.getElementById("item-list");
+
+            for (let item in pedido) {
+                let nome = pedido[item][1];
+                let quantidade = pedido[item][0];
+                let preco = pedido[item][2];
+                total += preco;
+
+                let itemHTML = `<li>${quantidade}x ${nome} - R$ ${preco.toFixed(2)}</li>`;
+                itemList.innerHTML += itemHTML;
+            }
+
+            document.getElementById("total-pedido").textContent = total.toFixed(2);
+            document.getElementById("data-hora").textContent = new Date().toLocaleString("pt-BR");
+        });
+
+        function imprimirNota() {
+            window.print();
+        }
+        function limpaStorage(){
+            localStorage.clear()
+        }
+    </script>
+
+</body>
+</html>

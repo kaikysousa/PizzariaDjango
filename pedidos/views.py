@@ -1,6 +1,8 @@
 from django.shortcuts import render
-from .models import Produto
+from .models import Produto, Pedido
 from django.core.paginator import Paginator
+from pedidos.models import Pedido
+from django import forms
 # Create your views here.
 
 def index(request):
@@ -15,3 +17,19 @@ def index(request):
     page = request.GET.get('page')
     page_obj = paginator.get_page(page)
     return render(request, 'pedidos/index.html', {'produto_objetos': produto_objetos})
+
+def checkout(request):
+    if request.method == 'POST':
+        items = request.POST.get('items',"")
+        nome = request.POST.get('nome',"")
+        endereco = request.POST.get('endereco1',"")
+        endereco2 = request.POST.get('endereco2',"")
+        observacoes = request.POST.get('observacoes',"")
+        total = request.POST.get('total',"")
+
+        pedido = Pedido(items= items, nome=nome, endereco=endereco,endereco2=endereco2,observacoes=observacoes,total=total)
+        pedido.save()
+
+
+
+    return render(request,'pedidos/checkout.html')
