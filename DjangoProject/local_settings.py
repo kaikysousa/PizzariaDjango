@@ -16,13 +16,3 @@ ALLOWED_HOSTS = [
 ]  # Troque * para seu domínio ou IP
 
 # Config para postgresql
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'projeto_pizza',
-        'USER': 'usuario_pizza',
-        'PASSWORD': 'senha_pizza',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
-}

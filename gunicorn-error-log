@@ -1106,3 +1106,305 @@ Bad Request: /logon.htm
  - - [12/Feb/2025:16:43:38 +0000] "GET /logon.htm HTTP/1.1" 400 57339 "-" "Hello World"
 [2025-02-12 16:52:53 +0000] [19483] [DEBUG] GET /
  - - [12/Feb/2025:16:52:53 +0000] "GET / HTTP/1.1" 200 6355 "-" "Hello World"
+[2025-02-12 17:46:17 +0000] [19484] [DEBUG] GET /
+ - - [12/Feb/2025:17:46:17 +0000] "GET / HTTP/1.1" 200 6355 "-" "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.117 Safari/537.36"
+[2025-02-12 17:47:42 +0000] [19481] [INFO] Worker exiting (pid: 19481)
+[2025-02-12 17:47:42 +0000] [19484] [INFO] Worker exiting (pid: 19484)
+[2025-02-12 17:47:42 +0000] [19485] [INFO] Worker exiting (pid: 19485)
+[2025-02-12 17:47:42 +0000] [19486] [INFO] Worker exiting (pid: 19486)
+[2025-02-12 17:47:42 +0000] [19483] [INFO] Worker exiting (pid: 19483)
+[2025-02-12 17:47:42 +0000] [19482] [INFO] Worker exiting (pid: 19482)
+[2025-02-12 17:47:42 +0000] [19480] [INFO] Handling signal: term
+[2025-02-12 17:47:42 +0000] [19480] [ERROR] Worker (pid:19481) was sent SIGTERM!
+[2025-02-12 17:47:42 +0000] [19480] [ERROR] Worker (pid:19482) was sent SIGTERM!
+[2025-02-12 17:47:42 +0000] [19480] [ERROR] Worker (pid:19483) was sent SIGTERM!
+[2025-02-12 17:47:42 +0000] [19480] [ERROR] Worker (pid:19485) was sent SIGTERM!
+[2025-02-12 17:47:42 +0000] [19480] [ERROR] Worker (pid:19486) was sent SIGTERM!
+[2025-02-12 17:47:42 +0000] [19480] [ERROR] Worker (pid:19484) was sent SIGTERM!
+[2025-02-12 17:47:42 +0000] [19480] [INFO] Shutting down: Master
+[2025-02-12 17:47:42 +0000] [40375] [DEBUG] Current configuration:
+  config: ./gunicorn.conf.py
+  wsgi_app: None
+  bind: ['unix:/run/pizza.socket']
+  backlog: 2048
+  workers: 6
+  worker_class: sync
+  threads: 1
+  worker_connections: 1000
+  max_requests: 0
+  max_requests_jitter: 0
+  timeout: 30
+  graceful_timeout: 30
+  keepalive: 2
+  limit_request_line: 4094
+  limit_request_fields: 100
+  limit_request_field_size: 8190
+  reload: False
+  reload_engine: auto
+  reload_extra_files: []
+  spew: False
+  check_config: False
+  print_config: False
+  preload_app: False
+  sendfile: None
+  reuse_port: False
+  chdir: /home/kaikydsousa/PizzariaDjango
+  daemon: False
+  raw_env: []
+  pidfile: None
+  worker_tmp_dir: None
+  user: 1002
+  group: 33
+  umask: 0
+  initgroups: False
+  tmp_upload_dir: None
+  secure_scheme_headers: {'X-FORWARDED-PROTOCOL': 'ssl', 'X-FORWARDED-PROTO': 'https', 'X-FORWARDED-SSL': 'on'}
+  forwarded_allow_ips: ['127.0.0.1', '::1']
+  accesslog: -
+  disable_redirect_access_to_syslog: False
+  access_log_format: %(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"
+  errorlog: /home/kaikydsousa/PizzariaDjango/gunicorn-error-log
+  loglevel: debug
+  capture_output: True
+  logger_class: gunicorn.glogging.Logger
+  logconfig: None
+  logconfig_dict: {}
+  logconfig_json: None
+  syslog_addr: udp://localhost:514
+  syslog: False
+  syslog_prefix: None
+  syslog_facility: user
+  enable_stdio_inheritance: True
+  statsd_host: None
+  dogstatsd_tags: 
+  statsd_prefix: 
+  proc_name: None
+  default_proc_name: DjangoProject.wsgi:application
+  pythonpath: None
+  paste: None
+  on_starting: <function OnStarting.on_starting at 0x7fa25ea44900>
+  on_reload: <function OnReload.on_reload at 0x7fa25ea44a40>
+  when_ready: <function WhenReady.when_ready at 0x7fa25ea44b80>
+  pre_fork: <function Prefork.pre_fork at 0x7fa25ea44cc0>
+  post_fork: <function Postfork.post_fork at 0x7fa25ea44e00>
+  post_worker_init: <function PostWorkerInit.post_worker_init at 0x7fa25ea44f40>
+  worker_int: <function WorkerInt.worker_int at 0x7fa25ea45080>
+  worker_abort: <function WorkerAbort.worker_abort at 0x7fa25ea451c0>
+  pre_exec: <function PreExec.pre_exec at 0x7fa25ea45300>
+  pre_request: <function PreRequest.pre_request at 0x7fa25ea45440>
+  post_request: <function PostRequest.post_request at 0x7fa25ea454e0>
+  child_exit: <function ChildExit.child_exit at 0x7fa25ea45620>
+  worker_exit: <function WorkerExit.worker_exit at 0x7fa25ea45760>
+  nworkers_changed: <function NumWorkersChanged.nworkers_changed at 0x7fa25ea458a0>
+  on_exit: <function OnExit.on_exit at 0x7fa25ea459e0>
+  ssl_context: <function NewSSLContext.ssl_context at 0x7fa25ea45bc0>
+  proxy_protocol: False
+  proxy_allow_ips: ['127.0.0.1', '::1']
+  keyfile: None
+  certfile: None
+  ssl_version: 2
+  cert_reqs: 0
+  ca_certs: None
+  suppress_ragged_eofs: True
+  do_handshake_on_connect: False
+  ciphers: None
+  raw_paste_global_conf: []
+  permit_obsolete_folding: False
+  strip_header_spaces: False
+  permit_unconventional_http_method: False
+  permit_unconventional_http_version: False
+  casefold_http_method: False
+  forwarder_headers: ['SCRIPT_NAME', 'PATH_INFO']
+  header_map: drop
+[2025-02-12 17:47:42 +0000] [40375] [INFO] Starting gunicorn 23.0.0
+[2025-02-12 17:47:42 +0000] [40375] [DEBUG] Arbiter booted
+[2025-02-12 17:47:42 +0000] [40375] [INFO] Listening at: unix:/run/pizza.socket (40375)
+[2025-02-12 17:47:42 +0000] [40375] [INFO] Using worker: sync
+[2025-02-12 17:47:42 +0000] [40376] [INFO] Booting worker with pid: 40376
+[2025-02-12 17:47:42 +0000] [40377] [INFO] Booting worker with pid: 40377
+[2025-02-12 17:47:42 +0000] [40378] [INFO] Booting worker with pid: 40378
+[2025-02-12 17:47:42 +0000] [40379] [INFO] Booting worker with pid: 40379
+[2025-02-12 17:47:42 +0000] [40380] [INFO] Booting worker with pid: 40380
+[2025-02-12 17:47:42 +0000] [40381] [INFO] Booting worker with pid: 40381
+[2025-02-12 17:47:42 +0000] [40375] [DEBUG] 6 workers
+[2025-02-12 17:48:33 +0000] [40378] [DEBUG] GET /checkout/
+ - - [12/Feb/2025:17:48:33 +0000] "GET /checkout/ HTTP/1.1" 200 4246 "http://34.39.141.209/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-12 17:48:34 +0000] [40378] [DEBUG] GET /checkout/
+ - - [12/Feb/2025:17:48:34 +0000] "GET /checkout/ HTTP/1.1" 200 4246 "http://34.39.141.209/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-12 17:48:36 +0000] [40378] [DEBUG] GET /
+/home/kaikydsousa/PizzariaDjango/pedidos/views.py:16: UnorderedObjectListWarning: Pagination may yield inconsistent results with an unordered object_list: <class 'pedidos.models.Produto'> QuerySet.
+  paginator = Paginator(produto_objetos, 4)
+ - - [12/Feb/2025:17:48:36 +0000] "GET / HTTP/1.1" 500 145 "http://34.39.141.209/checkout/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-12 17:48:37 +0000] [40379] [DEBUG] GET /
+/home/kaikydsousa/PizzariaDjango/pedidos/views.py:16: UnorderedObjectListWarning: Pagination may yield inconsistent results with an unordered object_list: <class 'pedidos.models.Produto'> QuerySet.
+  paginator = Paginator(produto_objetos, 4)
+ - - [12/Feb/2025:17:48:37 +0000] "GET / HTTP/1.1" 500 145 "http://34.39.141.209/checkout/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-12 17:48:37 +0000] [40376] [DEBUG] GET /
+/home/kaikydsousa/PizzariaDjango/pedidos/views.py:16: UnorderedObjectListWarning: Pagination may yield inconsistent results with an unordered object_list: <class 'pedidos.models.Produto'> QuerySet.
+  paginator = Paginator(produto_objetos, 4)
+ - - [12/Feb/2025:17:48:37 +0000] "GET / HTTP/1.1" 500 145 "http://34.39.141.209/checkout/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-12 17:48:41 +0000] [40379] [DEBUG] GET /
+ - - [12/Feb/2025:17:48:41 +0000] "GET / HTTP/1.1" 500 145 "http://34.39.141.209/checkout/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-12 17:48:44 +0000] [40381] [DEBUG] GET /
+/home/kaikydsousa/PizzariaDjango/pedidos/views.py:16: UnorderedObjectListWarning: Pagination may yield inconsistent results with an unordered object_list: <class 'pedidos.models.Produto'> QuerySet.
+  paginator = Paginator(produto_objetos, 4)
+ - - [12/Feb/2025:17:48:44 +0000] "GET / HTTP/1.1" 500 145 "http://34.39.141.209/checkout/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-12 17:48:48 +0000] [40378] [DEBUG] GET /checkout/
+ - - [12/Feb/2025:17:48:48 +0000] "GET /checkout/ HTTP/1.1" 200 4246 "http://34.39.141.209/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-12 17:48:55 +0000] [40376] [DEBUG] GET /
+ - - [12/Feb/2025:17:48:55 +0000] "GET / HTTP/1.1" 500 145 "http://34.39.141.209/checkout/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-12 17:48:57 +0000] [40376] [DEBUG] GET /
+ - - [12/Feb/2025:17:48:57 +0000] "GET / HTTP/1.1" 500 145 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-12 17:49:05 +0000] [40377] [DEBUG] GET /
+/home/kaikydsousa/PizzariaDjango/pedidos/views.py:16: UnorderedObjectListWarning: Pagination may yield inconsistent results with an unordered object_list: <class 'pedidos.models.Produto'> QuerySet.
+  paginator = Paginator(produto_objetos, 4)
+ - - [12/Feb/2025:17:49:05 +0000] "GET / HTTP/1.1" 500 145 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-12 17:49:08 +0000] [40378] [DEBUG] GET /
+ - - [12/Feb/2025:17:49:08 +0000] "GET / HTTP/1.1" 500 145 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-12 17:49:11 +0000] [40381] [DEBUG] GET /admin/
+ - - [12/Feb/2025:17:49:11 +0000] "GET /admin/ HTTP/1.1" 500 145 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-12 17:49:16 +0000] [40380] [DEBUG] GET /checkout/
+ - - [12/Feb/2025:17:49:16 +0000] "GET /checkout/ HTTP/1.1" 200 4246 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-12 17:49:19 +0000] [40376] [DEBUG] GET /
+ - - [12/Feb/2025:17:49:19 +0000] "GET / HTTP/1.1" 500 145 "http://34.39.141.209/checkout/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-12 17:56:49 +0000] [40376] [INFO] Worker exiting (pid: 40376)
+[2025-02-12 17:56:49 +0000] [40377] [INFO] Worker exiting (pid: 40377)
+[2025-02-12 17:56:49 +0000] [40378] [INFO] Worker exiting (pid: 40378)
+[2025-02-12 17:56:49 +0000] [40379] [INFO] Worker exiting (pid: 40379)
+[2025-02-12 17:56:49 +0000] [40381] [INFO] Worker exiting (pid: 40381)
+[2025-02-12 17:56:49 +0000] [40380] [INFO] Worker exiting (pid: 40380)
+[2025-02-12 17:56:49 +0000] [40375] [INFO] Handling signal: term
+[2025-02-12 17:56:49 +0000] [40375] [ERROR] Worker (pid:40376) was sent SIGTERM!
+[2025-02-12 17:56:49 +0000] [40375] [ERROR] Worker (pid:40381) was sent SIGTERM!
+[2025-02-12 17:56:49 +0000] [40375] [ERROR] Worker (pid:40377) was sent SIGTERM!
+[2025-02-12 17:56:49 +0000] [40375] [ERROR] Worker (pid:40378) was sent SIGTERM!
+[2025-02-12 17:56:49 +0000] [40375] [ERROR] Worker (pid:40379) was sent SIGTERM!
+[2025-02-12 17:56:49 +0000] [40375] [ERROR] Worker (pid:40380) was sent SIGTERM!
+[2025-02-12 17:56:49 +0000] [40375] [INFO] Shutting down: Master
+[2025-02-12 17:56:49 +0000] [41890] [DEBUG] Current configuration:
+  config: ./gunicorn.conf.py
+  wsgi_app: None
+  bind: ['unix:/run/pizza.socket']
+  backlog: 2048
+  workers: 6
+  worker_class: sync
+  threads: 1
+  worker_connections: 1000
+  max_requests: 0
+  max_requests_jitter: 0
+  timeout: 30
+  graceful_timeout: 30
+  keepalive: 2
+  limit_request_line: 4094
+  limit_request_fields: 100
+  limit_request_field_size: 8190
+  reload: False
+  reload_engine: auto
+  reload_extra_files: []
+  spew: False
+  check_config: False
+  print_config: False
+  preload_app: False
+  sendfile: None
+  reuse_port: False
+  chdir: /home/kaikydsousa/PizzariaDjango
+  daemon: False
+  raw_env: []
+  pidfile: None
+  worker_tmp_dir: None
+  user: 1002
+  group: 33
+  umask: 0
+  initgroups: False
+  tmp_upload_dir: None
+  secure_scheme_headers: {'X-FORWARDED-PROTOCOL': 'ssl', 'X-FORWARDED-PROTO': 'https', 'X-FORWARDED-SSL': 'on'}
+  forwarded_allow_ips: ['127.0.0.1', '::1']
+  accesslog: -
+  disable_redirect_access_to_syslog: False
+  access_log_format: %(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"
+  errorlog: /home/kaikydsousa/PizzariaDjango/gunicorn-error-log
+  loglevel: debug
+  capture_output: True
+  logger_class: gunicorn.glogging.Logger
+  logconfig: None
+  logconfig_dict: {}
+  logconfig_json: None
+  syslog_addr: udp://localhost:514
+  syslog: False
+  syslog_prefix: None
+  syslog_facility: user
+  enable_stdio_inheritance: True
+  statsd_host: None
+  dogstatsd_tags: 
+  statsd_prefix: 
+  proc_name: None
+  default_proc_name: DjangoProject.wsgi:application
+  pythonpath: None
+  paste: None
+  on_starting: <function OnStarting.on_starting at 0x7f485b9cc900>
+  on_reload: <function OnReload.on_reload at 0x7f485b9cca40>
+  when_ready: <function WhenReady.when_ready at 0x7f485b9ccb80>
+  pre_fork: <function Prefork.pre_fork at 0x7f485b9cccc0>
+  post_fork: <function Postfork.post_fork at 0x7f485b9cce00>
+  post_worker_init: <function PostWorkerInit.post_worker_init at 0x7f485b9ccf40>
+  worker_int: <function WorkerInt.worker_int at 0x7f485b9cd080>
+  worker_abort: <function WorkerAbort.worker_abort at 0x7f485b9cd1c0>
+  pre_exec: <function PreExec.pre_exec at 0x7f485b9cd300>
+  pre_request: <function PreRequest.pre_request at 0x7f485b9cd440>
+  post_request: <function PostRequest.post_request at 0x7f485b9cd4e0>
+  child_exit: <function ChildExit.child_exit at 0x7f485b9cd620>
+  worker_exit: <function WorkerExit.worker_exit at 0x7f485b9cd760>
+  nworkers_changed: <function NumWorkersChanged.nworkers_changed at 0x7f485b9cd8a0>
+  on_exit: <function OnExit.on_exit at 0x7f485b9cd9e0>
+  ssl_context: <function NewSSLContext.ssl_context at 0x7f485b9cdbc0>
+  proxy_protocol: False
+  proxy_allow_ips: ['127.0.0.1', '::1']
+  keyfile: None
+  certfile: None
+  ssl_version: 2
+  cert_reqs: 0
+  ca_certs: None
+  suppress_ragged_eofs: True
+  do_handshake_on_connect: False
+  ciphers: None
+  raw_paste_global_conf: []
+  permit_obsolete_folding: False
+  strip_header_spaces: False
+  permit_unconventional_http_method: False
+  permit_unconventional_http_version: False
+  casefold_http_method: False
+  forwarder_headers: ['SCRIPT_NAME', 'PATH_INFO']
+  header_map: drop
+[2025-02-12 17:56:49 +0000] [41890] [INFO] Starting gunicorn 23.0.0
+[2025-02-12 17:56:49 +0000] [41890] [DEBUG] Arbiter booted
+[2025-02-12 17:56:49 +0000] [41890] [INFO] Listening at: unix:/run/pizza.socket (41890)
+[2025-02-12 17:56:49 +0000] [41890] [INFO] Using worker: sync
+[2025-02-12 17:56:49 +0000] [41891] [INFO] Booting worker with pid: 41891
+[2025-02-12 17:56:49 +0000] [41892] [INFO] Booting worker with pid: 41892
+[2025-02-12 17:56:49 +0000] [41893] [INFO] Booting worker with pid: 41893
+[2025-02-12 17:56:49 +0000] [41894] [INFO] Booting worker with pid: 41894
+[2025-02-12 17:56:50 +0000] [41895] [INFO] Booting worker with pid: 41895
+[2025-02-12 17:56:50 +0000] [41896] [INFO] Booting worker with pid: 41896
+[2025-02-12 17:56:50 +0000] [41890] [DEBUG] 6 workers
+[2025-02-12 17:57:15 +0000] [41892] [DEBUG] GET /
+/home/kaikydsousa/PizzariaDjango/pedidos/views.py:16: UnorderedObjectListWarning: Pagination may yield inconsistent results with an unordered object_list: <class 'pedidos.models.Produto'> QuerySet.
+  paginator = Paginator(produto_objetos, 4)
+ - - [12/Feb/2025:17:57:15 +0000] "GET / HTTP/1.1" 200 6355 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-12 17:57:16 +0000] [41892] [DEBUG] GET /
+ - - [12/Feb/2025:17:57:16 +0000] "GET / HTTP/1.1" 200 6355 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-12 17:57:18 +0000] [41892] [DEBUG] GET /checkout/
+ - - [12/Feb/2025:17:57:18 +0000] "GET /checkout/ HTTP/1.1" 200 4246 "http://34.39.141.209/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-12 17:57:20 +0000] [41892] [DEBUG] GET /
+ - - [12/Feb/2025:17:57:20 +0000] "GET / HTTP/1.1" 200 6355 "http://34.39.141.209/checkout/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-12 17:57:25 +0000] [41892] [DEBUG] GET /checkout/
+ - - [12/Feb/2025:17:57:25 +0000] "GET /checkout/ HTTP/1.1" 200 4246 "http://34.39.141.209/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-12 17:57:36 +0000] [41893] [DEBUG] GET /
+/home/kaikydsousa/PizzariaDjango/pedidos/views.py:16: UnorderedObjectListWarning: Pagination may yield inconsistent results with an unordered object_list: <class 'pedidos.models.Produto'> QuerySet.
+  paginator = Paginator(produto_objetos, 4)
+ - - [12/Feb/2025:17:57:36 +0000] "GET / HTTP/1.1" 200 6355 "http://34.39.141.209/checkout/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-12 17:57:46 +0000] [41894] [DEBUG] GET /checkout/
+ - - [12/Feb/2025:17:57:46 +0000] "GET /checkout/ HTTP/1.1" 200 4246 "http://34.39.141.209/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-12 17:58:11 +0000] [41891] [DEBUG] GET /admin/
+ - - [12/Feb/2025:17:58:11 +0000] "GET /admin/ HTTP/1.1" 302 0 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-12 17:58:12 +0000] [41891] [DEBUG] GET /admin/login/
+ - - [12/Feb/2025:17:58:12 +0000] "GET /admin/login/?next=/admin/ HTTP/1.1" 200 4160 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
