@@ -25,8 +25,11 @@ SECRET_KEY = 'django-insecure--wlz=v82_)(*r6lwaahpe)rf0e-fm-4)qui7@h+(f2zlc!jwso
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['34.39.141.209']
-
+ALLOWED_HOSTS = [
+    '34.39.141.209',
+    '127.0.0.1',
+    'localhost',
+]
 
 # Application definition
 
@@ -133,3 +136,8 @@ MEDIA_ROOT = BASE_DIR / 'media'  # Diretório onde os arquivos de mídia serão 
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+try :
+    from DjangoProject.local_settings import *
+except ImportError:
+    ...
