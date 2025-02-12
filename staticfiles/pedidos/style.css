@@ -1,0 +1,66 @@
+body {
+    font-family: "Courier New", Courier, monospace;
+    font-size: 14px;
+    text-align: center;
+    width: 80mm; /* Largura da impressora térmica */
+    margin: auto;
+}
+
+.container {
+    width: 100%;
+    max-width: 80mm;
+}
+
+.header, .footer {
+    text-align: center;
+    font-weight: bold;
+    border-top: 2px dashed black;
+    border-bottom: 2px dashed black;
+    padding: 5px 0;
+}
+
+.items {
+    text-align: left;
+    margin-bottom: 10px;
+}
+
+.items li {
+    list-style-type: none;
+    padding: 5px 0;
+    border-bottom: 1px dashed black;
+}
+
+.total {
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+input, textarea {
+    width: 100%;
+    font-family: "Courier New", Courier, monospace;
+    font-size: 14px;
+    margin-bottom: 5px;
+    padding: 5px;
+    border: 1px solid black;
+}
+
+.btn-print {
+    margin-top: 10px;
+    display: block;
+    text-align: center;
+    padding: 10px;
+    background: black;
+    color: white;
+    border: none;
+    width: 100%;
+    cursor: pointer;
+}
+
+@media print {
+    .btn-print {
+        display: none;
+    }
+    input, textarea {
+        border: none;
+    }
+}
