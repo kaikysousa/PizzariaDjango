@@ -7,6 +7,8 @@ db.sqlite3
 static/
 media/
 DjangoProject/local_settings.py
+DjangoProject/__pycache__
+DjangoProject/__pycache__/settings.cpython-312.pyc
 
 # Backup files #
 *.bak
