@@ -51,6 +51,16 @@
             border: 1px solid black;
         }
 
+        textarea {
+            width: 100%;
+            font-family: "Courier New", Courier, monospace;
+            font-size: 14px;
+            padding: 5px;
+            border: 1px solid black;
+            min-height: 40px; /* Define uma altura mínima */
+            overflow-y: hidden; /* Esconde a barra de rolagem */
+            resize: none; /* Impede redimensionamento manual */
+        }
         .btn-print {
             margin-top: 10px;
             display: block;
@@ -77,7 +87,7 @@
 
     <div class="container">
         <div class="header">
-            <p>*** PIZZARIA DO BAIRRO ***</p>
+            <p>*** PIZZARIA DO AISLAN ***</p>
             <p>CNPJ: 00.000.000/0000-00</p>
             <p>Data: <span id="data-hora"></span></p>
             <p>==========================</p>
@@ -140,6 +150,18 @@
         function limpaStorage(){
             localStorage.clear()
         }
+
+        function ajustarAlturaTextarea(textarea) {
+            textarea.style.height = "auto"; // Resetar altura antes de calcular
+            textarea.style.height = textarea.scrollHeight + "px"; // Ajusta para o conteúdo
+        }
+
+        document.querySelectorAll("textarea").forEach(textarea => {
+            textarea.addEventListener("input", function () {
+                ajustarAlturaTextarea(this);
+            });
+            ajustarAlturaTextarea(textarea);// Ajusta caso já tenha conteúdo salvo
+        });
     </script>
 
 </body>
