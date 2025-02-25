@@ -6,7 +6,6 @@ class Produto(models.Model):
     preco = models.DecimalField(max_digits=10, decimal_places=2)
     categoria = models.CharField(max_length=100)
     descricao = models.TextField()
-    imagem = models.CharField(max_length=300)
 
 class Pedido(models.Model):
     items = models.CharField(max_length=3000)
