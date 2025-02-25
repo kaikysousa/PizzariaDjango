@@ -28,7 +28,7 @@
                         <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
 
                             <li class="nav-item active">
-                                <button onclick="MostraPedido(pedido)" id="pedido" data-html="true" type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-placement="bottom" data-content="Bottom popover">Pedido(0)</button>
+                                <button onclick="limpaStorage()" id="limpaPedido" data-html="true" type="button">Limpar pedido</button>
                         </ul>
                     </div>
                 </nav>
@@ -49,6 +49,13 @@
                     </div>
                 </form>
             </div>
+        </div>
+
+        <div id="pedido-lista" class="mt-3 p-3 border rounded">
+            <h5>Pedido:</h5>
+            <button onclick="MostraPedido(pedido)" id="pedido" data-html="true" type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-placement="bottom" data-content="Bottom popover">Pedido(0)</button>
+            <ul id="pedido" class="list-unstyled"></ul>
+            <a href="/checkout" class="btn btn-primary">Fechar pedido</a>
         </div>
 
 
@@ -126,10 +133,10 @@
         console.log(pedido)
         localStorage.setItem('pedido',JSON.stringify(pedido));
         document.getElementById('pedido').innerHTML = "Pedido("+ Object.keys(pedido).length +")"; 
-
+        atualizarListaPedido()
 
     });
-
+    atualizarListaPedido()
     MostraPedido(pedido);
     function MostraPedido(pedido){
         var pedidoString = "";
@@ -156,7 +163,6 @@
         if (!sessionStorage.getItem("meiaSelecionada")) {
             // Se ainda não há uma meia pizza selecionada, salva temporariamente
             sessionStorage.setItem("meiaSelecionada", JSON.stringify({ id: item_id, nome: nome, price: price }));
-            alert("Escolha outro sabor para completar sua pizza!");
         } else {
             // Se já tem uma meia selecionada, combina os sabores
             var meiaAnterior = JSON.parse(sessionStorage.getItem("meiaSelecionada"));
@@ -166,9 +172,14 @@
             var nomeCombinado = meiaAnterior.nome + " / " + nome;
             var precoCombinado = meiaAnterior.price + price;
 
-            // Adiciona ao carrinho
-            pedido[idCombinado] = [1, nomeCombinado, precoCombinado];
-
+            if (pedido[idCombinado] != undefined) {
+                // Se já existe, apenas aumenta a quantidade
+                pedido[idCombinado][0] += 1;
+                pedido[idCombinado][2] += precoCombinado;
+            } else {
+                // Adiciona ao carrinho
+                pedido[idCombinado] = [1, nomeCombinado, precoCombinado];
+            }
             // Atualiza LocalStorage
             localStorage.setItem('pedido', JSON.stringify(pedido));
 
@@ -178,8 +189,27 @@
             // Atualiza a interface
             document.getElementById('pedido').innerHTML = "Pedido(" + Object.keys(pedido).length + ")";
             console.log(pedido);
+            atualizarListaPedido()
         }
     });
+    function limpaStorage(){
+            localStorage.clear()
+            sessionStorage.clear()
+            atualizarListaPedido()
+            location.reload()
+        }
+
+    function atualizarListaPedido() {
+        let pedidoItens = document.getElementById("pedido");
+        pedidoItens.innerHTML = "";
+        let pedidoObject = JSON.parse(localStorage.getItem("pedido")) || {};
+
+        for (let item in pedidoObject) {
+            let li = document.createElement("li");
+            li.innerHTML = `${pedidoObject[item][1]} - Quantidade: ${pedidoObject[item][0]}`;
+            pedidoItens.appendChild(li);
+        }
+    }
 
 
 </script>
