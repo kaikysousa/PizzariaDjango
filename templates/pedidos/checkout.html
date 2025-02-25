@@ -80,6 +80,12 @@
             input, textarea {
                 border: none;
             }
+
+        label{
+            text-align: left !important;
+            display:block;
+
+        }
         }
     </style>
 </head>
@@ -94,16 +100,16 @@
         </div>
 
         <form id="pedido-form">
-            <label for="nome">Nome do Cliente:</label>
+            <label class="info_pedido" for="nome">Nome do Cliente:</label>
             <input type="text" id="nome" name="nome">
 
-            <label for="endereco1">Condomínio:</label>
+            <label class="info_pedido"  for="endereco1">Condomínio:</label>
             <input type="text" id="endereco1" name="endereco1">
 
-            <label for="endereco2">Endereço:</label>
+            <label class="info_pedido" for="endereco2">Endereço:</label>
             <textarea id="endereco2" name="endereco2" rows="2"></textarea>
 
-            <label for="observacoes">Observações:</label>
+            <label class="info_pedido" for="observacoes">Observações:</label>
             <textarea id="observacoes" name="observacoes" rows="2"></textarea>
 
             <div class="items">

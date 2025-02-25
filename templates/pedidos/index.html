@@ -58,9 +58,14 @@
                 <div class="card">
                     <img src="{{ product.imagem }}" >
                     <div class="card-body">
+                        <div id="cat{{product.id}}" class="card-title">{{ product.categoria }}</div>
                         <div id="nm{{product.id}}" class="card-title">{{ product.nome }}</div>
                         <div class="card-text" id="price{{ product.id }}">{{ product.preco }}</div>
                         <button id="{{ product.id }}" class="btn atc btn-warning">Adicionar ao pedido</button>
+                        {% if product.categoria == "pizza" %}
+                            <button id="{{ product.id }}" class="btn atc-meia btn-secondary">Adicionar meia</button>
+                        {% endif %}
+
                     </div>
                 </div>
             </div>
@@ -108,7 +113,6 @@
     $(document).on('click','.atc',function (){
         console.log('O botão de adicionar ao carrinho foi clickado');
         var item_id = this.id.toString();
-
         if(pedido[item_id] != undefined){
             quantidade = pedido[item_id][0]+1;
             pedido[item_id][0] = quantidade;
@@ -143,5 +147,41 @@
         document.getElementById("pedido").setAttribute('data-content',pedidoString);
         $('[data-toggle="popover"]').popover();
     }
+    $(document).on('click', '.atc-meia', function () {
+        console.log('O botão de adicionar meia pizza foi clicado');
+
+        var item_id = this.id.toString();
+        var price = parseFloat(document.getElementById("price" + item_id).innerHTML) / 2; // Metade do preço
+        var nome = document.getElementById("nm" + item_id).innerHTML;
+
+        if (!sessionStorage.getItem("meiaSelecionada")) {
+            // Se ainda não há uma meia pizza selecionada, salva temporariamente
+            sessionStorage.setItem("meiaSelecionada", JSON.stringify({ id: item_id, nome: nome, price: price }));
+            alert("Escolha outro sabor para completar sua pizza!");
+        } else {
+            // Se já tem uma meia selecionada, combina os sabores
+            var meiaAnterior = JSON.parse(sessionStorage.getItem("meiaSelecionada"));
+
+            // Criar um ID único para a pizza meia-meia
+            var idCombinado = meiaAnterior.id + "-" + item_id;
+            var nomeCombinado = meiaAnterior.nome + " / " + nome;
+            var precoCombinado = meiaAnterior.price + price;
+
+            // Adiciona ao carrinho
+            pedido[idCombinado] = [1, nomeCombinado, precoCombinado];
+
+            // Atualiza LocalStorage
+            localStorage.setItem('pedido', JSON.stringify(pedido));
+
+            // Limpa a seleção de meia pizza
+            sessionStorage.removeItem("meiaSelecionada");
+
+            // Atualiza a interface
+            document.getElementById('pedido').innerHTML = "Pedido(" + Object.keys(pedido).length + ")";
+            console.log(pedido);
+        }
+    });
+
+
 </script>
 </html>
