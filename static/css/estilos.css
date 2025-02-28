@@ -27,17 +27,26 @@ body {
 }
 
 /* Botão de limpar pedido */
-#limpaPedido {
-    background-color: #dc3545;
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 5px;
-    cursor: pointer;
+/* Estilização do botão "Limpar Pedido" */
+.btn-limpa-pedido {
+    background-color: #dc3545 !important;
+    color: white !important;
+    border: none !important;
+    padding: 10px 16px !important;
+    border-radius: 8px !important;
+    cursor: pointer !important;
+    font-weight: bold !important;
+    transition: all 0.3s ease-in-out !important;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2) !important;
+    position: fixed !important;
+    top: 10px !important;
+    left: 10px !important;
+    z-index: 1000 !important;
 }
 
-#limpaPedido:hover {
-    background-color: #c82333;
+.btn-limpa-pedido:hover {
+    background-color: #c82333 !important;
+    box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.3) !important;
 }
 
 /* Estilização do formulário de busca */

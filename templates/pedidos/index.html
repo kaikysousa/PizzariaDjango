@@ -19,17 +19,9 @@
         <div class="row">
             <div class="col-md-12">
                 <nav class="navbar navbar-expand-sm navbar-light bg-light">
-                    <a class="navbar-brand" href="{% url 'index' %}">Inicio</a>
-                    <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse"
-                            data-target="#collapsibleNavId" aria-controls="collapsibleNavId"
-                            aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
+                    <button onclick="limpaStorage()" id="limpaPedido" class="btn" data-html="true" type="button">
+                        Limpar pedido
                     </button>
-                    <div class="collapse navbar-collapse" id="collapsibleNavId">
-                            <button onclick="limpaStorage()" id="limpaPedido" data-html="true" type="button">
-                                Limpar pedido
-                            </button>
-                    </div>
                 </nav>
             </div>
         </div>
