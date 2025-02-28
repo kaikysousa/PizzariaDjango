@@ -1,7 +1,7 @@
 import csv
 from pedidos.models import Produto
 
-with open('/home/kaiky/PycharmProjects/DjangoProject/cardapio.csv', newline='', encoding='utf-8') as csvfile:
+with open('/home/kaikydsousa/PizzariaDjango/cardapio.csv', newline='', encoding='utf-8') as csvfile:
     reader = csv.DictReader(csvfile)
     for row in reader:
         Produto.objects.create(
@@ -10,4 +10,3 @@ with open('/home/kaiky/PycharmProjects/DjangoProject/cardapio.csv', newline='', 
             categoria=row['categoria'],
             descricao=row['descricao']
         )
-q
