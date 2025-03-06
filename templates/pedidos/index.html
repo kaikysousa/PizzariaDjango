@@ -61,7 +61,7 @@
                     <input type="hidden" name="filtroDoce" value="doce">
                     <button type="submit" class="filtro-btn doce">Filtrar: Pizzas Doces</button>
                 </form>
-                <a href="?page="><button class="btn atc-meia btn-secondary">Remove a filtragem</button></a>
+                <a href="?page="><button class="filtro-btn remove">Remove a filtragem</button></a>
         </div>
 
 
@@ -70,7 +70,7 @@
             <div class="col-md-3">
                 <div class="card">
                     <div class="card-body">
-                        <div id="cat{{product.id}}" class="card-title">{{ product.categoria }}</div>
+                        <div id="cat{{product.id}}" class="card-title">Categoria: {{ product.categoria }}</div>
                         <div id="nm{{product.id}}" class="card-title">{{ product.nome }}</div>
                         <div class="card-text" id="price{{ product.id }}">{{ product.preco }}</div>
                         <button id="{{ product.id }}" class="btn atc btn-warning">Adicionar ao pedido</button>

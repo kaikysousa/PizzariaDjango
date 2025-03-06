@@ -151,3 +151,7 @@ input[type='search'] {
 .doce:hover {
     background-color: #d1651a;
 }
+
+.remove {
+    background-color: olivedrab;
+}
