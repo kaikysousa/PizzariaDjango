@@ -31,7 +31,7 @@
                 <form class="card card-sm">
                     <div class="card-body row no-gutters align-items-center">
                         <div class="col">
-                            <input type="search" name="item_name" placeholder="Search for products" class="form-control form-control-borderless">
+                            <input type="search" name="item_name" placeholder="Procurar produto pelo nome" class="form-control form-control-borderless">
                         </div>
                         <div class="col-auto">
                             <button class="btn btn-success" type="submit">Buscar</button>
@@ -48,6 +48,22 @@
             <a href="/checkout" class="btn btn-primary">Fechar pedido</a>
         </div>
 
+        <div class="filtros">
+                <form method="GET" action="">
+                    <input type="hidden" name="filtroPizza" value="pizza">
+                    <button type="submit" class="filtro-btn pizza">Filtrar: Pizzas</button>
+                </form>
+                <form method="GET" action="">
+                    <input type="hidden" name="filtroBebida" value="bebida">
+                    <button type="submit" class="filtro-btn bebida">Filtrar: Bebidas</button>
+                </form>
+                <form method="GET" action="">
+                    <input type="hidden" name="filtroDoce" value="doce">
+                    <button type="submit" class="filtro-btn doce">Filtrar: Pizzas Doces</button>
+                </form>
+                <a href="?page="><button class="btn atc-meia btn-secondary">Remove a filtragem</button></a>
+        </div>
+
 
         <div class="row">
             {% for product in produto_objetos %}
@@ -58,7 +74,7 @@
                         <div id="nm{{product.id}}" class="card-title">{{ product.nome }}</div>
                         <div class="card-text" id="price{{ product.id }}">{{ product.preco }}</div>
                         <button id="{{ product.id }}" class="btn atc btn-warning">Adicionar ao pedido</button>
-                        {% if product.categoria == "pizza" %}
+                        {% if product.categoria == "pizza" or "pizza doce" %}
                             <button id="{{ product.id }}" class="btn atc-meia btn-secondary">Adicionar meia</button>
                         {% endif %}
 
@@ -122,7 +138,7 @@
         }
         console.log(pedido)
         localStorage.setItem('pedido',JSON.stringify(pedido));
-        document.getElementById('pedido').innerHTML = "Pedido("+ Object.keys(pedido).length +")"; 
+        document.getElementById('pedido').innerHTML = "Pedido("+ Object.keys(pedido).length +")";
         atualizarListaPedido()
 
     });
@@ -199,6 +215,18 @@
             li.innerHTML = `${pedidoObject[item][1]} - Quantidade: ${pedidoObject[item][0]}`;
             pedidoItens.appendChild(li);
         }
+    }
+
+    function filtroPizza() {
+        document.getElementById('filtroPizza').innerHTML = "pizza"
+    }
+
+    function filtroBebidas() {
+        document.getElementById('filtroBebidas').innerHTML = "doce"
+    }
+
+    function filtroDoces() {
+        document.getElementById('filtroDoces').innerHTML = "bebidas"
     }
 
 

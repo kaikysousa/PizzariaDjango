@@ -12,6 +12,18 @@ def index(request):
     if item_name != '' and item_name is not None:
         produto_objetos = produto_objetos.filter(nome__icontains=item_name)
 
+    filtro_pizza = request.GET.get('filtroPizza')
+    if filtro_pizza == "pizza":
+        produto_objetos = produto_objetos.filter(categoria__icontains="pizza")
+
+    filtro_bebida = request.GET.get('filtroBebida')
+    if filtro_bebida == "bebida":
+        produto_objetos = produto_objetos.filter(categoria__icontains="bebida")
+
+    filtro_doce = request.GET.get('filtroDoce')
+    if filtro_doce == "doce":
+        produto_objetos = produto_objetos.filter(categoria__icontains="doce")
+
     #paginação
     paginator = Paginator(produto_objetos, 4)
     page = request.GET.get('page')

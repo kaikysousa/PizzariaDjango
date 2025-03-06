@@ -122,3 +122,42 @@ input[type='search'] {
     background-color: #007bff;
     color: white;
 }
+
+.filtros {
+    display: flex;
+    gap: 10px;
+}
+
+.filtro-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    color: white;
+    transition: 0.3s;
+}
+
+.pizza {
+    background-color: #ff5733; /* Vermelho alaranjado */
+}
+
+.pizza:hover {
+    background-color: #e04e2b;
+}
+
+.bebida {
+    background-color: #3498db; /* Azul */
+}
+
+.bebida:hover {
+    background-color: #2980b9;
+}
+
+.doce {
+    background-color: #e67e22; /* Laranja */
+}
+
+.doce:hover {
+    background-color: #d1651a;
+}
