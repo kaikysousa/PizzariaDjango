@@ -19,7 +19,7 @@
         <div class="row">
             <div class="col-md-12">
                 <nav class="navbar navbar-expand-sm navbar-light bg-light">
-                    <button onclick="limpaStorage()" id="limpaPedido" class="btn" data-html="true" type="button">
+                    <button onclick="limpaStorage()" class="btn" data-html="true" type="button">
                         Limpar pedido
                     </button>
                 </nav>
@@ -43,7 +43,7 @@
 
         <div id="pedido-lista" class="mt-3 p-3 border rounded">
             <h5>Pedido: R$<span id="total-pedido">0,00</span></h5>
-            <button onclick="MostraPedido(pedido)" id="pedido" data-html="true" type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-placement="bottom" data-content="Bottom popover">Pedido(0)</button>
+            <span id="pedido" class="pedido-info" onclick="MostraPedido(pedido)">Pedido(0)</span>
             <ul id="pedido" class="list-unstyled"></ul>
             <a href="/checkout" class="btn btn-primary">Fechar pedido</a>
         </div>
