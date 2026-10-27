@@ -141,3 +141,8 @@ GitHub.sublime-settings
 !.vscode/launch.json
 !.vscode/extensions.json
 .history
+# Auditoria e execucao local
+GATES.md
+.unlazy/
+PROMPT-*.md
+
