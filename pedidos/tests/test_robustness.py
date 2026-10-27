@@ -53,6 +53,26 @@ class RobustnessTests(TestCase):
             importar(caminho.name)
         Path(caminho.name).unlink()
 
+    def test_importar_rejeita_categoria_invalida(self):
+        caminho = self._csv([["Suco", "8.00", "suco", ""]])
+        with self.assertRaises(ValueError):
+            importar(caminho)
+        Path(caminho).unlink()
+
+    def test_importar_rejeita_preco_invalido(self):
+        caminho = self._csv([["Suco", "abc", "bebida", ""]])
+        with self.assertRaises(ValueError):
+            importar(caminho)
+        Path(caminho).unlink()
+
+    def test_importar_atualiza_produto_existente(self):
+        caminho = self._csv([["Margherita", "50,00", "pizza", "Nova"]])
+        importar(caminho)
+        self.assertEqual(Produto.objects.filter(nome__iexact="Margherita").count(), 1)
+        self.produto.refresh_from_db()
+        self.assertEqual(self.produto.preco, 50)
+        Path(caminho).unlink()
+
     @override_settings(DEBUG=True)
     def test_media_route_configurada(self):
         from django.conf import settings

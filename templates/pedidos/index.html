@@ -3,6 +3,20 @@
 
 {% block title %}Pizzaria do Aislan — cardápio e pedidos{% endblock %}
 
+{% block extra_head %}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Restaurant",
+      "name": "Pizzaria do Aislan",
+      "servesCuisine": "Pizza",
+      "priceRange": "R$",
+      "url": "{{ request.build_absolute_uri }}",
+      "hasMenu": "{{ request.build_absolute_uri }}#cardapio"
+    }
+  </script>
+{% endblock %}
+
 {% block content %}
 <section class="hero" aria-labelledby="hero-titulo">
   <div class="hero__texto">
@@ -109,25 +123,4 @@
   </ol>
 </section>
 
-<div class="carrinho" id="carrinho" hidden>
-  <div class="carrinho__fundo" data-fechar-carrinho></div>
-  <aside class="carrinho__painel" role="dialog" aria-modal="true" aria-labelledby="carrinho-titulo">
-    <header class="carrinho__topo">
-      <h2 id="carrinho-titulo">Seu pedido</h2>
-      <button class="icone" type="button" data-fechar-carrinho aria-label="Fechar pedido">×</button>
-    </header>
-    <p class="carrinho__vazio" id="carrinho-vazio">Seu carrinho está vazio. Escolha um sabor para começar.</p>
-    <ul class="carrinho__itens" id="carrinho-itens"></ul>
-    <footer class="carrinho__rodape">
-      <p class="carrinho__total">Total <strong id="carrinho-total">R$ 0,00</strong></p>
-      <form id="form-revisar" method="post" action="{% url 'revisar_pedido' %}">
-        {% csrf_token %}
-        <input type="hidden" name="carrinho" id="carrinho-json">
-        <button class="botao botao--primario botao--largo" type="submit">Revisar pedido</button>
-      </form>
-    </footer>
-  </aside>
-</div>
-
-<div class="toast" id="toast" role="status" aria-live="polite"></div>
 {% endblock %}

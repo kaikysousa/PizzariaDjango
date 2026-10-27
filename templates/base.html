@@ -6,13 +6,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}Pizzaria do Aislan — cardápio e pedidos{% endblock %}</title>
   <meta name="description" content="{% block description %}Monte sua pizza, escolha bebidas e finalize o pedido com recibo de 80 mm.{% endblock %}">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{% block og_title %}Pizzaria do Aislan — cardápio e pedidos{% endblock %}">
+  <meta property="og:description" content="Monte sua pizza, escolha bebidas e finalize o pedido com recibo de 80 mm.">
   <meta name="theme-color" content="#b33a1a">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'css/tokens.css' %}">
   <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
-  {% block extra_css %}{% endblock %}
+  {% block extra_head %}{% endblock %}
+  <noscript><style>[data-reveal]{opacity:1;transform:none}</style></noscript>
 </head>
 <body>
   <a class="pular" href="#conteudo">Pular para o conteúdo</a>
@@ -35,7 +39,7 @@
         <a href="{% url 'index' %}#como-funciona">Como funciona</a>
       </nav>
 
-      <a class="botao-carrinho" href="{% url 'index' %}#carrinho" data-abrir-carrinho>
+      <a class="botao-carrinho" href="{% url 'index' %}#carrinho" data-abrir-carrinho aria-label="Abrir pedido">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.6L21 8H6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="20" r="1.4" fill="currentColor"/><circle cx="18" cy="20" r="1.4" fill="currentColor"/></svg>
         <span>Pedido</span>
         <span class="contador" data-carrinho-contador hidden>0</span>
@@ -44,8 +48,37 @@
   </header>
 
   <main id="conteudo">
+    {% if messages %}
+      <div class="mensagens" role="status" aria-live="polite">
+        {% for message in messages %}
+          <p class="alerta alerta--{{ message.tags }}">{{ message }}</p>
+        {% endfor %}
+      </div>
+    {% endif %}
     {% block content %}{% endblock %}
   </main>
+
+  <dialog class="carrinho" id="carrinho" aria-labelledby="carrinho-titulo">
+    <aside class="carrinho__painel">
+      <header class="carrinho__topo">
+        <h2 id="carrinho-titulo">Seu pedido</h2>
+        <button class="icone" type="button" data-fechar-carrinho aria-label="Fechar pedido">×</button>
+      </header>
+      <p class="carrinho__vazio" id="carrinho-vazio">Seu carrinho está vazio. Escolha um sabor para começar.</p>
+      <ul class="carrinho__itens" id="carrinho-itens"></ul>
+      <footer class="carrinho__rodape">
+        <p class="carrinho__total">Total <strong id="carrinho-total">R$ 0,00</strong></p>
+        <form id="form-revisar" method="post" action="{% url 'revisar_pedido' %}">
+          {% csrf_token %}
+          <input type="hidden" name="carrinho" id="carrinho-json">
+          <button class="botao botao--primario botao--largo" type="submit">Revisar pedido</button>
+        </form>
+      </footer>
+    </aside>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
 
   <footer class="rodape">
     <div class="rodape__interno">

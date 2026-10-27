@@ -103,6 +103,8 @@ PROBE_JS = r"""
     .map((l) => l.href)
     .filter((href) => href.startsWith(location.origin));
 
+  const cartDialog = document.querySelector("dialog#carrinho");
+
   return {
     title: document.title,
     lang: document.documentElement.lang,
@@ -116,6 +118,11 @@ PROBE_JS = r"""
     imagesWithoutAlt,
     contrastFailures,
     localCss,
+    hiddenBroken: [...document.querySelectorAll("[hidden]")]
+      .filter((el) => getComputedStyle(el).display !== "none")
+      .map((el) => el.id || el.className),
+    cartDialog: Boolean(cartDialog),
+    cartDialogLabelled: Boolean(cartDialog && cartDialog.getAttribute("aria-labelledby")),
     headings: [...document.querySelectorAll('h1,h2,h3')].map((h) => `${h.tagName}:${(h.innerText || '').trim().slice(0, 40)}`),
     formsWithoutCsrf: [...document.querySelectorAll('form[method="post"]')].filter((f) => !f.querySelector('input[name="csrfmiddlewaretoken"]')).length,
   };
@@ -266,6 +273,10 @@ def main():
                 failures.append(f"campos sem label: {mobile['inputsWithoutLabel']}")
             if mobile["imagesWithoutAlt"]:
                 failures.append(f"imagens sem alt: {mobile['imagesWithoutAlt']}")
+            if mobile["hiddenBroken"]:
+                failures.append(f"[hidden] ainda visível: {mobile['hiddenBroken']}")
+            if not mobile["cartDialog"] or not mobile["cartDialogLabelled"]:
+                failures.append("drawer sem dialog nativo ou sem aria-labelledby")
             if mobile["contrastFailures"]:
                 failures.append(f"contraste: {mobile['contrastFailures']}")
             if not mobile["lang"].lower().startswith("pt"):

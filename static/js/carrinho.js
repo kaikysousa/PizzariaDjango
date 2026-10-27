@@ -65,8 +65,7 @@
     elementos.contador.classList.add("contador--pulso");
   };
 
-  const atualizarContador = () => {
-    const carrinho = ler();
+  const atualizarContador = (carrinho = ler()) => {
     const quantidade = quantidadeTotal(carrinho);
     if (!elementos.contador) return;
     elementos.contador.textContent = String(quantidade);
@@ -84,9 +83,11 @@
   };
 
   const render = () => {
+    const carrinho = ler();
+    atualizarContador(carrinho);
+
     if (!elementos.itens) return;
 
-    const carrinho = ler();
     const entradas = Object.entries(carrinho);
 
     elementos.itens.replaceChildren();
@@ -144,8 +145,6 @@
         })),
       });
     }
-
-    atualizarContador();
   };
 
   const adicionar = (ids, nome, preco) => {
@@ -230,13 +229,19 @@
     cancelarMeia();
   };
 
+  let ultimoFoco = null;
+
   const abrirCarrinho = () => {
     if (!elementos.drawer) return;
-    elementos.drawer.hidden = false;
+    ultimoFoco = document.activeElement;
+    if (typeof elementos.drawer.showModal === "function") {
+      elementos.drawer.showModal();
+    } else {
+      elementos.drawer.setAttribute("open", "");
+    }
     window.requestAnimationFrame(() => {
       elementos.drawer.classList.add("carrinho--aberto");
     });
-    document.body.style.overflow = "hidden";
     const fechar = elementos.drawer.querySelector("[data-fechar-carrinho]");
     if (fechar) fechar.focus();
   };
@@ -245,9 +250,9 @@
     if (!elementos.drawer) return;
     elementos.drawer.classList.remove("carrinho--aberto");
     window.setTimeout(() => {
-      elementos.drawer.hidden = true;
+      if (elementos.drawer.open) elementos.drawer.close();
+      if (ultimoFoco && typeof ultimoFoco.focus === "function") ultimoFoco.focus();
     }, 220);
-    document.body.style.overflow = "";
   };
 
   document.addEventListener("click", (evento) => {
@@ -292,11 +297,15 @@
     }
   });
 
-  document.addEventListener("keydown", (evento) => {
-    if (evento.key === "Escape" && elementos.drawer && !elementos.drawer.hidden) {
+  if (elementos.drawer) {
+    elementos.drawer.addEventListener("cancel", (evento) => {
+      evento.preventDefault();
       fecharCarrinho();
-    }
-  });
+    });
+    elementos.drawer.addEventListener("click", (evento) => {
+      if (evento.target === elementos.drawer) fecharCarrinho();
+    });
+  }
 
   if (elementos.form) {
     elementos.form.addEventListener("submit", (evento) => {

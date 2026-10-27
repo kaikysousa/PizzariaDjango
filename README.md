@@ -1,4 +1,4 @@
-# Sistema de Pedidos — Pizzaria
+﻿# Sistema de Pedidos — Pizzaria
 
 Aplicação Django para cardápio, carrinho, checkout e impressão de recibo em impressora térmica de 80 mm.
 
@@ -14,7 +14,7 @@ Aplicação Django para cardápio, carrinho, checkout e impressão de recibo em 
 ## Requisitos
 
 - Python 3.12+
-- Django 5.1.6
+- Django 5.2.18 (LTS)
 - Impressora térmica de 80 mm pareada no Windows (para impressão física)
 
 ## Instalação
@@ -40,7 +40,10 @@ Abra `http://127.0.0.1:8000/`. O admin fica em `/admin/`.
 | `DJANGO_ALLOWED_HOSTS` | `127.0.0.1,localhost` | hosts separados por vírgula |
 | `DJANGO_DB_PATH` | `db.sqlite3` | caminho do banco SQLite |
 | `DJANGO_SECURE_SSL_REDIRECT` | `1` | redireciona HTTP para HTTPS em produção |
-| `DJANGO_HSTS_SECONDS` | `3600` | HSTS em produção |
+| `DJANGO_HSTS_SECONDS` | `31536000` | HSTS em produção |
+| `PIZZARIA_CNPJ` | vazio | CNPJ opcional no recibo |
+
+O arquivo `.env` é carregado automaticamente pelo `python-dotenv`.
 
 ## Testes
 
@@ -50,12 +53,24 @@ python manage.py test
 
 Os gates de auditoria ficam em `GATES.md` e podem ser verificados com a skill `unlazy`.
 
+## Produção
+
+```bash
+set DJANGO_DEBUG=0
+set DJANGO_SECRET_KEY=<chave-longa-e-aleatoria>
+set DJANGO_ALLOWED_HOSTS=seu-dominio.com
+python manage.py collectstatic --noinput
+gunicorn DjangoProject.wsgi
+```
+
+Em produção, o WhiteNoise serve os arquivos estáticos coletados. Use HTTPS e um proxy reverso para o TLS.
+
 ## Impressão
 
 1. Pareie a impressora térmica no Windows e instale o driver.
 2. Abra o recibo de um pedido e clique em **Imprimir**.
 3. No diálogo do navegador, selecione a impressora e papel de 80 mm.
-4. O CSS usa `@page { size: 80mm auto; margin: 0 }`; o driver deve respeitar a largura.
+4. O CSS usa `@page { size: 80mm auto; size: 80mm 297mm; margin: 0 }`. O segundo valor é o fallback do Chrome; o driver deve respeitar a largura.
 
 O navegador não envia trabalho por Bluetooth diretamente. O pareamento e o driver são do sistema operacional.
 
@@ -73,6 +88,6 @@ scripts/              gates de auditoria
 ## Limitações
 
 - Não processa pagamento online; registra a forma escolhida.
-- Não emite documento fiscal. O CNPJ é configuração e não vem preenchido.
-- Não há autenticação de cliente; o recibo usa token UUID.
+- Não emite documento fiscal. O CNPJ é opcional e vem de `PIZZARIA_CNPJ`.
+- Não há autenticação de cliente; o recibo usa token UUID com `noindex`.
 - SQLite é o banco padrão de desenvolvimento.

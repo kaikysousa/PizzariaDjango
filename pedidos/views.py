@@ -1,10 +1,13 @@
 import json
+import uuid
 
+from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.cache import never_cache
 from django.views.decorators.http import require_POST
 
 from .forms import PedidoForm
@@ -44,15 +47,27 @@ def index(request):
 def revisar_pedido(request):
     try:
         payload = json.loads(request.POST.get("carrinho") or "")
+        if not isinstance(payload, dict):
+            raise ValueError("payload precisa ser objeto")
         itens = payload.get("itens")
         if not isinstance(itens, list) or not itens:
             raise ValueError("carrinho vazio")
         normalizados = [
-            {"ids": [int(valor) for valor in item["ids"]], "quantidade": int(item["quantidade"])}
+            {
+                "ids": [int(valor) for valor in item["ids"]],
+                "quantidade": int(item["quantidade"]),
+            }
             for item in itens
         ]
         resolver_itens(normalizados)
-    except (ValueError, TypeError, KeyError, json.JSONDecodeError, ValidationError):
+    except (
+        ValueError,
+        TypeError,
+        KeyError,
+        AttributeError,
+        json.JSONDecodeError,
+        ValidationError,
+    ):
         messages.error(request, "Não foi possível revisar o carrinho. Tente novamente.")
         return redirect("index")
 
@@ -76,28 +91,56 @@ def checkout(request):
         return redirect("index")
 
     if request.method == "POST":
+        token_sessao = request.session.pop("checkout_token", None)
+        token_enviado = request.POST.get("checkout_token")
+        if not token_sessao or token_enviado != token_sessao:
+            messages.error(request, "Este pedido já foi enviado. Confira o carrinho.")
+            return redirect("checkout")
+
         form = PedidoForm(request.POST)
         if form.is_valid():
             try:
-                pedido = criar_pedido(itens=request.session["carrinho"], **form.cleaned_data)
+                pedido = criar_pedido(
+                    itens=request.session["carrinho"], **form.cleaned_data
+                )
             except ValidationError as erro:
                 form.add_error(None, erro)
             else:
                 request.session.pop("carrinho", None)
                 return redirect("recibo", token=pedido.token)
+
+        request.session["checkout_token"] = uuid.uuid4().hex
     else:
         form = PedidoForm()
+        request.session["checkout_token"] = uuid.uuid4().hex
 
     return render(
         request,
         "pedidos/checkout.html",
-        {"itens": itens, "total": total, "form": form},
+        {
+            "itens": itens,
+            "total": total,
+            "form": form,
+            "checkout_token": request.session["checkout_token"],
+        },
     )
 
 
+@never_cache
 def recibo(request, token):
-    pedido = get_object_or_404(Pedido, token=token)
-    return render(request, "pedidos/recibo.html", {"pedido": pedido})
+    pedido = get_object_or_404(
+        Pedido.objects.prefetch_related(
+            "itens__produto", "itens__segundo_produto"
+        ),
+        token=token,
+    )
+    response = render(
+        request,
+        "pedidos/recibo.html",
+        {"pedido": pedido, "pizzaria_cnpj": settings.PIZZARIA_CNPJ},
+    )
+    response["X-Robots-Tag"] = "noindex, nofollow"
+    return response
 
 
 def carrinho_json(request):

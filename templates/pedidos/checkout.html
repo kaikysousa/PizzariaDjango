@@ -34,15 +34,26 @@
       <h2 id="dados-titulo">Dados para entrega</h2>
       <form method="post" class="formulario">
         {% csrf_token %}
+        <input type="hidden" name="checkout_token" value="{{ checkout_token }}">
         {% if form.non_field_errors %}
           <div class="alerta" role="alert">{{ form.non_field_errors }}</div>
+        {% endif %}
+        {% if form.errors %}
+          <div class="alerta" role="alert">
+            <p>Revise os campos abaixo:</p>
+            <ul>
+              {% for field in form %}
+                {% if field.errors %}<li><a href="#{{ field.id_for_label }}">{{ field.label }}</a></li>{% endif %}
+              {% endfor %}
+            </ul>
+          </div>
         {% endif %}
         {% for field in form %}
           <div class="campo {% if field.errors %}campo--erro{% endif %}">
             <label for="{{ field.id_for_label }}">{{ field.label }}</label>
             {{ field }}
             {% if field.help_text %}<p class="ajuda">{{ field.help_text }}</p>{% endif %}
-            {% for erro in field.errors %}<p class="erro">{{ erro }}</p>{% endfor %}
+            {% for erro in field.errors %}<p class="erro" id="erro-{{ field.id_for_label }}">{{ erro }}</p>{% endfor %}
           </div>
         {% endfor %}
         <button class="botao botao--primario botao--largo" type="submit">Finalizar pedido</button>
@@ -51,4 +62,11 @@
     </section>
   </div>
 </section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  const primeiroErro = document.querySelector(".campo--erro input, .campo--erro textarea, .campo--erro select");
+  if (primeiroErro) primeiroErro.focus();
+</script>
 {% endblock %}

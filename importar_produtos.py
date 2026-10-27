@@ -16,7 +16,9 @@ BASE_DIR = Path(__file__).resolve().parent
 
 
 def importar(caminho, dry_run=False):
-    from pedidos.models import Produto
+    from decimal import Decimal, InvalidOperation
+
+    from pedidos.models import Categoria, Produto
 
     caminho = Path(caminho)
     if not caminho.exists():
@@ -30,18 +32,41 @@ def importar(caminho, dry_run=False):
             raise ValueError("CSV precisa das colunas nome, preco e categoria")
 
         for linha in leitor:
+            numero = leitor.line_num
             nome = (linha.get("nome") or "").strip()
             if not nome:
                 continue
+
+            categoria = (linha.get("categoria") or "").strip().lower()
+            if categoria not in Categoria.values:
+                raise ValueError(
+                    f"Linha {numero}: categoria inválida {categoria!r}"
+                )
+
+            bruto = (linha.get("preco") or "").replace(",", ".").strip()
+            try:
+                preco = Decimal(bruto)
+            except (InvalidOperation, ValueError):
+                raise ValueError(f"Linha {numero}: preço inválido {bruto!r}")
+            if preco <= 0:
+                raise ValueError(f"Linha {numero}: preço deve ser maior que zero")
+
             dados = {
-                "preco": (linha.get("preco") or "0").replace(",", ".").strip(),
-                "categoria": (linha.get("categoria") or "").strip(),
+                "preco": preco,
+                "categoria": categoria,
                 "descricao": (linha.get("descricao") or "").strip(),
             }
+
             if dry_run:
-                print(f"DRY_RUN {nome} | {dados['preco']} | {dados['categoria']}")
+                print(f"DRY_RUN {nome} | {preco} | {categoria}")
             else:
-                Produto.objects.update_or_create(nome=nome, defaults=dados)
+                existente = Produto.objects.filter(nome__iexact=nome).first()
+                if existente:
+                    for campo, valor in dados.items():
+                        setattr(existente, campo, valor)
+                    existente.save(update_fields=list(dados))
+                else:
+                    Produto.objects.create(nome=nome, **dados)
             criados += 1
 
     return criados

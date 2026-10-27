@@ -53,6 +53,7 @@ body {
   border-bottom: 1px dashed #000;
   padding-bottom: 2mm;
   margin-bottom: 2mm;
+  break-inside: avoid;
 }
 
 .recibo__bloco p {
@@ -72,6 +73,7 @@ body {
   gap: 2mm;
   padding: 1mm 0;
   border-bottom: 1px dotted #666;
+  break-inside: avoid;
 }
 
 .recibo__itens li:last-child {
@@ -136,6 +138,6 @@ body {
   }
 
   body {
-    padding: 0;
+    padding: 0 2mm;
   }
 }

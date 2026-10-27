@@ -32,6 +32,10 @@ class CheckoutFlowTests(TestCase):
             {"carrinho": json.dumps({"itens": itens})},
         )
 
+    def _checkout_token(self):
+        self.client.get(reverse("checkout"))
+        return self.client.session["checkout_token"]
+
     def test_revisar_exige_post(self):
         response = self.client.get(reverse("revisar_pedido"))
         self.assertEqual(response.status_code, 405)
@@ -82,7 +86,8 @@ class CheckoutFlowTests(TestCase):
 
     def test_cria_pedido_e_redireciona_para_recibo(self):
         self._revisar()
-        response = self.client.post(reverse("checkout"), self.dados)
+        dados = dict(self.dados, checkout_token=self._checkout_token())
+        response = self.client.post(reverse("checkout"), dados)
         self.assertEqual(response.status_code, 302)
         self.assertEqual(Pedido.objects.count(), 1)
         pedido = Pedido.objects.get()
@@ -95,7 +100,11 @@ class CheckoutFlowTests(TestCase):
 
     def test_form_invalido_nao_cria_pedido(self):
         self._revisar()
-        dados = dict(self.dados, nome="")
+        dados = dict(
+            self.dados,
+            nome="",
+            checkout_token=self._checkout_token(),
+        )
         response = self.client.post(reverse("checkout"), dados)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(Pedido.objects.count(), 0)
@@ -103,7 +112,11 @@ class CheckoutFlowTests(TestCase):
 
     def test_total_adulterado_no_post_e_ignorado(self):
         self._revisar()
-        dados = dict(self.dados, total="0.01")
+        dados = dict(
+            self.dados,
+            total="0.01",
+            checkout_token=self._checkout_token(),
+        )
         self.client.post(reverse("checkout"), dados)
         pedido = Pedido.objects.get()
         self.assertEqual(pedido.total, Decimal("91.80"))
@@ -145,6 +158,39 @@ class CheckoutFlowTests(TestCase):
         self.assertNotIn("localStorage.clear", conteudo)
         self.assertIn("@page", self._css_recibo())
         self.assertIn("80mm", self._css_recibo())
+
+    def test_payload_nao_objeto_nao_quebra(self):
+        for payload in ("[]", "null", '"abc"', "123", "true"):
+            response = self.client.post(
+                reverse("revisar_pedido"), {"carrinho": payload}
+            )
+            self.assertRedirects(response, reverse("index"))
+
+    def test_segundo_post_nao_duplica_pedido(self):
+        self._revisar()
+        dados = dict(self.dados, checkout_token=self._checkout_token())
+        primeira = self.client.post(reverse("checkout"), dados)
+        segunda = self.client.post(reverse("checkout"), dados)
+        self.assertEqual(primeira.status_code, 302)
+        self.assertEqual(segunda.status_code, 302)
+        self.assertEqual(Pedido.objects.count(), 1)
+
+    def test_mensagem_de_carrinho_vazio_aparece(self):
+        response = self.client.get(reverse("checkout"), follow=True)
+        self.assertContains(response, "Seu carrinho está vazio")
+
+    def test_recibo_tem_cabecalhos_de_privacidade(self):
+        pedido = criar_pedido(
+            itens=[{"ids": [self.margherita.id], "quantidade": 1}],
+            nome="Ana",
+            telefone="11999999999",
+            endereco="Rua A, 1",
+        )
+        response = self.client.get(
+            reverse("recibo", kwargs={"token": pedido.token})
+        )
+        self.assertIn("noindex", response["X-Robots-Tag"])
+        self.assertTrue(response.has_header("Cache-Control"))
 
     @staticmethod
     def _css_recibo():

@@ -5,12 +5,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Pedido #{{ pedido.id }} — Pizzaria do Aislan</title>
+  <meta name="robots" content="noindex, nofollow">
   <link rel="stylesheet" href="{% static 'css/recibo.css' %}">
 </head>
 <body>
   <main class="recibo" aria-labelledby="recibo-titulo">
     <header class="recibo__cabecalho">
       <p class="recibo__marca">PIZZARIA DO AISLAN</p>
+      {% if pizzaria_cnpj %}<p>CNPJ: {{ pizzaria_cnpj }}</p>{% endif %}
       <p class="recibo__titulo" id="recibo-titulo">RECIBO</p>
       <p>Pedido #{{ pedido.id }}</p>
       <p>{{ pedido.criado_em|date:"d/m/Y H:i" }}</p>

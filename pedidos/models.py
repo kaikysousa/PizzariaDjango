@@ -1,6 +1,8 @@
 ﻿import uuid
 
+from django.core.validators import MaxValueValidator
 from django.db import models
+from django.db.models import Case, IntegerField, Value, When
 
 
 class Categoria(models.TextChoices):
@@ -19,7 +21,16 @@ class Produto(models.Model):
     disponivel = models.BooleanField(default=True)
 
     class Meta:
-        ordering = ["categoria", "nome"]
+        ordering = [
+            Case(
+                When(categoria=Categoria.PIZZA, then=Value(0)),
+                When(categoria=Categoria.PIZZA_DOCE, then=Value(1)),
+                When(categoria=Categoria.BEBIDA, then=Value(2)),
+                default=Value(3),
+                output_field=IntegerField(),
+            ),
+            "nome",
+        ]
         indexes = [models.Index(fields=["categoria", "nome"])]
 
     def __str__(self):
@@ -84,7 +95,9 @@ class ItemPedido(models.Model):
         blank=True,
         on_delete=models.PROTECT,
     )
-    quantidade = models.PositiveIntegerField()
+    quantidade = models.PositiveIntegerField(
+        validators=[MaxValueValidator(99)]
+    )
     preco_unitario = models.DecimalField(max_digits=10, decimal_places=2)
 
     class Meta:

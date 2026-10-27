@@ -4,6 +4,10 @@
   box-sizing: border-box;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -556,6 +560,22 @@ h3 {
 
 /* Carrinho */
 .carrinho {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  background: transparent;
+  color: var(--tinta);
+}
+
+.carrinho:not([open]) {
+  display: none;
+}
+
+.carrinho[open] {
   position: fixed;
   inset: 0;
   z-index: 60;
@@ -563,16 +583,8 @@ h3 {
   justify-content: flex-end;
 }
 
-.carrinho[hidden] {
-  display: none;
-}
-
-.carrinho__fundo {
-  position: absolute;
-  inset: 0;
+.carrinho::backdrop {
   background: rgba(31, 26, 23, 0.45);
-  opacity: 0;
-  transition: opacity var(--transicao);
 }
 
 .carrinho__painel {
@@ -588,12 +600,12 @@ h3 {
   box-shadow: -20px 0 50px -30px rgba(0, 0, 0, 0.5);
 }
 
-.carrinho--aberto .carrinho__fundo {
-  opacity: 1;
-}
-
 .carrinho--aberto .carrinho__painel {
   transform: translateX(0);
+}
+
+body:has(dialog[open]) {
+  overflow: hidden;
 }
 
 .carrinho__topo {
@@ -664,8 +676,8 @@ h3 {
 }
 
 .qtd button {
-  width: 34px;
-  height: 34px;
+  width: 44px;
+  height: 44px;
   border: 0;
   background: transparent;
   font-size: 1rem;
@@ -861,6 +873,21 @@ h3 {
   color: var(--erro);
   padding: 0.8rem 1rem;
   border-radius: 12px;
+}
+
+.mensagens {
+  max-width: var(--container);
+  margin: 1rem auto 0;
+  padding: 0 1.25rem;
+}
+
+.mensagens .alerta {
+  margin: 0 0 0.5rem;
+}
+
+.alerta ul {
+  margin: 0.4rem 0 0 1.1rem;
+  padding: 0;
 }
 
 .formulario__nota {

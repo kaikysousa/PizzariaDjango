@@ -52,6 +52,12 @@ class IntakeTests(TestCase):
         with self.assertRaises(ValidationError):
             resolver_itens([{"ids": [self.margherita.id], "quantidade": 0}])
 
+    def test_rejeita_quantidade_acima_do_limite(self):
+        with self.assertRaises(ValidationError):
+            resolver_itens(
+                [{"ids": [self.margherita.id], "quantidade": 1_000_000_000}]
+            )
+
     def test_rejeita_produto_inexistente(self):
         with self.assertRaises(ValidationError):
             resolver_itens([{"ids": [9999], "quantidade": 1}])

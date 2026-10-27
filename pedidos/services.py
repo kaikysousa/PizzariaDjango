@@ -9,6 +9,7 @@ from .models import Categoria, ItemPedido, Pedido, Produto
 
 CENTAVO = Decimal("0.01")
 CATEGORIAS_MEIA = {Categoria.PIZZA, Categoria.PIZZA_DOCE}
+QUANTIDADE_MAXIMA = 99
 
 
 def _preco_unitario(produto, segundo_produto=None):
@@ -37,6 +38,10 @@ def resolver_itens(itens):
 
         if quantidade < 1:
             raise ValidationError("A quantidade deve ser maior que zero.")
+        if quantidade > QUANTIDADE_MAXIMA:
+            raise ValidationError(
+                f"A quantidade máxima por item é {QUANTIDADE_MAXIMA}."
+            )
         if len(ids) not in (1, 2) or len(ids) != len(set(ids)):
             raise ValidationError("Item de pedido inválido.")
 
