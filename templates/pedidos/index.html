@@ -1,245 +1,90 @@
+{% extends "base.html" %}
 {% load static %}
-<!doctype html>
-<html lang="en">
-<head>
-    <title>Title</title>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://bootswatch.com/5/lux/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/estilos.css' %}">
 
+{% block title %}Pizzaria do Aislan — cardápio e pedidos{% endblock %}
 
-</head>
-<body>
-    <div class="container">
+{% block extra_head %}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Restaurant",
+      "name": "Pizzaria do Aislan",
+      "servesCuisine": "Pizza",
+      "priceRange": "R$",
+      "url": "{{ request.build_absolute_uri }}",
+      "hasMenu": "{{ request.build_absolute_uri }}#cardapio"
+    }
+  </script>
+{% endblock %}
 
-        <div class="row">
-            <div class="col-md-12">
-                <nav class="navbar navbar-expand-sm navbar-light bg-light">
-                    <button onclick="limpaStorage()" class="btn btn-limpa-pedido" data-html="true" type="button">
-                        Limpar pedido
-                    </button>
-                </nav>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-12">
-                <form class="card card-sm">
-                    <div class="card-body row no-gutters align-items-center">
-                        <div class="col">
-                            <input type="search" name="item_name" placeholder="Procurar produto pelo nome" class="form-control form-control-borderless">
-                        </div>
-                        <div class="col-auto">
-                            <button class="btn btn-success" type="submit">Buscar</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <div id="pedido-lista" class="mt-3 p-3 border rounded">
-            <h5>Pedido: R$<span id="total-pedido">0,00</span></h5>
-            <span id="pedido" class="pedido-info" onclick="MostraPedido(pedido)">Pedido(0)</span>
-            <ul id="pedido" class="list-unstyled"></ul>
-            <a href="/checkout" class="btn btn-primary">Fechar pedido</a>
-        </div>
-
-        <div class="filtros">
-                <form method="GET" action="">
-                    <input type="hidden" name="filtroPizza" value="pizza">
-                    <button type="submit" class="filtro-btn pizza">Filtrar: Pizzas</button>
-                </form>
-                <form method="GET" action="">
-                    <input type="hidden" name="filtroBebida" value="bebida">
-                    <button type="submit" class="filtro-btn bebida">Filtrar: Bebidas</button>
-                </form>
-                <form method="GET" action="">
-                    <input type="hidden" name="filtroDoce" value="doce">
-                    <button type="submit" class="filtro-btn doce">Filtrar: Pizzas Doces</button>
-                </form>
-                <a href="?page="><button class="filtro-btn remove">Remove a filtragem</button></a>
-        </div>
-
-
-        <div class="row">
-            {% for product in produto_objetos %}
-            <div class="col-md-3">
-                <div class="card">
-                    <div class="card-body">
-                        <div id="cat{{product.id}}" class="card-title">Categoria: {{ product.categoria }}</div>
-                        <div id="nm{{product.id}}" class="card-title">{{ product.nome }}</div>
-                        <div class="card-text" id="price{{ product.id }}">{{ product.preco }}</div>
-                        <button id="{{ product.id }}" class="btn atc btn-warning">Adicionar ao pedido</button>
-                        {% if product.categoria == "pizza" or "pizza doce" %}
-                            <button id="{{ product.id }}" class="btn atc-meia btn-secondary">Adicionar meia</button>
-                        {% endif %}
-
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-
-        <div class="row">
-            <div class="col-md-3 offset-md-4">
-                <ul class="pagination">
-                    {% if produto_objetos.has_previous %}
-                        <li class="page-item">
-                            <a class="page-link" href="?page= {{ produto_objetos.previous_page_number }}">Anterior</a>
-                        </li>
-                    {% endif %}
-                        <li class="page-item">
-                            <a class="page-link" href="?page= {{ produto_objetos.number }}">Página atual</a>
-                        </li>
-                    {% if produto_objetos.has_next %}
-                        <li class="page-item">
-                            <a class="page-link" href="?page= {{ produto_objetos.next_page_number }}">Avançar</a>
-                        </li>
-                    {% endif %}
-                </ul> R$ <span id="total-pedido">0,00</span>
-            </div>
-        </div>
+{% block content %}
+<section class="cardapio" id="cardapio" aria-labelledby="cardapio-titulo">
+  <div class="secao__cabecalho">
+    <div>
+      <h1 id="cardapio-titulo">Cardápio</h1>
+      <p class="cardapio__resumo">Entrega e retirada · Pix, dinheiro e cartão · Recibo impresso</p>
     </div>
-<!-- Optional JavaScript -->
-<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-        crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
-</body>
-<script type="text/javascript">
-    if(localStorage.getItem('pedido')==null){
-        var pedido = {};
-    }
-    else{
-        pedido = JSON.parse(localStorage.getItem('pedido'));
-    }
+    <form class="busca" method="get" role="search">
+      <label class="sr-only" for="busca-produto">Buscar produto pelo nome</label>
+      <input id="busca-produto" type="search" name="q" value="{{ busca }}" placeholder="Buscar sabor ou bebida">
+      {% if categoria_ativa %}<input type="hidden" name="categoria" value="{{ categoria_ativa }}">{% endif %}
+      <button class="botao botao--secundario" type="submit">Buscar</button>
+    </form>
+  </div>
 
-    $(document).on('click','.atc',function (){
-        console.log('O botão de adicionar ao carrinho foi clickado');
-        var item_id = this.id.toString();
-        if(pedido[item_id] != undefined){
-            quantidade = pedido[item_id][0]+1;
-            pedido[item_id][0] = quantidade;
-            pedido[item_id][2] = pedido[item_id][2] + parseFloat(document.getElementById("price"+item_id).innerHTML);
-        }
-        else{
-            quantidade = 1;
-            price = parseFloat(document.getElementById("price"+item_id).innerHTML);
-            nome = document.getElementById("nm"+item_id).innerHTML;
-            pedido[item_id]=[quantidade,nome,price];
-        }
-        console.log(pedido)
-        localStorage.setItem('pedido',JSON.stringify(pedido));
-        document.getElementById('pedido').innerHTML = "Pedido("+ Object.keys(pedido).length +")";
-        atualizarListaPedido()
+  <nav class="chips" aria-label="Filtrar por categoria">
+    <a class="chip {% if not categoria_ativa %}chip--ativo{% endif %}" href="{% querystring categoria=None %}">Tudo</a>
+    {% for valor, rotulo in categorias %}
+      <a class="chip {% if categoria_ativa == valor %}chip--ativo{% endif %}" href="{% querystring categoria=valor %}">{{ rotulo }}</a>
+    {% endfor %}
+  </nav>
 
-    });
-    atualizarListaPedido()
-    MostraPedido(pedido);
-    function MostraPedido(pedido){
-        var pedidoString = "";
-        pedidoString += "<h5>Pedido:</h5>";
+  <div class="meia-aviso" id="meia-aviso" hidden>
+    <span id="meia-texto">Metade escolhida. Escolha a segunda metade.</span>
+    <button class="botao botao--texto" type="button" data-cancelar-meia>Cancelar</button>
+  </div>
 
-        let pedidoObject = JSON.parse(localStorage.getItem("pedido"))
+  {% if grupos %}
+    {% for grupo in grupos %}
+      <section class="grupo" aria-labelledby="grupo-{{ grupo.valor|slugify }}">
+        <h3 class="grupo__titulo" id="grupo-{{ grupo.valor|slugify }}">{{ grupo.rotulo }}</h3>
+        <div class="grade">
+          {% for produto in grupo.produtos %}
+            <article class="produto" data-reveal>
+              <div class="produto__topo">
+                <span class="tag">{{ produto.get_categoria_display }}</span>
+                <span class="produto__preco">R$ {{ produto.preco|floatformat:2 }}</span>
+              </div>
+              <h3>{{ produto.nome }}</h3>
+              {% if produto.descricao %}<p class="produto__descricao">{{ produto.descricao }}</p>{% endif %}
+              <div class="produto__acoes">
+                <button
+                  class="botao botao--primario js-adicionar"
+                  type="button"
+                  data-id="{{ produto.id }}"
+                  data-nome="{{ produto.nome }}"
+                  data-preco="{{ produto.preco }}"
+                  aria-label="Adicionar {{ produto.nome }} ao pedido"
+                >Adicionar</button>
+                {% if produto.categoria == "pizza" or produto.categoria == "pizza doce" %}
+                  <button
+                    class="botao botao--fantasma js-meia"
+                    type="button"
+                    data-id="{{ produto.id }}"
+                    data-nome="{{ produto.nome }}"
+                    data-preco="{{ produto.preco }}"
+                    aria-label="Escolher metade de {{ produto.nome }}"
+                  >Meia</button>
+                {% endif %}
+              </div>
+            </article>
+          {% endfor %}
+        </div>
+      </section>
+    {% endfor %}
+  {% else %}
+    <p class="vazio">Nenhum produto encontrado. <a href="{% url 'index' %}">Limpar filtros</a>.</p>
+  {% endif %}
+</section>
 
-        for (item in pedidoObject){
-            console.log(pedidoObject[item][0])
-            console.log(pedidoObject[item][1])
-            pedidoString += pedidoObject[item][1] + " -- " + "Quantidade:" + pedidoObject[item][0] + "</br>";
-        }
-        pedidoString += "<a href='/checkout'>Fechar pedido</a>";
-        document.getElementById("pedido").setAttribute('data-content',pedidoString);
-        $('[data-toggle="popover"]').popover();
-    }
-    $(document).on('click', '.atc-meia', function () {
-        console.log('O botão de adicionar meia pizza foi clicado');
-
-        var item_id = this.id.toString();
-        var price = parseFloat(document.getElementById("price" + item_id).innerHTML) / 2; // Metade do preço
-        var nome = document.getElementById("nm" + item_id).innerHTML;
-
-        if (!sessionStorage.getItem("meiaSelecionada")) {
-            // Se ainda não há uma meia pizza selecionada, salva temporariamente
-            sessionStorage.setItem("meiaSelecionada", JSON.stringify({ id: item_id, nome: nome, price: price }));
-        } else {
-            // Se já tem uma meia selecionada, combina os sabores
-            var meiaAnterior = JSON.parse(sessionStorage.getItem("meiaSelecionada"));
-
-            // Criar um ID único para a pizza meia-meia
-            var idCombinado = meiaAnterior.id + "-" + item_id;
-            var nomeCombinado = meiaAnterior.nome + " / " + nome;
-            var precoCombinado = meiaAnterior.price + price;
-
-            if (pedido[idCombinado] != undefined) {
-                // Se já existe, apenas aumenta a quantidade
-                pedido[idCombinado][0] += 1;
-                pedido[idCombinado][2] += precoCombinado;
-            } else {
-                // Adiciona ao carrinho
-                pedido[idCombinado] = [1, nomeCombinado, precoCombinado];
-            }
-            // Atualiza LocalStorage
-            localStorage.setItem('pedido', JSON.stringify(pedido));
-
-            // Limpa a seleção de meia pizza
-            sessionStorage.removeItem("meiaSelecionada");
-
-            // Atualiza a interface
-            document.getElementById('pedido').innerHTML = "Pedido(" + Object.keys(pedido).length + ")";
-            console.log(pedido);
-            atualizarListaPedido()
-        }
-    });
-    function limpaStorage(){
-            localStorage.clear()
-            sessionStorage.clear()
-            atualizarListaPedido()
-            location.reload()
-        }
-
-    function atualizarListaPedido() {
-        let pedidoItens = document.getElementById("pedido");
-        pedidoItens.innerHTML = "";
-        let pedidoObject = JSON.parse(localStorage.getItem("pedido")) || {};
-
-        for (let item in pedidoObject) {
-            let li = document.createElement("li");
-            li.innerHTML = `${pedidoObject[item][1]} - Quantidade: ${pedidoObject[item][0]}`;
-            pedidoItens.appendChild(li);
-
-        }
-        atualizarTotal()
-    }
-
-    function filtroPizza() {
-        document.getElementById('filtroPizza').innerHTML = "pizza"
-    }
-
-    function filtroBebidas() {
-        document.getElementById('filtroBebidas').innerHTML = "doce"
-    }
-
-    function filtroDoces() {
-        document.getElementById('filtroDoces').innerHTML = "bebidas"
-    }
-            function atualizarTotal() {
-            let pedido = localStorage.getItem('pedido') ? JSON.parse(localStorage.getItem('pedido')) : {};
-            let total = 0;
-
-            for (let item in pedido) {
-                let preco = pedido[item][2];
-                total += preco;
-            }
-            document.getElementById("total-pedido").textContent = total.toFixed(2);
-        }
-
-</script>
-</html>
+{% endblock %}

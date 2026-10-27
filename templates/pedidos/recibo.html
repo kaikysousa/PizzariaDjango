@@ -1,0 +1,67 @@
+{% load static %}
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pedido #{{ pedido.id }} — Pizzaria do Aislan</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="{% static 'css/recibo.css' %}">
+</head>
+<body>
+  <main class="recibo" aria-labelledby="recibo-titulo">
+    <header class="recibo__cabecalho">
+      <p class="recibo__marca">PIZZARIA DO AISLAN</p>
+      {% if pizzaria_cnpj %}<p>CNPJ: {{ pizzaria_cnpj }}</p>{% endif %}
+      <p class="recibo__titulo" id="recibo-titulo">RECIBO</p>
+      <p>Pedido #{{ pedido.id }}</p>
+      <p>{{ pedido.criado_em|date:"d/m/Y H:i" }}</p>
+      <p>Status: {{ pedido.get_status_display }}</p>
+    </header>
+
+    <section class="recibo__bloco">
+      <p><strong>Cliente:</strong> {{ pedido.nome }}</p>
+      <p><strong>Telefone:</strong> {{ pedido.telefone }}</p>
+      <p><strong>Endereço:</strong> {{ pedido.endereco }}{% if pedido.endereco2 %} — {{ pedido.endereco2 }}{% endif %}</p>
+    </section>
+
+    <section class="recibo__bloco">
+      <ul class="recibo__itens">
+        {% for item in pedido.itens.all %}
+          <li>
+            <span>{{ item.quantidade }}x {{ item.nome }}</span>
+            <span>R$ {{ item.subtotal|floatformat:2 }}</span>
+          </li>
+        {% endfor %}
+      </ul>
+    </section>
+
+    <section class="recibo__totais">
+      <p>Total <strong>R$ {{ pedido.total|floatformat:2 }}</strong></p>
+      <p>Pagamento: {{ pedido.get_pagamento_display }}</p>
+    </section>
+
+    {% if pedido.observacoes %}
+      <section class="recibo__bloco">
+        <p><strong>Observações:</strong> {{ pedido.observacoes }}</p>
+      </section>
+    {% endif %}
+
+    <footer class="recibo__rodape">
+      <p>Obrigado pela preferência!</p>
+      <p>Volte sempre.</p>
+    </footer>
+  </main>
+
+  <div class="acoes no-print">
+    <button class="botao botao--primario" type="button" onclick="window.print()">Imprimir</button>
+    <a class="botao botao--fantasma" href="{% url 'index' %}" data-novo-pedido>Novo pedido</a>
+  </div>
+
+  <script>
+    document.querySelector("[data-novo-pedido]")?.addEventListener("click", function () {
+      try { localStorage.removeItem("carrinho:v2"); } catch (erro) { /* armazenamento indisponível */ }
+    });
+  </script>
+</body>
+</html>

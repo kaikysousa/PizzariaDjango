@@ -1,0 +1,143 @@
+@page {
+  size: 80mm auto;
+  size: 80mm 297mm;
+  margin: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 80mm;
+  margin: 0;
+  padding: 0;
+  background: #fff;
+  color: #000;
+}
+
+body {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 11px;
+  line-height: 1.35;
+  padding: 3mm;
+}
+
+.recibo {
+  width: 100%;
+}
+
+.recibo__cabecalho,
+.recibo__rodape {
+  text-align: center;
+  border-top: 1px dashed #000;
+  border-bottom: 1px dashed #000;
+  padding: 2mm 0;
+  margin-bottom: 2mm;
+}
+
+.recibo__marca {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .08em;
+}
+
+.recibo__titulo {
+  font-size: 11px;
+  letter-spacing: .2em;
+  margin-top: 1mm;
+}
+
+.recibo__bloco {
+  border-bottom: 1px dashed #000;
+  padding-bottom: 2mm;
+  margin-bottom: 2mm;
+  break-inside: avoid;
+}
+
+.recibo__bloco p {
+  margin: 0 0 1mm;
+  overflow-wrap: anywhere;
+}
+
+.recibo__itens {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.recibo__itens li {
+  display: flex;
+  justify-content: space-between;
+  gap: 2mm;
+  padding: 1mm 0;
+  border-bottom: 1px dotted #666;
+  break-inside: avoid;
+}
+
+.recibo__itens li:last-child {
+  border-bottom: 0;
+}
+
+.recibo__itens span:first-child {
+  flex: 1;
+}
+
+.recibo__totais {
+  border-top: 2px solid #000;
+  border-bottom: 2px solid #000;
+  padding: 2mm 0;
+  margin-bottom: 2mm;
+  text-align: right;
+}
+
+.recibo__totais p {
+  margin: 0 0 1mm;
+}
+
+.recibo__totais strong {
+  font-size: 14px;
+}
+
+.recibo__rodape {
+  border-bottom: 0;
+  border-top: 1px dashed #000;
+}
+
+.acoes {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin: 16px auto;
+  max-width: 80mm;
+}
+
+.acoes .botao {
+  font: 600 14px/1 "DM Sans", system-ui, sans-serif;
+  padding: 12px 18px;
+  border-radius: 999px;
+  border: 1px solid #b33a1a;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.acoes .botao--primario {
+  background: #b33a1a;
+  color: #fff;
+}
+
+.acoes .botao--fantasma {
+  background: #fff;
+  color: #b33a1a;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    padding: 0 2mm;
+  }
+}

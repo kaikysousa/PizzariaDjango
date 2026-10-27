@@ -1,180 +1,72 @@
-<!DOCTYPE html>
-<html lang="pt">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pedido - Pizzaria</title>
-    <style>
-        body {
-            font-family: "Courier New", Courier, monospace;
-            font-size: 14px;
-            text-align: center;
-            width: 80mm; /* Largura da impressora térmica */
-            margin: auto;
-        }
+{% extends "base.html" %}
+{% load static %}
 
-        .container {
-            width: 100%;
-            max-width: 80mm;
-        }
+{% block title %}Revisar pedido — Pizzaria do Aislan{% endblock %}
+{% block description %}Confira os itens, informe seus dados e finalize o pedido.{% endblock %}
 
-        .header, .footer {
-            text-align: center;
-            font-weight: bold;
-            border-top: 2px dashed black;
-            border-bottom: 2px dashed black;
-            padding: 5px 0;
-        }
+{% block content %}
+<section class="checkout" aria-labelledby="checkout-titulo">
+  <div class="checkout__cabecalho">
+    <p class="olho">Quase pronto</p>
+    <h1 id="checkout-titulo">Revisar pedido</h1>
+    <p class="checkout__apoio">Confira os itens e preencha os dados de entrega.</p>
+  </div>
 
-        .items {
-            text-align: left;
-            margin-bottom: 10px;
-        }
-
-        .items li {
-            list-style-type: none;
-            padding: 5px 0;
-            border-bottom: 1px dashed black;
-        }
-
-        .total {
-            font-weight: bold;
-            margin-top: 10px;
-        }
-
-        input, textarea {
-            width: 100%;
-            font-family: "Courier New", Courier, monospace;
-            font-size: 14px;
-            margin-bottom: 5px;
-            padding: 5px;
-            border-bottom: 2px solid black;
-        }
-
-        textarea {
-            width: 100%;
-            font-family: "Courier New", Courier, monospace;
-            font-size: 14px;
-            padding: 5px;
-            border: 1px solid black;
-            min-height: 40px; /* Define uma altura mínima */
-            overflow-y: hidden; /* Esconde a barra de rolagem */
-            resize: none; /* Impede redimensionamento manual */
-        }
-        .btn-print {
-            margin-top: 10px;
-            display: block;
-            text-align: center;
-            padding: 10px;
-            background: black;
-            color: white;
-            border: none;
-            width: 100%;
-            cursor: pointer;
-        }
-
-        @media print {
-            .btn-print {
-                display: none;
-            }
-            input, textarea {
-                border: none;
-            }
-
-        label{
-            text-align: left !important;
-            display:block;
-
-        }
-        }
-    </style>
-</head>
-<body>
-
-    <div class="container">
-        <div class="header">
-            <p>*** PIZZARIA DO AISLAN ***</p>
-            <p>CNPJ: 00.000.000/0000-00</p>
-            <p>Data: <span id="data-hora"></span></p>
-            <p>==========================</p>
-        </div>
-
-        <form id="pedido-form">
-            <label class="info_pedido" for="nome">Nome do Cliente:</label>
-            <input type="text" id="nome" name="nome">
-
-            <label class="info_pedido"  for="endereco1">Condomínio:</label>
-            <input type="text" id="endereco1" name="endereco1">
-
-            <label class="info_pedido" for="endereco2">Endereço:</label>
-            <textarea id="endereco2" name="endereco2" rows="2"></textarea>
-
-            <label class="info_pedido" for="observacoes">Observações:</label>
-            <textarea id="observacoes" name="observacoes" rows="2"></textarea>
-
-            <div class="items">
-                <ul id="item-list"></ul>
+  <div class="checkout__grade">
+    <section class="resumo" aria-labelledby="resumo-titulo">
+      <h2 id="resumo-titulo">Seu pedido</h2>
+      <ul class="resumo__itens">
+        {% for item in itens %}
+          <li>
+            <div>
+              <strong>{{ item.quantidade }}x {{ item.produto.nome }}{% if item.segundo_produto %} / {{ item.segundo_produto.nome }}{% endif %}</strong>
+              <span>R$ {{ item.preco_unitario|floatformat:2 }} cada</span>
             </div>
+            <span>R$ {{ item.subtotal|floatformat:2 }}</span>
+          </li>
+        {% endfor %}
+      </ul>
+      <p class="resumo__total">Total <strong>R$ {{ total|floatformat:2 }}</strong></p>
+      <a class="botao botao--texto" href="{% url 'index' %}">Adicionar mais itens</a>
+    </section>
 
-            <p class="total">Total: R$ <span id="total-pedido">0,00</span></p>
+    <section class="dados" aria-labelledby="dados-titulo">
+      <h2 id="dados-titulo">Dados para entrega</h2>
+      <form method="post" class="formulario">
+        {% csrf_token %}
+        <input type="hidden" name="checkout_token" value="{{ checkout_token }}">
+        {% if form.non_field_errors %}
+          <div class="alerta" role="alert">{{ form.non_field_errors }}</div>
+        {% endif %}
+        {% if form.errors %}
+          <div class="alerta" role="alert">
+            <p>Revise os campos abaixo:</p>
+            <ul>
+              {% for field in form %}
+                {% if field.errors %}<li><a href="#{{ field.id_for_label }}">{{ field.label }}</a></li>{% endif %}
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+        {% for field in form %}
+          <div class="campo {% if field.errors %}campo--erro{% endif %}">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.help_text %}<p class="ajuda">{{ field.help_text }}</p>{% endif %}
+            {% for erro in field.errors %}<p class="erro" id="erro-{{ field.id_for_label }}">{{ erro }}</p>{% endfor %}
+          </div>
+        {% endfor %}
+        <button class="botao botao--primario botao--largo" type="submit">Finalizar pedido</button>
+        <p class="formulario__nota">O pagamento é combinado na entrega. Nenhum dado de cartão é solicitado aqui.</p>
+      </form>
+    </section>
+  </div>
+</section>
+{% endblock %}
 
-            <div class="footer">
-                <p>Obrigado pela preferência!</p>
-                <p>Volte Sempre!</p>
-                <p>==========================</p>
-            </div>
-
-            <button type="button" class="btn-print" onclick="imprimirNota()">Imprimir</button>
-            <button type="button" class="btn-print" onclick="window.location.href='{% url 'index' %}'">Voltar</button>
-            <button type="button" class="btn-print"onclick="limparEVoltar()">Cancelar</button>
-        </form>
-    </div>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            let pedido = localStorage.getItem('pedido') ? JSON.parse(localStorage.getItem('pedido')) : {};
-            let total = 0;
-            let itemList = document.getElementById("item-list");
-
-            for (let item in pedido) {
-                let nome = pedido[item][1];
-                let quantidade = pedido[item][0];
-                let preco = pedido[item][2];
-                total += preco;
-
-                let itemHTML = `<li>${quantidade}x ${nome} - R$ ${preco.toFixed(2)}</li>`;
-                itemList.innerHTML += itemHTML;
-            }
-
-            document.getElementById("total-pedido").textContent = total.toFixed(2);
-            document.getElementById("data-hora").textContent = new Date().toLocaleString("pt-BR");
-        });
-
-        function imprimirNota() {
-            window.print();
-            limpaStorage()
-        }
-        function limpaStorage(){
-            localStorage.clear()
-        }
-
-        function ajustarAlturaTextarea(textarea) {
-            textarea.style.height = "auto"; // Resetar altura antes de calcular
-            textarea.style.height = textarea.scrollHeight + "px"; // Ajusta para o conteúdo
-        }
-
-        document.querySelectorAll("textarea").forEach(textarea => {
-            textarea.addEventListener("input", function () {
-                ajustarAlturaTextarea(this);
-            });
-            ajustarAlturaTextarea(textarea);// Ajusta caso já tenha conteúdo salvo
-        });
-
-        function limparEVoltar() {
-            limpaStorage(); // Limpa apenas os pedidos
-            window.location.href = "{% url 'index' %}"; // Redireciona para a página inicial
-        }
-    </script>
-
-</body>
-</html>
+{% block extra_js %}
+<script>
+  const primeiroErro = document.querySelector(".campo--erro input, .campo--erro textarea, .campo--erro select");
+  if (primeiroErro) primeiroErro.focus();
+</script>
+{% endblock %}
