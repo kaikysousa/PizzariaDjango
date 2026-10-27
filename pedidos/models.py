@@ -1,4 +1,4 @@
-import uuid
+﻿import uuid
 
 from django.db import models
 
@@ -40,11 +40,11 @@ class Pedido(models.Model):
         CARTAO = "cartao", "Cartão"
 
     token = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
-    nome = models.CharField(max_length=100)
-    telefone = models.CharField(max_length=20)
-    endereco = models.CharField(max_length=150)
-    endereco2 = models.CharField(max_length=100, blank=True)
-    observacoes = models.TextField(blank=True)
+    nome = models.CharField("nome", max_length=100)
+    telefone = models.CharField("telefone", max_length=20)
+    endereco = models.CharField("endereço", max_length=150)
+    endereco2 = models.CharField("complemento", max_length=100, blank=True)
+    observacoes = models.TextField("observações", blank=True)
     total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     status = models.CharField(
         max_length=20, choices=Status.choices, default=Status.NOVO

@@ -1,47 +1,118 @@
-from django.shortcuts import render
-from .models import Produto, Pedido
+import json
+
+from django.contrib import messages
+from django.core.exceptions import ValidationError
 from django.core.paginator import Paginator
-from pedidos.models import Pedido
-from django import forms
-# Create your views here.
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.http import require_POST
+
+from .forms import PedidoForm
+from .models import Categoria, Pedido, Produto
+from .services import criar_pedido, resolver_itens
+
 
 def index(request):
-    produto_objetos = Produto.objects.all()
+    produtos = Produto.objects.filter(disponivel=True)
 
-    item_name = request.GET.get('item_name')
-    if item_name != '' and item_name is not None:
-        produto_objetos = produto_objetos.filter(nome__icontains=item_name)
+    busca = (request.GET.get("q") or "").strip()
+    if busca:
+        produtos = produtos.filter(nome__icontains=busca)
 
-    filtro_pizza = request.GET.get('filtroPizza')
-    if filtro_pizza == "pizza":
-        produto_objetos = produto_objetos.filter(categoria__icontains="pizza")
+    categoria = (request.GET.get("categoria") or "").strip()
+    if categoria in Categoria.values:
+        produtos = produtos.filter(categoria=categoria)
+    else:
+        categoria = ""
 
-    filtro_bebida = request.GET.get('filtroBebida')
-    if filtro_bebida == "bebida":
-        produto_objetos = produto_objetos.filter(categoria__icontains="bebida")
+    page_obj = Paginator(produtos, 4).get_page(request.GET.get("page"))
 
-    filtro_doce = request.GET.get('filtroDoce')
-    if filtro_doce == "doce":
-        produto_objetos = produto_objetos.filter(categoria__icontains="doce")
+    return render(
+        request,
+        "pedidos/index.html",
+        {
+            "page_obj": page_obj,
+            "produtos": page_obj.object_list,
+            "busca": busca,
+            "categoria_ativa": categoria,
+            "categorias": Categoria.choices,
+        },
+    )
 
-    #paginação
-    paginator = Paginator(produto_objetos, 4)
-    page = request.GET.get('page')
-    page_obj = paginator.get_page(page)
-    return render(request, 'pedidos/index.html', {'produto_objetos': produto_objetos})
+
+@require_POST
+def revisar_pedido(request):
+    try:
+        payload = json.loads(request.POST.get("carrinho") or "")
+        itens = payload.get("itens")
+        if not isinstance(itens, list) or not itens:
+            raise ValueError("carrinho vazio")
+        normalizados = [
+            {"ids": [int(valor) for valor in item["ids"]], "quantidade": int(item["quantidade"])}
+            for item in itens
+        ]
+        resolver_itens(normalizados)
+    except (ValueError, TypeError, KeyError, json.JSONDecodeError, ValidationError):
+        messages.error(request, "Não foi possível revisar o carrinho. Tente novamente.")
+        return redirect("index")
+
+    request.session["carrinho"] = normalizados
+    return redirect("checkout")
+
+
+def _carrinho_da_sessao(request):
+    carrinho = request.session.get("carrinho") or []
+    try:
+        return resolver_itens(carrinho)
+    except ValidationError:
+        request.session.pop("carrinho", None)
+        return [], 0
+
 
 def checkout(request):
-    if request.method == 'POST':
-        items = request.POST.get('items',"")
-        nome = request.POST.get('nome',"")
-        endereco = request.POST.get('endereco1',"")
-        endereco2 = request.POST.get('endereco2',"")
-        observacoes = request.POST.get('observacoes',"")
-        total = request.POST.get('total',"")
+    itens, total = _carrinho_da_sessao(request)
+    if not itens:
+        messages.info(request, "Seu carrinho está vazio.")
+        return redirect("index")
 
-        pedido = Pedido(items= items, nome=nome, endereco=endereco,endereco2=endereco2,observacoes=observacoes,total=total)
-        pedido.save()
+    if request.method == "POST":
+        form = PedidoForm(request.POST)
+        if form.is_valid():
+            try:
+                pedido = criar_pedido(itens=request.session["carrinho"], **form.cleaned_data)
+            except ValidationError as erro:
+                form.add_error(None, erro)
+            else:
+                request.session.pop("carrinho", None)
+                return redirect("recibo", token=pedido.token)
+    else:
+        form = PedidoForm()
+
+    return render(
+        request,
+        "pedidos/checkout.html",
+        {"itens": itens, "total": total, "form": form},
+    )
 
 
+def recibo(request, token):
+    pedido = get_object_or_404(Pedido, token=token)
+    return render(request, "pedidos/recibo.html", {"pedido": pedido})
 
-    return render(request,'pedidos/checkout.html')
+
+def carrinho_json(request):
+    """Endpoint opcional para depuração do carrinho da sessão."""
+    itens, total = _carrinho_da_sessao(request)
+    return JsonResponse(
+        {
+            "itens": [
+                {
+                    "nome": item["produto"].nome,
+                    "quantidade": item["quantidade"],
+                    "subtotal": str(item["subtotal"]),
+                }
+                for item in itens
+            ],
+            "total": str(total),
+        }
+    )

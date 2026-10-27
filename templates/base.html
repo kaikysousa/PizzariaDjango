@@ -1,0 +1,61 @@
+{% load static %}
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Pizzaria do Aislan — cardápio e pedidos{% endblock %}</title>
+  <meta name="description" content="{% block description %}Monte sua pizza, escolha bebidas e finalize o pedido com recibo de 80 mm.{% endblock %}">
+  <meta name="theme-color" content="#b33a1a">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/tokens.css' %}">
+  <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+  <a class="pular" href="#conteudo">Pular para o conteúdo</a>
+
+  <header class="topo">
+    <div class="topo__interno">
+      <a class="marca" href="{% url 'index' %}" aria-label="Pizzaria do Aislan — início">
+        <svg class="marca__icone" viewBox="0 0 48 48" aria-hidden="true">
+          <path d="M24 5 43 40a3 3 0 0 1-4 4L24 35 9 44a3 3 0 0 1-4-4Z" fill="currentColor" opacity=".16"/>
+          <path d="M24 5 43 40a3 3 0 0 1-4 4L24 35 9 44a3 3 0 0 1-4-4Z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/>
+          <circle cx="24" cy="24" r="2.6" fill="currentColor"/>
+          <circle cx="18" cy="35" r="2.2" fill="currentColor"/>
+          <circle cx="30" cy="35" r="2.2" fill="currentColor"/>
+        </svg>
+        <span class="marca__texto">Pizzaria <strong>do Aislan</strong></span>
+      </a>
+
+      <nav class="topo__nav" aria-label="Principal">
+        <a href="{% url 'index' %}#cardapio">Cardápio</a>
+        <a href="{% url 'index' %}#como-funciona">Como funciona</a>
+      </nav>
+
+      <a class="botao-carrinho" href="{% url 'index' %}#carrinho" data-abrir-carrinho>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.6L21 8H6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="20" r="1.4" fill="currentColor"/><circle cx="18" cy="20" r="1.4" fill="currentColor"/></svg>
+        <span>Pedido</span>
+        <span class="contador" data-carrinho-contador hidden>0</span>
+      </a>
+    </div>
+  </header>
+
+  <main id="conteudo">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="rodape">
+    <div class="rodape__interno">
+      <p><strong>Pizzaria do Aislan</strong> — cardápio, pedidos e recibo de 80 mm.</p>
+      <p class="rodape__miudo">Feito com Django. Preços em reais.</p>
+    </div>
+  </footer>
+
+  <script src="{% static 'js/carrinho.js' %}" defer></script>
+  <script src="{% static 'js/motion.js' %}" defer></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -152,3 +152,7 @@ PROMPT-*.md
 gunicorn-error-log
 templates/pedidos/index.html.save
 
+
+# Firecrawl local
+.firecrawl/
+
