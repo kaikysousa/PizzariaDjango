@@ -146,3 +146,9 @@ GATES.md
 .unlazy/
 PROMPT-*.md
 
+
+# Artefatos locais/IDE
+.idea/
+gunicorn-error-log
+templates/pedidos/index.html.save
+
