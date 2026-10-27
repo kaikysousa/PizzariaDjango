@@ -4,7 +4,6 @@ import uuid
 from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import ValidationError
-from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.cache import never_cache
@@ -28,14 +27,24 @@ def index(request):
     else:
         categoria = ""
 
-    page_obj = Paginator(produtos, 4).get_page(request.GET.get("page"))
+    produtos = list(produtos)
+
+    grupos = [
+        {
+            "valor": valor,
+            "rotulo": rotulo,
+            "produtos": [produto for produto in produtos if produto.categoria == valor],
+        }
+        for valor, rotulo in Categoria.choices
+    ]
+    grupos = [grupo for grupo in grupos if grupo["produtos"]]
 
     return render(
         request,
         "pedidos/index.html",
         {
-            "page_obj": page_obj,
-            "produtos": page_obj.object_list,
+            "grupos": grupos,
+            "produtos": produtos,
             "busca": busca,
             "categoria_ativa": categoria,
             "categorias": Categoria.choices,

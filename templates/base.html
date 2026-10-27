@@ -24,19 +24,11 @@
   <header class="topo">
     <div class="topo__interno">
       <a class="marca" href="{% url 'index' %}" aria-label="Pizzaria do Aislan — início">
-        <svg class="marca__icone" viewBox="0 0 48 48" aria-hidden="true">
-          <path d="M24 5 43 40a3 3 0 0 1-4 4L24 35 9 44a3 3 0 0 1-4-4Z" fill="currentColor" opacity=".16"/>
-          <path d="M24 5 43 40a3 3 0 0 1-4 4L24 35 9 44a3 3 0 0 1-4-4Z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/>
-          <circle cx="24" cy="24" r="2.6" fill="currentColor"/>
-          <circle cx="18" cy="35" r="2.2" fill="currentColor"/>
-          <circle cx="30" cy="35" r="2.2" fill="currentColor"/>
-        </svg>
         <span class="marca__texto">Pizzaria <strong>do Aislan</strong></span>
       </a>
 
       <nav class="topo__nav" aria-label="Principal">
         <a href="{% url 'index' %}#cardapio">Cardápio</a>
-        <a href="{% url 'index' %}#como-funciona">Como funciona</a>
       </nav>
 
       <a class="botao-carrinho" href="{% url 'index' %}#carrinho" data-abrir-carrinho aria-label="Abrir pedido">
@@ -82,8 +74,15 @@
 
   <footer class="rodape">
     <div class="rodape__interno">
-      <p><strong>Pizzaria do Aislan</strong> — cardápio, pedidos e recibo de 80 mm.</p>
-      <p class="rodape__miudo">Feito com Django. Preços em reais.</p>
+      <p><strong>Pizzaria do Aislan</strong></p>
+      {% if pizzaria.endereco or pizzaria.telefone or pizzaria.horario %}
+        <p class="rodape__dados">
+          {% if pizzaria.endereco %}<span>{{ pizzaria.endereco }}</span>{% endif %}
+          {% if pizzaria.telefone %}<span>Tel. {{ pizzaria.telefone }}</span>{% endif %}
+          {% if pizzaria.horario %}<span>{{ pizzaria.horario }}</span>{% endif %}
+        </p>
+      {% endif %}
+      <p class="rodape__miudo">Entrega e retirada. Pagamento em dinheiro, Pix ou cartão.{% if pizzaria.cnpj %} CNPJ {{ pizzaria.cnpj }}.{% endif %}</p>
     </div>
   </footer>
 

@@ -18,33 +18,11 @@
 {% endblock %}
 
 {% block content %}
-<section class="hero" aria-labelledby="hero-titulo">
-  <div class="hero__texto">
-    <p class="olho">Cardápio da casa</p>
-    <h1 id="hero-titulo">Sua pizza,<br><em>do seu jeito.</em></h1>
-    <p class="hero__apoio">Escolha os sabores, monte o pedido e feche a conta em poucos toques. A nota sai em 80 mm, pronta para a térmica.</p>
-    <div class="hero__acoes">
-      <a class="botao botao--primario" href="#cardapio">Ver cardápio</a>
-      <a class="botao botao--fantasma" href="#como-funciona">Como funciona</a>
-    </div>
-  </div>
-  <div class="hero__arte" aria-hidden="true">
-    <div class="pizza">
-      <span class="pizza__fatia pizza__fatia--1"></span>
-      <span class="pizza__fatia pizza__fatia--2"></span>
-      <span class="pizza__fatia pizza__fatia--3"></span>
-      <span class="pizza__fatia pizza__fatia--4"></span>
-      <span class="pizza__fatia pizza__fatia--5"></span>
-      <span class="pizza__fatia pizza__fatia--6"></span>
-    </div>
-  </div>
-</section>
-
 <section class="cardapio" id="cardapio" aria-labelledby="cardapio-titulo">
   <div class="secao__cabecalho">
     <div>
-      <p class="olho">Escolha com calma</p>
-      <h2 id="cardapio-titulo">Cardápio</h2>
+      <h1 id="cardapio-titulo">Cardápio</h1>
+      <p class="cardapio__resumo">Entrega e retirada · Pix, dinheiro e cartão · Recibo impresso</p>
     </div>
     <form class="busca" method="get" role="search">
       <label class="sr-only" for="busca-produto">Buscar produto pelo nome</label>
@@ -55,9 +33,9 @@
   </div>
 
   <nav class="chips" aria-label="Filtrar por categoria">
-    <a class="chip {% if not categoria_ativa %}chip--ativo{% endif %}" href="{% querystring categoria=None page=None %}">Tudo</a>
+    <a class="chip {% if not categoria_ativa %}chip--ativo{% endif %}" href="{% querystring categoria=None %}">Tudo</a>
     {% for valor, rotulo in categorias %}
-      <a class="chip {% if categoria_ativa == valor %}chip--ativo{% endif %}" href="{% querystring categoria=valor page=None %}">{{ rotulo }}</a>
+      <a class="chip {% if categoria_ativa == valor %}chip--ativo{% endif %}" href="{% querystring categoria=valor %}">{{ rotulo }}</a>
     {% endfor %}
   </nav>
 
@@ -66,61 +44,47 @@
     <button class="botao botao--texto" type="button" data-cancelar-meia>Cancelar</button>
   </div>
 
-  <div class="grade" id="grade-produtos">
-    {% for produto in produtos %}
-      <article class="produto" data-reveal>
-        <div class="produto__topo">
-          <span class="tag">{{ produto.get_categoria_display }}</span>
-          <span class="produto__preco">R$ {{ produto.preco|floatformat:2 }}</span>
+  {% if grupos %}
+    {% for grupo in grupos %}
+      <section class="grupo" aria-labelledby="grupo-{{ grupo.valor|slugify }}">
+        <h3 class="grupo__titulo" id="grupo-{{ grupo.valor|slugify }}">{{ grupo.rotulo }}</h3>
+        <div class="grade">
+          {% for produto in grupo.produtos %}
+            <article class="produto" data-reveal>
+              <div class="produto__topo">
+                <span class="tag">{{ produto.get_categoria_display }}</span>
+                <span class="produto__preco">R$ {{ produto.preco|floatformat:2 }}</span>
+              </div>
+              <h3>{{ produto.nome }}</h3>
+              {% if produto.descricao %}<p class="produto__descricao">{{ produto.descricao }}</p>{% endif %}
+              <div class="produto__acoes">
+                <button
+                  class="botao botao--primario js-adicionar"
+                  type="button"
+                  data-id="{{ produto.id }}"
+                  data-nome="{{ produto.nome }}"
+                  data-preco="{{ produto.preco }}"
+                  aria-label="Adicionar {{ produto.nome }} ao pedido"
+                >Adicionar</button>
+                {% if produto.categoria == "pizza" or produto.categoria == "pizza doce" %}
+                  <button
+                    class="botao botao--fantasma js-meia"
+                    type="button"
+                    data-id="{{ produto.id }}"
+                    data-nome="{{ produto.nome }}"
+                    data-preco="{{ produto.preco }}"
+                    aria-label="Escolher metade de {{ produto.nome }}"
+                  >Meia</button>
+                {% endif %}
+              </div>
+            </article>
+          {% endfor %}
         </div>
-        <h3>{{ produto.nome }}</h3>
-        {% if produto.descricao %}<p class="produto__descricao">{{ produto.descricao }}</p>{% endif %}
-        <div class="produto__acoes">
-          <button
-            class="botao botao--primario js-adicionar"
-            type="button"
-            data-id="{{ produto.id }}"
-            data-nome="{{ produto.nome }}"
-            data-preco="{{ produto.preco }}"
-            aria-label="Adicionar {{ produto.nome }} ao pedido"
-          >Adicionar</button>
-          {% if produto.categoria == "pizza" or produto.categoria == "pizza doce" %}
-            <button
-              class="botao botao--fantasma js-meia"
-              type="button"
-              data-id="{{ produto.id }}"
-              data-nome="{{ produto.nome }}"
-              data-preco="{{ produto.preco }}"
-              aria-label="Escolher metade de {{ produto.nome }}"
-            >Meia</button>
-          {% endif %}
-        </div>
-      </article>
-    {% empty %}
-      <p class="vazio">Nenhum produto encontrado. <a href="{% url 'index' %}">Limpar filtros</a>.</p>
+      </section>
     {% endfor %}
-  </div>
-
-  {% if page_obj.paginator.num_pages > 1 %}
-    <nav class="paginacao" aria-label="Paginação do cardápio">
-      {% if page_obj.has_previous %}
-        <a class="botao botao--fantasma" href="{% querystring page=page_obj.previous_page_number %}">Anterior</a>
-      {% endif %}
-      <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
-      {% if page_obj.has_next %}
-        <a class="botao botao--fantasma" href="{% querystring page=page_obj.next_page_number %}">Próxima</a>
-      {% endif %}
-    </nav>
+  {% else %}
+    <p class="vazio">Nenhum produto encontrado. <a href="{% url 'index' %}">Limpar filtros</a>.</p>
   {% endif %}
-</section>
-
-<section class="como-funciona" id="como-funciona" aria-labelledby="como-titulo">
-  <h2 id="como-titulo">Como funciona</h2>
-  <ol class="passos">
-    <li><span>1</span><div><strong>Monte o pedido</strong><p>Adicione sabores, bebidas ou uma meia pizza.</p></div></li>
-    <li><span>2</span><div><strong>Revise e preencha</strong><p>Confira os itens e informe nome, telefone e endereço.</p></div></li>
-    <li><span>3</span><div><strong>Imprima a nota</strong><p>O recibo sai em 80 mm para a impressora térmica.</p></div></li>
-  </ol>
 </section>
 
 {% endblock %}

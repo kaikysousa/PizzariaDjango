@@ -16,15 +16,27 @@ class CatalogTests(TestCase):
                 )
             )
 
-    def test_primeira_pagina_tem_quatro_produtos(self):
+    def test_cardapio_mostra_todos_os_produtos(self):
         response = self.client.get(reverse("index"))
-        self.assertEqual(len(response.context["produtos"]), 4)
-        self.assertTrue(response.context["page_obj"].has_next())
+        self.assertEqual(len(response.context["produtos"]), 5)
+        self.assertNotIn("page_obj", response.context)
+        self.assertContains(response, "Pizza 4")
 
-    def test_segunda_pagina_tem_o_restante(self):
-        response = self.client.get(reverse("index"), {"page": 2})
-        self.assertEqual(len(response.context["produtos"]), 1)
-        self.assertFalse(response.context["page_obj"].has_next())
+    def test_agrupa_por_categoria_na_ordem_do_modelo(self):
+        response = self.client.get(reverse("index"))
+        grupos = response.context["grupos"]
+        self.assertEqual(
+            [grupo["valor"] for grupo in grupos], ["pizza", "bebida"]
+        )
+        self.assertEqual(len(grupos[0]["produtos"]), 4)
+        self.assertEqual(len(grupos[1]["produtos"]), 1)
+
+    def test_categoria_sem_produto_nao_rende_secao(self):
+        response = self.client.get(reverse("index"), {"categoria": "pizza"})
+        self.assertEqual(
+            [grupo["valor"] for grupo in response.context["grupos"]], ["pizza"]
+        )
+        self.assertNotContains(response, 'id="grupo-bebida"')
 
     def test_filtro_por_categoria(self):
         response = self.client.get(reverse("index"), {"categoria": "bebida"})
@@ -35,7 +47,7 @@ class CatalogTests(TestCase):
         response = self.client.get(reverse("index"), {"q": "Pizza 3"})
         self.assertEqual(len(response.context["produtos"]), 1)
 
-    def test_filtro_sobrevive_a_paginacao(self):
+    def test_parametro_page_e_ignorado(self):
         for indice in range(6):
             Produto.objects.create(
                 nome=f"Bebida {indice}", preco="5.00", categoria=Categoria.BEBIDA
@@ -43,7 +55,13 @@ class CatalogTests(TestCase):
         response = self.client.get(
             reverse("index"), {"categoria": "bebida", "page": 2}
         )
-        self.assertContains(response, "categoria=bebida")
+        self.assertEqual(len(response.context["produtos"]), 7)
+        self.assertTrue(
+            all(
+                produto.categoria == Categoria.BEBIDA
+                for produto in response.context["produtos"]
+            )
+        )
 
     def test_busca_e_filtro_combinados(self):
         response = self.client.get(

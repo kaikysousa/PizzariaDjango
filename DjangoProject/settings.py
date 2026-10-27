@@ -89,6 +89,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'pedidos.context_processors.pizzaria',
             ],
         },
     },
@@ -182,4 +183,9 @@ except ImportError:
 
 # Dados opcionais da nota fiscal.
 PIZZARIA_CNPJ = os.environ.get('PIZZARIA_CNPJ', '')
+
+# Dados operacionais exibidos no rodapé. Vazio oculta o item.
+PIZZARIA_TELEFONE = os.environ.get('PIZZARIA_TELEFONE', '')
+PIZZARIA_ENDERECO = os.environ.get('PIZZARIA_ENDERECO', '')
+PIZZARIA_HORARIO = os.environ.get('PIZZARIA_HORARIO', '')
 
