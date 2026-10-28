@@ -1,3 +1,4 @@
 -r requirements.txt
 pypdf>=5.0
+ruff==0.17.3
 websocket-client>=1.8
