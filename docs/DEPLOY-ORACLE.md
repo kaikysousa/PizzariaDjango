@@ -71,12 +71,12 @@ A porta 22 já vem liberada.
 Imagens Ubuntu da Oracle usam `iptables-persistent`, não `ufw`.
 
 ```bash
-sudo iptables -I INPUT 6 -p tcp -m multiport --dports 80,443 -m conntrack --ctstate NEW -j ACCEPT
+sudo iptables -I INPUT 1 -p tcp -m multiport --dports 80,443 -m conntrack --ctstate NEW -j ACCEPT
 sudo netfilter-persistent save
 sudo iptables -L INPUT -n --line-numbers
 ```
 
-A regra nova precisa ficar **acima** da linha `REJECT`. Se `netfilter-persistent` não existir:
+Inserir na posição 1 funciona em qualquer imagem. A regra precisa aparecer **acima** da linha `REJECT`. Em algumas imagens `-I INPUT 6` cai depois do `REJECT` e não abre nada.
 
 ```bash
 sudo apt update && sudo apt install -y iptables-persistent
@@ -95,6 +95,40 @@ Um `connection refused` significa regra de iptables faltando. Um timeout costuma
 ```bash
 sudo apt update && sudo apt upgrade -y
 sudo apt install -y python3-venv python3-pip git nginx sqlite3
+```
+
+### 4.1 Ubuntu 20.04 ou 22.04 (Python antigo)
+
+O Django 5.2 exige Python 3.10 ou superior. Se a imagem for 20.04, ative o ESM e instale Python 3.12 com `uv`. Não compile o Python: em 952 MB isso falha por memória.
+
+```bash
+sudo pro attach SEU_TOKEN
+sudo pro enable esm-infra esm-apps
+curl -LsSf https://astral.sh/uv/install.sh | sh
+export PATH="$HOME/.local/bin:$PATH"
+uv python install 3.12
+uv python find 3.12
+```
+
+Crie o venv com o Python 3.12:
+
+```bash
+uv venv --python 3.12 .venv
+uv pip install --python .venv/bin/python -r requirements.txt
+```
+
+Sem ESM, a VM não recebe correções de segurança. O token é gratuito em https://ubuntu.com/pro.
+
+### 4.2 Swap
+
+Com 952 MB de RAM, crie swap antes de instalar qualquer coisa:
+
+```bash
+sudo fallocate -l 2G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
 ```
 
 ## 5. Código e ambiente
@@ -129,6 +163,7 @@ PIZZARIA_HORARIO=
 
 Três detalhes que quebram deploy:
 
+- `DEBUG` agora tem default `False`. Sem `.env` com `DJANGO_DEBUG`, o app sobe em modo produção.
 - `DJANGO_SECRET_KEY` é obrigatória com `DEBUG=0`. Sem ela o app não sobe.
 - `DJANGO_SECURE_SSL_REDIRECT=1` é o padrão do `settings.py` quando `DEBUG=0`. Com HTTP puro, todo acesso vira um redirecionamento para `https://` e a página não abre. Deixe `0` até o certificado existir.
 - `DJANGO_HSTS_SECONDS=0` até o HTTPS estar estável. HSTS é irreversível no navegador do visitante pelo prazo configurado.
@@ -161,8 +196,8 @@ WorkingDirectory=/home/ubuntu/pizzaria
 EnvironmentFile=/home/ubuntu/pizzaria/.env
 ExecStart=/home/ubuntu/pizzaria/.venv/bin/gunicorn DjangoProject.wsgi:application \
     --bind 127.0.0.1:8001 \
-    --workers 2 \
-    --threads 2 \
+    --workers 1 \
+    --threads 4 \
     --timeout 60 \
     --access-logfile - \
     --error-logfile -
@@ -182,7 +217,7 @@ sudo systemctl status pizzaria --no-pager
 curl -I http://127.0.0.1:8001
 ```
 
-SQLite com vários workers pode gerar `database is locked`. Dois workers e dois threads atendem bem uma pizzaria. Se aparecer o erro, ative WAL:
+SQLite com vários workers pode gerar `database is locked`. Use 1 worker e 4 threads; se ainda aparecer, ative WAL:
 
 ```bash
 sqlite3 /home/ubuntu/pizzaria/db.sqlite3 "PRAGMA journal_mode=WAL;"
@@ -193,12 +228,52 @@ sqlite3 /home/ubuntu/pizzaria/db.sqlite3 "PRAGMA journal_mode=WAL;"
 Crie `/etc/nginx/sites-available/pizzaria`:
 
 ```nginx
+map $request_method $limit_key {
+    POST $binary_remote_addr;
+    default "";
+}
+limit_req_zone $limit_key zone=post_zone:10m rate=20r/m;
+
 server {
     listen 80;
     listen [::]:80;
     server_name SEU_IP pizzaria.seudominio.com;
 
     client_max_body_size 2m;
+
+    gzip on;
+    gzip_types text/css application/javascript application/json image/svg+xml;
+    gzip_min_length 1024;
+
+    location /admin/ {
+        # Troque pelo seu IP fixo. Sem isso o admin fica aberto na internet.
+        allow SEU_IP_RESIDENCIAL;
+        allow 127.0.0.1;
+        deny all;
+        proxy_pass http://127.0.0.1:8001;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location = /carrinho/revisar/ {
+        limit_req zone=post_zone burst=10 nodelay;
+        proxy_pass http://127.0.0.1:8001;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location = /checkout/ {
+        limit_req zone=post_zone burst=10 nodelay;
+        proxy_pass http://127.0.0.1:8001;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
 
     location / {
         proxy_pass http://127.0.0.1:8001;
@@ -209,6 +284,8 @@ server {
     }
 }
 ```
+
+O `map` limita apenas POST, então navegar pelo checkout continua livre.
 
 Ative e teste:
 
