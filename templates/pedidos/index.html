@@ -47,7 +47,7 @@
   {% if grupos %}
     {% for grupo in grupos %}
       <section class="grupo" aria-labelledby="grupo-{{ grupo.valor|slugify }}">
-        <h3 class="grupo__titulo" id="grupo-{{ grupo.valor|slugify }}">{{ grupo.rotulo }}</h3>
+        <h2 class="grupo__titulo" id="grupo-{{ grupo.valor|slugify }}">{{ grupo.rotulo }}</h2>
         <div class="grade">
           {% for produto in grupo.produtos %}
             <article class="produto" data-reveal>

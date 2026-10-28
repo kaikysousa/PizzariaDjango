@@ -58,7 +58,7 @@
     <a class="botao botao--fantasma" href="{% url 'index' %}" data-novo-pedido>Novo pedido</a>
   </div>
 
-  <script>
+  <script nonce="{{ request.csp_nonce }}">
     document.querySelector("[data-novo-pedido]")?.addEventListener("click", function () {
       try { localStorage.removeItem("carrinho:v2"); } catch (erro) { /* armazenamento indisponível */ }
     });

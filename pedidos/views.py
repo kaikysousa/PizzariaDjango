@@ -118,6 +118,7 @@ def checkout(request):
                 request.session.pop("carrinho", None)
                 return redirect("recibo", token=pedido.token)
 
+        form.marcar_erros_acessiveis()
         request.session["checkout_token"] = uuid.uuid4().hex
     else:
         form = PedidoForm()

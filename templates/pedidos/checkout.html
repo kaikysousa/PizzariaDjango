@@ -53,7 +53,7 @@
             <label for="{{ field.id_for_label }}">{{ field.label }}</label>
             {{ field }}
             {% if field.help_text %}<p class="ajuda">{{ field.help_text }}</p>{% endif %}
-            {% for erro in field.errors %}<p class="erro" id="erro-{{ field.id_for_label }}">{{ erro }}</p>{% endfor %}
+            <p class="erro" id="erro-{{ field.id_for_label }}"{% if not field.errors %} hidden{% endif %}>{% for erro in field.errors %}{{ erro }}{% endfor %}</p>
           </div>
         {% endfor %}
         <button class="botao botao--primario botao--largo" type="submit">Finalizar pedido</button>
@@ -65,7 +65,7 @@
 {% endblock %}
 
 {% block extra_js %}
-<script>
+<script nonce="{{ request.csp_nonce }}">
   const primeiroErro = document.querySelector(".campo--erro input, .campo--erro textarea, .campo--erro select");
   if (primeiroErro) primeiroErro.focus();
 </script>

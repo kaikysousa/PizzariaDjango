@@ -10,9 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
-from pathlib import Path
 import os
 import secrets
+from pathlib import Path
 
 from django.core.exceptions import ImproperlyConfigured
 from dotenv import load_dotenv
@@ -32,7 +32,7 @@ def env_bool(name, default=False):
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env_bool("DJANGO_DEBUG", True)
+DEBUG = env_bool("DJANGO_DEBUG", False)
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "")
@@ -66,6 +66,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'pedidos.middleware.ContentSecurityPolicyMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -177,7 +178,7 @@ if not DEBUG:
     }
 
 try :
-    from DjangoProject.local_settings import *
+    from DjangoProject.local_settings import *  # noqa: F403
 except ImportError:
     ...
 

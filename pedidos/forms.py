@@ -24,6 +24,16 @@ class PedidoForm(forms.ModelForm):
             "observacoes": forms.Textarea(attrs={"rows": 3}),
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for nome, field in self.fields.items():
+            field.widget.attrs.setdefault("aria-describedby", f"erro-id_{nome}")
+
+    def marcar_erros_acessiveis(self):
+        for nome, field in self.fields.items():
+            if self.errors.get(nome):
+                field.widget.attrs["aria-invalid"] = "true"
+
     def clean_telefone(self):
         telefone = "".join(
             caractere for caractere in self.cleaned_data["telefone"] if caractere.isdigit()

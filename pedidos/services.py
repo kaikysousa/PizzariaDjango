@@ -1,6 +1,6 @@
 """Regras de entrada de pedido: validação, preço e persistência."""
 
-from decimal import Decimal, ROUND_HALF_UP
+from decimal import ROUND_HALF_UP, Decimal
 
 from django.core.exceptions import ValidationError
 from django.db import transaction
