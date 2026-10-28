@@ -51,6 +51,8 @@ O arquivo `.env` é carregado automaticamente pelo `python-dotenv`.
 python manage.py test
 ```
 
+Com `DJANGO_DEBUG=0` no ambiente, rode `DJANGO_DEBUG=1 python manage.py test`. A suíte depende do modo de desenvolvimento: em produção o `collectstatic` exige manifest e o `SECURE_SSL_REDIRECT` responde 301.
+
 Os gates de auditoria ficam em `GATES.md` e podem ser verificados com a skill `unlazy`.
 
 ## Produção
