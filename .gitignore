@@ -147,6 +147,11 @@ GATES.md
 PROMPT-*.md
 
 
+# Chaves SSH locais
+*.key
+*.pem
+ssh-key-*.pub
+
 # Artefatos locais/IDE
 .idea/
 gunicorn-error-log

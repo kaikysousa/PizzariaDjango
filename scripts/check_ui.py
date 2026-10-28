@@ -1,7 +1,6 @@
 """Sobe um servidor temporário e roda o probe de UI como gate."""
 
 import os
-import shutil
 import subprocess
 import sys
 import tempfile

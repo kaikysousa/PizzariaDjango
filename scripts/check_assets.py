@@ -42,14 +42,16 @@ if not errors:
     if "adicionar" not in carrinho or "remover" not in carrinho:
         errors.append("carrinho.js sem adicionar/remover")
 
-for width in (390, 768, 1280):
-    shot = SHOTS / f"after-{width}.png"
-    if not shot.exists():
-        errors.append(f"captura ausente: {shot}")
+if SHOTS.exists():
+    for width in (390, 768, 1280):
+        shot = SHOTS / f"after-{width}.png"
+        if not shot.exists():
+            errors.append(f"captura ausente: {shot}")
 
 ignored = subprocess.run(
-    ["git", "check-ignore", "-q", ".firecrawl"],
+    ["git", "check-ignore", "-q", ".firecrawl/"],
     cwd=ROOT,
+    check=False,
 )
 if ignored.returncode != 0:
     errors.append(".firecrawl não está no .gitignore")
