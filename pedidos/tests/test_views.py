@@ -135,6 +135,21 @@ class CheckoutFlowTests(TestCase):
         self.assertContains(response, f"Pedido #{pedido.id}")
         self.assertContains(response, "Margherita")
 
+    def test_recibo_nao_usa_handler_inline_bloqueado_por_csp(self):
+        pedido = criar_pedido(
+            itens=[{"ids": [self.margherita.id], "quantidade": 1}],
+            nome="Ana",
+            telefone="11999999999",
+            endereco="Rua A, 1",
+        )
+        response = self.client.get(
+            reverse("recibo", kwargs={"token": pedido.token})
+        )
+        html = response.content.decode()
+        self.assertNotIn("onclick=", html)
+        self.assertIn('id="btn-imprimir"', html)
+        self.assertIn("window.print", html)
+
     def test_recibo_com_token_errado_da_404(self):
         response = self.client.get(
             reverse(

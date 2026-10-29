@@ -54,11 +54,14 @@
   </main>
 
   <div class="acoes no-print">
-    <button class="botao botao--primario" type="button" onclick="window.print()">Imprimir</button>
+    <button class="botao botao--primario" type="button" id="btn-imprimir">Imprimir</button>
     <a class="botao botao--fantasma" href="{% url 'index' %}" data-novo-pedido>Novo pedido</a>
   </div>
 
   <script nonce="{{ request.csp_nonce }}">
+    document.getElementById("btn-imprimir")?.addEventListener("click", function () {
+      window.print();
+    });
     document.querySelector("[data-novo-pedido]")?.addEventListener("click", function () {
       try { localStorage.removeItem("carrinho:v2"); } catch (erro) { /* armazenamento indisponível */ }
     });
