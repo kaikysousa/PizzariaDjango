@@ -20,19 +20,37 @@
   let meia = null;
   let toastTimer = null;
 
-  const ler = () => {
-    try {
-      return JSON.parse(localStorage.getItem(CHAVE)) || {};
-    } catch (erro) {
-      return {};
-    }
-  };
-
   const salvar = (carrinho) => {
     try {
       localStorage.setItem(CHAVE, JSON.stringify(carrinho));
     } catch (erro) {
       /* modo privado pode bloquear o armazenamento */
+    }
+  };
+
+  const ler = () => {
+    try {
+      const bruto = JSON.parse(localStorage.getItem(CHAVE)) || {};
+      const carrinho = {};
+      let descartou = false;
+      for (const [chave, item] of Object.entries(bruto)) {
+        const preco = Number(item?.preco);
+        const quantidade = Number(item?.quantidade);
+        if (
+          !Array.isArray(item?.ids) ||
+          !Number.isFinite(preco) ||
+          !Number.isInteger(quantidade) ||
+          quantidade < 1
+        ) {
+          descartou = true;
+          continue;
+        }
+        carrinho[chave] = { ...item, preco, quantidade };
+      }
+      if (descartou) salvar(carrinho);
+      return carrinho;
+    } catch (erro) {
+      return {};
     }
   };
 

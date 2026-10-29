@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static %}
+{% load static l10n %}
 
 {% block title %}Pizzaria do Aislan — cardápio e pedidos{% endblock %}
 
@@ -63,7 +63,7 @@
                   type="button"
                   data-id="{{ produto.id }}"
                   data-nome="{{ produto.nome }}"
-                  data-preco="{{ produto.preco }}"
+                  data-preco="{{ produto.preco|unlocalize }}"
                   aria-label="Adicionar {{ produto.nome }} ao pedido"
                 >Adicionar</button>
                 {% if produto.categoria == "pizza" or produto.categoria == "pizza doce" %}
@@ -72,7 +72,7 @@
                     type="button"
                     data-id="{{ produto.id }}"
                     data-nome="{{ produto.nome }}"
-                    data-preco="{{ produto.preco }}"
+                    data-preco="{{ produto.preco|unlocalize }}"
                     aria-label="Escolher metade de {{ produto.nome }}"
                   >Meia</button>
                 {% endif %}

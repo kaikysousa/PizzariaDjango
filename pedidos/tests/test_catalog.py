@@ -22,6 +22,11 @@ class CatalogTests(TestCase):
         self.assertNotIn("page_obj", response.context)
         self.assertContains(response, "Pizza 4")
 
+    def test_preco_no_html_nao_e_localizado(self):
+        response = self.client.get(reverse("index"))
+        self.assertContains(response, 'data-preco="40.00"')
+        self.assertNotContains(response, 'data-preco="40,00"')
+
     def test_agrupa_por_categoria_na_ordem_do_modelo(self):
         response = self.client.get(reverse("index"))
         grupos = response.context["grupos"]
