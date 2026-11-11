@@ -1,6 +1,7 @@
 """Formulários do painel de pedidos."""
 
 from django import forms
+from django.db.models import Q
 
 from enderecos.models import Condominio
 from pedidos.models import Pedido, Produto
@@ -75,7 +76,12 @@ class PedidoBalcaoForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["condominio"].queryset = Condominio.objects.filter(ativo=True)
+        condominios = Condominio.objects.filter(ativo=True)
+        if self.instance and self.instance.pk and self.instance.condominio_id:
+            condominios = Condominio.objects.filter(
+                Q(ativo=True) | Q(pk=self.instance.condominio_id)
+            )
+        self.fields["condominio"].queryset = condominios
         self.fields["condominio"].required = False
         self.fields["condominio"].empty_label = "Sem condomínio"
         self.fields["endereco"].required = False
@@ -112,6 +118,12 @@ class PedidoBalcaoForm(forms.ModelForm):
         if not endereco:
             self.add_error(
                 "endereco", "Informe o endereço ou escolha um condomínio."
+            )
+        elif len(endereco) > 255:
+            self.add_error(
+                "endereco",
+                "Endereço muito longo (máximo 255 caracteres). "
+                "Ajuste o condomínio ou preencha manualmente.",
             )
         cleaned["endereco"] = endereco
         return cleaned

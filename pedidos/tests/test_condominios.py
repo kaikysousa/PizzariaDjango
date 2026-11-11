@@ -107,7 +107,7 @@ class CondominioCheckoutTests(TestCase):
         self.assertIn('data-bairro="Centro"', html)
         self.assertIn('data-cidade="São Paulo"', html)
         self.assertIn('data-cep="01000-000"', html)
-        self.assertIn('data-referencia="Portaria azul"', html)
+        self.assertNotIn("data-referencia=", html)
 
     def test_form_salva_condominio(self):
         self._enviar(condominio=self.condominio.pk)

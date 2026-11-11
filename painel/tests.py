@@ -356,6 +356,23 @@ class EditarPedidoTests(PainelBaseTestCase):
         self.assertEqual(resposta.status_code, 200)
         self.assertContains(resposta, "Margherita")
 
+    def test_edicao_preserva_condominio_inativo(self):
+        pedido = self._criar_pendente()
+        pedido.condominio = self.condominio
+        pedido.save(update_fields=["condominio"])
+        self.condominio.ativo = False
+        self.condominio.save(update_fields=["ativo"])
+
+        resposta = self.client.get(
+            reverse("painel_pedido_editar", args=[pedido.pk])
+        )
+
+        self.assertEqual(resposta.status_code, 200)
+        self.assertIn(
+            self.condominio,
+            resposta.context["form"].fields["condominio"].queryset,
+        )
+
     def test_edicao_mostra_itens_em_leitura_apos_preparando(self):
         pedido = self._criar_pendente()
         pedido = alterar_status(pedido, Pedido.Status.APROVADO, usuario=self.staff)

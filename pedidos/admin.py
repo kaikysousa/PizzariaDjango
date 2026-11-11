@@ -61,6 +61,10 @@ class PedidoAdmin(admin.ModelAdmin):
     readonly_fields = (
         "token",
         "total",
+        "status",
+        "aprovado_por",
+        "aprovado_em",
+        "motivo_cancelamento",
         "legacy_items",
         "criado_em",
         "atualizado_em",

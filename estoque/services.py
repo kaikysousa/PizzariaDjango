@@ -70,8 +70,13 @@ def registrar_movimento(
     usuario=None,
 ):
     """Registra entrada, saída, ajuste ou perda manual."""
-    if tipo not in MovimentoEstoque.Tipo.values:
-        raise ValidationError("Tipo de movimento inválido.")
+    tipos_manuais = {
+        MovimentoEstoque.Tipo.ENTRADA,
+        MovimentoEstoque.Tipo.AJUSTE,
+        MovimentoEstoque.Tipo.PERDA,
+    }
+    if tipo not in tipos_manuais:
+        raise ValidationError("Tipo de movimento não permitido manualmente.")
 
     quantidade = _quantizar(_decimal(quantidade))
     if quantidade == ZERO:

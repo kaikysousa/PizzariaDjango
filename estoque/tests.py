@@ -199,6 +199,20 @@ class EstoquePedidoTests(TestCase):
         self.assertEqual(self.mussarela.estoque_atual, Decimal("1250"))
         self.assertEqual(movimento.saldo_apos, Decimal("1250"))
 
+    def test_movimento_manual_rejeita_saida_e_estorno(self):
+        for tipo in (
+            MovimentoEstoque.Tipo.SAIDA,
+            MovimentoEstoque.Tipo.ESTORNO,
+        ):
+            with self.subTest(tipo=tipo):
+                with self.assertRaises(ValidationError):
+                    registrar_movimento(
+                        self.mussarela,
+                        tipo,
+                        "1",
+                        motivo="Tentativa manual",
+                    )
+
     def test_abaixo_minimo(self):
         self.assertFalse(self.mussarela.abaixo_minimo)
 

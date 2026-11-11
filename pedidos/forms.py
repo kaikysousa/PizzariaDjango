@@ -29,7 +29,6 @@ class CondominioSelect(forms.Select):
                     "data-bairro": condominio.bairro,
                     "data-cidade": condominio.cidade,
                     "data-cep": condominio.cep,
-                    "data-referencia": condominio.referencia,
                 }
             )
         return option
@@ -101,6 +100,12 @@ class PedidoForm(forms.ModelForm):
         if not endereco:
             self.add_error(
                 "endereco", "Informe o endereço ou selecione um condomínio."
+            )
+        elif len(endereco) > 255:
+            self.add_error(
+                "endereco",
+                "Endereço muito longo (máximo 255 caracteres). "
+                "Ajuste o condomínio ou preencha manualmente.",
             )
         else:
             cleaned_data["endereco"] = endereco
