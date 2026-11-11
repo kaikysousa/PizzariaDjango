@@ -17,6 +17,8 @@
       <p class="texto-suave">
         {% if pedido and not itens_editaveis %}
           Os itens deste pedido já foram travados. Só os dados de cliente e entrega podem mudar.
+        {% elif pedido %}
+          O total é recalculado pelo servidor ao salvar. Itens só podem mudar até o preparo.
         {% else %}
           O pedido nasce aprovado e com origem balcão. O total é calculado pelo servidor.
         {% endif %}

@@ -30,7 +30,7 @@ from .forms import (
 )
 
 ItemFormSet = formset_factory(
-    ItemPedidoForm, extra=2, max_num=20, validate_max=True
+    ItemPedidoForm, extra=4, max_num=20, validate_max=True
 )
 
 ACOES_STATUS = {
