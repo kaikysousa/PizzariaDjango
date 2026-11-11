@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path
+from django.urls import include, path
 
 from pedidos import views
 
@@ -11,6 +11,7 @@ urlpatterns = [
     path("carrinho/revisar/", views.revisar_pedido, name="revisar_pedido"),
     path("checkout/", views.checkout, name="checkout"),
     path("pedido/<uuid:token>/recibo/", views.recibo, name="recibo"),
+    path("painel/", include("painel.urls")),
 ]
 
 if settings.DEBUG:
