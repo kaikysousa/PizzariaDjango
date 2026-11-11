@@ -140,4 +140,3 @@ scripts/              gates de auditoria
 - Não emite documento fiscal. O CNPJ é opcional e vem de `PIZZARIA_CNPJ`.
 - Não há autenticação de cliente; o recibo usa token UUID com `noindex`.
 - SQLite é o banco padrão de desenvolvimento.
-
