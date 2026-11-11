@@ -545,7 +545,7 @@ de desenvolvimento.
 
 | Comando | O que cobre | Resultado esperado |
 | --- | --- | --- |
-| `python manage.py test` | Catálogo, carrinho, checkout, condomínios, status, painel, estoque, recibo, segurança e o fluxo E2E completo. | `Ran 160 tests` e `OK`. |
+| `python manage.py test` | Catálogo, carrinho, checkout, condomínios, status, painel, estoque, recibo, segurança e o fluxo E2E completo. | `Ran 169 tests` e `OK`. |
 | `python manage.py makemigrations --check --dry-run` | Detecta modelo alterado sem migração. | `No changes detected`. |
 | `python manage.py check` | Configuração e consistência do projeto. | `System check identified no issues (0 silenced).` |
 | `ruff check .` | Estilo e erros estáticos de Python. | `All checks passed!`. |
@@ -559,7 +559,7 @@ Distribuição da suíte nesta branch:
 | `enderecos` | 3 | endereço completo e ordenação de condomínios |
 | `estoque` | 27 | baixa, meia pizza, estorno, edição, ajustes manuais, admin |
 | `painel` | 28 | autenticação, dashboard, lista, criação, edição e ações |
-| **Total** | **160** | |
+| **Total** | **169** | |
 
 O gate do recibo precisa de Chrome ou Edge e das dependências de desenvolvimento
 (`pypdf` e `websocket-client`, já incluídas em `requirements-dev.txt`). Ele usa as portas
@@ -717,7 +717,7 @@ Marque cada item depois de conferir a evidência.
 
 ### Qualidade
 
-- [ ] `python manage.py test` com 160 testes e `OK`.
+- [ ] `python manage.py test` com 169 testes e `OK`.
 - [ ] `python manage.py makemigrations --check --dry-run` com `No changes detected`.
 - [ ] `python manage.py check` sem issues.
 - [ ] `ruff check .` com `All checks passed!`.
