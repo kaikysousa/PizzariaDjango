@@ -18,6 +18,12 @@ Django application for menu browsing, cart, checkout, and receipt printing on an
 
 <img src="docs/screenshots/recibo.png" alt="80 mm receipt" width="300">
 
+### Owner panel
+
+![Owner dashboard](docs/screenshots/gestao-dashboard.png)
+
+![Order list](docs/screenshots/gestao-pedidos.png)
+
 ## Features
 
 - Menu with search, category filter, and pagination.
