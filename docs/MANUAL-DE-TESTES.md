@@ -486,7 +486,7 @@ Regras de estoque:
 - nenhuma linha estoura a largura ou é cortada;
 - a marca é maior que o corpo, e o total é o maior texto;
 - a largura da página é 80 mm e o conteúdo cabe em uma página;
-- pedidos com mais de 12 itens usam a página estendida de 420 mm; acima de 24 itens pode haver mais de uma página;
+- pedidos com mais de 12 itens usam a página estendida de 600 mm; com mais de 30 itens ou observação longa, usam a página de 1500 mm;
 - o texto continua legível: corpo 13 px, marca 16 px, título 13 px, total 17 px;
 - a margem lateral de impressão é de 2 mm.
 

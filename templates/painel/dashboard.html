@@ -1,6 +1,6 @@
 {% extends "painel/base.html" %}
 
-{% block title %}Dashboard â€” Painel{% endblock %}
+{% block title %}Dashboard — Painel{% endblock %}
 
 {% block content %}
   <div class="pagina-cabecalho">
@@ -43,7 +43,7 @@
           {% for pedido in pendentes %}
             <li>
               <a class="lista-compacta__principal" href="{% url 'painel_pedido_detalhe' pedido.pk %}">
-                <strong>#{{ pedido.pk }} â€” {{ pedido.nome }}</strong>
+                <strong>#{{ pedido.pk }} — {{ pedido.nome }}</strong>
                 <span class="texto-suave">{{ pedido.telefone }}</span>
               </a>
               <span class="lista-compacta__meta">
@@ -67,7 +67,7 @@
           {% for pedido in em_andamento %}
             <li>
               <a class="lista-compacta__principal" href="{% url 'painel_pedido_detalhe' pedido.pk %}">
-                <strong>#{{ pedido.pk }} â€” {{ pedido.nome }}</strong>
+                <strong>#{{ pedido.pk }} — {{ pedido.nome }}</strong>
                 <span class="texto-suave">R$ {{ pedido.total|floatformat:2 }}</span>
               </a>
               <span class="lista-compacta__meta">

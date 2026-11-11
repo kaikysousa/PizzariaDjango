@@ -395,6 +395,21 @@ class EditarPedidoTests(PainelBaseTestCase):
             resposta.context["formset"].forms[0].fields["produto"].queryset,
         )
 
+    def test_edita_quantidade_de_produto_indisponivel(self):
+        pedido = self._criar_pendente()
+        self.pizza.disponivel = False
+        self.pizza.save(update_fields=["disponivel"])
+
+        resposta = self.client.post(
+            reverse("painel_pedido_editar", args=[pedido.pk]),
+            self._dados_form(**{"itens-0-quantidade": "2"}),
+        )
+
+        self.assertEqual(resposta.status_code, 302)
+        pedido.refresh_from_db()
+        self.assertEqual(pedido.itens.get().quantidade, 2)
+        self.assertEqual(pedido.total, Decimal("91.80"))
+
     def test_edicao_mostra_itens_em_leitura_apos_preparando(self):
         pedido = self._criar_pendente()
         pedido = alterar_status(pedido, Pedido.Status.APROVADO, usuario=self.staff)

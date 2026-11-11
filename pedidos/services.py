@@ -4,6 +4,7 @@ from decimal import ROUND_HALF_UP, Decimal
 
 from django.core.exceptions import ValidationError
 from django.db import transaction
+from django.db.models import Q
 from django.utils import timezone
 
 from .models import Categoria, ItemPedido, Pedido, Produto
@@ -41,8 +42,9 @@ def _preco_unitario(produto, segundo_produto=None):
     return produto.preco
 
 
-def resolver_itens(itens):
+def resolver_itens(itens, ids_permitidos=None):
     """Valida IDs e quantidades contra o banco e recalcula todo preço."""
+    permitidos = set(ids_permitidos or [])
     if not isinstance(itens, list) or not itens:
         raise ValidationError("O carrinho está vazio.")
 
@@ -66,7 +68,12 @@ def resolver_itens(itens):
         if len(ids) not in (1, 2) or len(ids) != len(set(ids)):
             raise ValidationError("Item de pedido inválido.")
 
-        produtos = list(Produto.objects.filter(id__in=ids, disponivel=True))
+        produtos = list(
+            Produto.objects.filter(
+                Q(id__in=ids)
+                & (Q(disponivel=True) | Q(id__in=permitidos))
+            )
+        )
         if len(produtos) != len(ids):
             raise ValidationError("Produto inexistente ou indisponível.")
 
@@ -225,7 +232,14 @@ def atualizar_itens_pedido(pedido, itens, usuario=None):
             "Os itens deste pedido não podem mais ser editados."
         )
 
-    resolved, total = resolver_itens(itens)
+    ids_atuais = set(
+        pedido_travado.itens.values_list("produto_id", flat=True)
+    ) | set(
+        pedido_travado.itens.exclude(segundo_produto_id=None).values_list(
+            "segundo_produto_id", flat=True
+        )
+    )
+    resolved, total = resolver_itens(itens, ids_permitidos=ids_atuais)
     pedido_travado.itens.all().delete()
     ItemPedido.objects.bulk_create(
         [

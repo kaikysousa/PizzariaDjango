@@ -142,13 +142,21 @@
 <script nonce="{{ request.csp_nonce }}">
   (function () {
     const total = document.getElementById("id_itens-TOTAL_FORMS");
+    const maximo = document.getElementById("id_itens-MAX_NUM_FORMS");
     const container = document.querySelector(".itens-formset");
     const botao = document.getElementById("adicionar-item");
     const template = document.getElementById("item-vazio");
     if (!total || !container || !botao || !template) return;
 
+    function atualizarBotao() {
+      const limite = maximo ? parseInt(maximo.value, 10) : 0;
+      botao.disabled = limite > 0 && parseInt(total.value, 10) >= limite;
+    }
+
     botao.addEventListener("click", function () {
       const indice = parseInt(total.value, 10);
+      const limite = maximo ? parseInt(maximo.value, 10) : 0;
+      if (limite > 0 && indice >= limite) return;
       const html = template.innerHTML.replace(/__prefix__/g, indice);
       const wrapper = document.createElement("div");
       wrapper.innerHTML = html.trim();
@@ -157,7 +165,10 @@
       fieldset.querySelector("legend").textContent = "Item " + (indice + 1);
       container.appendChild(fieldset);
       total.value = indice + 1;
+      atualizarBotao();
     });
+
+    atualizarBotao();
   })();
 </script>
 {% endblock %}

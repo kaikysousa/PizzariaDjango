@@ -1,4 +1,4 @@
-# Sistema de Pedidos â€” Pizzaria
+# Sistema de Pedidos — Pizzaria
 
 [![CI](https://github.com/kaikysousa/PizzariaDjango/actions/workflows/ci.yml/badge.svg)](https://github.com/kaikysousa/PizzariaDjango/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/kaikysousa/PizzariaDjango)](https://github.com/kaikysousa/PizzariaDjango/releases)

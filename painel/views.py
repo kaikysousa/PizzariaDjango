@@ -30,7 +30,7 @@ from .forms import (
 )
 
 ItemFormSet = formset_factory(
-    ItemPedidoForm, extra=4, max_num=50, validate_max=True
+    ItemPedidoForm, extra=4, max_num=200, validate_max=True
 )
 
 ACOES_STATUS = {
@@ -318,13 +318,12 @@ def pedido_editar(request, pk):
         pk=pk,
     )
     editavel = pedido.itens_editaveis
-    produtos_extras = set(
-        pedido.itens.values_list("produto_id", flat=True)
-    ) | set(
-        pedido.itens.exclude(segundo_produto_id=None).values_list(
-            "segundo_produto_id", flat=True
-        )
-    )
+    produtos_extras = set()
+    if editavel:
+        for item in pedido.itens.all():
+            produtos_extras.add(item.produto_id)
+            if item.segundo_produto_id:
+                produtos_extras.add(item.segundo_produto_id)
 
     if request.method == "POST":
         form = PedidoBalcaoForm(request.POST, instance=pedido)

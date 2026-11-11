@@ -68,7 +68,11 @@ def wait_server(url, timeout=25):
     raise RuntimeError(f"servidor nao respondeu: {url}")
 
 
-wait_server(f"http://127.0.0.1:{PORT}/")
+try:
+    wait_server(f"http://127.0.0.1:{PORT}/")
+except RuntimeError as error:
+    server.terminate()
+    raise SystemExit(str(error))
 profile = tempfile.mkdtemp(prefix="receipt-pdf-")
 chrome = subprocess.Popen(
     [
