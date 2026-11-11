@@ -84,7 +84,7 @@ class CheckoutFlowTests(TestCase):
         )
         self.assertEqual(response.status_code, 403)
 
-    def test_cria_pedido_e_redireciona_para_recibo(self):
+    def test_cria_pedido_e_redireciona_para_acompanhamento(self):
         self._revisar()
         dados = dict(self.dados, checkout_token=self._checkout_token())
         response = self.client.post(reverse("checkout"), dados)
@@ -93,9 +93,11 @@ class CheckoutFlowTests(TestCase):
         pedido = Pedido.objects.get()
         self.assertEqual(pedido.total, Decimal("91.80"))
         self.assertEqual(pedido.telefone, "11999999999")
+        self.assertEqual(pedido.status, Pedido.Status.AGUARDANDO_APROVACAO)
         self.assertNotIn("carrinho", self.client.session)
         self.assertRedirects(
-            response, reverse("recibo", kwargs={"token": pedido.token})
+            response,
+            reverse("acompanhar_pedido", kwargs={"token": pedido.token}),
         )
 
     def test_form_invalido_nao_cria_pedido(self):

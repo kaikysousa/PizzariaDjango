@@ -13,6 +13,23 @@ from .forms import PedidoForm
 from .models import Categoria, Pedido, Produto
 from .services import criar_pedido, resolver_itens
 
+STATUS_COM_RECIBO = frozenset(
+    {
+        Pedido.Status.APROVADO,
+        Pedido.Status.PREPARANDO,
+        Pedido.Status.SAIU,
+        Pedido.Status.ENTREGUE,
+    }
+)
+
+ETAPAS_ACOMPANHAMENTO = [
+    (Pedido.Status.AGUARDANDO_APROVACAO, "Pedido recebido"),
+    (Pedido.Status.APROVADO, "Aprovado pela loja"),
+    (Pedido.Status.PREPARANDO, "Em preparo"),
+    (Pedido.Status.SAIU, "Saiu para entrega"),
+    (Pedido.Status.ENTREGUE, "Entregue"),
+]
+
 
 def index(request):
     produtos = Produto.objects.filter(disponivel=True)
@@ -116,7 +133,7 @@ def checkout(request):
                 form.add_error(None, erro)
             else:
                 request.session.pop("carrinho", None)
-                return redirect("recibo", token=pedido.token)
+                return redirect("acompanhar_pedido", token=pedido.token)
 
         form.marcar_erros_acessiveis()
         request.session["checkout_token"] = uuid.uuid4().hex
@@ -148,6 +165,50 @@ def recibo(request, token):
         request,
         "pedidos/recibo.html",
         {"pedido": pedido, "pizzaria_cnpj": settings.PIZZARIA_CNPJ},
+    )
+    response["X-Robots-Tag"] = "noindex, nofollow"
+    return response
+
+
+def _etapas_do_pedido(pedido):
+    """Monta a timeline com o estado de cada etapa do pedido."""
+    ordem = [status for status, _ in ETAPAS_ACOMPANHAMENTO]
+    if pedido.status not in ordem:
+        return []
+
+    indice_atual = ordem.index(pedido.status)
+    etapas = []
+    for indice, (status, rotulo) in enumerate(ETAPAS_ACOMPANHAMENTO):
+        if indice < indice_atual:
+            estado = "concluida"
+        elif indice == indice_atual:
+            estado = "atual"
+        else:
+            estado = "pendente"
+        etapas.append({"status": status, "rotulo": rotulo, "estado": estado})
+    return etapas
+
+
+@never_cache
+def acompanhar_pedido(request, token):
+    pedido = get_object_or_404(
+        Pedido.objects.select_related("condominio").prefetch_related(
+            "itens__produto", "itens__segundo_produto"
+        ),
+        token=token,
+    )
+    response = render(
+        request,
+        "pedidos/acompanhar.html",
+        {
+            "pedido": pedido,
+            "etapas": _etapas_do_pedido(pedido),
+            "mostrar_recibo": pedido.status in STATUS_COM_RECIBO,
+            "aguardando_aprovacao": (
+                pedido.status == Pedido.Status.AGUARDANDO_APROVACAO
+            ),
+            "cancelado": pedido.status == Pedido.Status.CANCELADO,
+        },
     )
     response["X-Robots-Tag"] = "noindex, nofollow"
     return response

@@ -10,6 +10,11 @@ urlpatterns = [
     path("", views.index, name="index"),
     path("carrinho/revisar/", views.revisar_pedido, name="revisar_pedido"),
     path("checkout/", views.checkout, name="checkout"),
+    path(
+        "pedido/<uuid:token>/acompanhar/",
+        views.acompanhar_pedido,
+        name="acompanhar_pedido",
+    ),
     path("pedido/<uuid:token>/recibo/", views.recibo, name="recibo"),
     path("painel/", include("painel.urls")),
 ]

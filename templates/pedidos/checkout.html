@@ -68,5 +68,58 @@
 <script nonce="{{ request.csp_nonce }}">
   const primeiroErro = document.querySelector(".campo--erro input, .campo--erro textarea, .campo--erro select");
   if (primeiroErro) primeiroErro.focus();
+
+  (function () {
+    const selectCondominio = document.getElementById("id_condominio");
+    const campoEndereco = document.getElementById("id_endereco");
+    if (!selectCondominio || !campoEndereco) return;
+
+    let enderecoAutomatico = "";
+
+    function enderecoDaOpcao() {
+      const opcao = selectCondominio.options[selectCondominio.selectedIndex];
+      if (!opcao || !opcao.value) return "";
+      const dados = opcao.dataset;
+      const principal = dados.numero
+        ? dados.endereco + ", " + dados.numero
+        : dados.endereco;
+      return [
+        principal,
+        dados.bairro,
+        dados.cidade,
+        dados.cep ? "CEP " + dados.cep : "",
+      ]
+        .filter(Boolean)
+        .join(" - ");
+    }
+
+    function aplicarEnderecoDoCondominio() {
+      const novo = enderecoDaOpcao();
+      const atual = campoEndereco.value.trim();
+
+      if (!novo) {
+        if (atual && atual === enderecoAutomatico) campoEndereco.value = "";
+        enderecoAutomatico = "";
+        return;
+      }
+
+      if (!atual || atual === enderecoAutomatico) {
+        campoEndereco.value = novo;
+        enderecoAutomatico = novo;
+      }
+    }
+
+    if (selectCondominio.value) {
+      const inicial = enderecoDaOpcao();
+      if (!campoEndereco.value.trim()) {
+        campoEndereco.value = inicial;
+        enderecoAutomatico = inicial;
+      } else if (campoEndereco.value.trim() === inicial) {
+        enderecoAutomatico = inicial;
+      }
+    }
+
+    selectCondominio.addEventListener("change", aplicarEnderecoDoCondominio);
+  })();
 </script>
 {% endblock %}
