@@ -1,4 +1,4 @@
-from decimal import Decimal
+﻿from decimal import Decimal
 
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
@@ -15,13 +15,13 @@ from pedidos.services import (
 class StatusPedidoTests(TestCase):
     def setUp(self):
         self.usuario = get_user_model().objects.create_user(
-            username="dono", password="senha-teste"
+            username="dono", password="senha-teste", is_staff=True
         )
         self.pizza = Produto.objects.create(
             nome="Margherita", preco="45.90", categoria=Categoria.PIZZA
         )
         self.bebida = Produto.objects.create(
-            nome="Água", preco="4.00", categoria=Categoria.BEBIDA
+            nome="Ãgua", preco="4.00", categoria=Categoria.BEBIDA
         )
 
     def _criar(self, **kwargs):
@@ -41,10 +41,14 @@ class StatusPedidoTests(TestCase):
         self.assertEqual(pedido.origem, Pedido.Origem.CLIENTE)
 
     def test_status_inicial_de_balcao(self):
-        pedido = self._criar(origem=Pedido.Origem.BALCAO)
+        pedido = self._criar(origem=Pedido.Origem.BALCAO, usuario=self.usuario)
 
         self.assertEqual(pedido.status, Pedido.Status.APROVADO)
         self.assertEqual(pedido.origem, Pedido.Origem.BALCAO)
+
+    def test_balcao_sem_usuario_staff_e_rejeitado(self):
+        with self.assertRaises(ValidationError):
+            self._criar(origem=Pedido.Origem.BALCAO)
 
     def test_status_inicial_invalido(self):
         with self.assertRaises(ValidationError):
@@ -92,12 +96,12 @@ class StatusPedidoTests(TestCase):
             pedido,
             Pedido.Status.CANCELADO,
             usuario=self.usuario,
-            motivo="Endereço fora da área",
+            motivo="EndereÃ§o fora da Ã¡rea",
         )
 
         self.assertEqual(pedido.status, Pedido.Status.CANCELADO)
         self.assertEqual(
-            pedido.motivo_cancelamento, "Endereço fora da área"
+            pedido.motivo_cancelamento, "EndereÃ§o fora da Ã¡rea"
         )
 
     def test_itens_editaveis_por_status(self):
@@ -130,3 +134,4 @@ class StatusPedidoTests(TestCase):
         self.assertEqual(pedido.total, Decimal("91.80"))
         self.assertEqual(pedido.itens.count(), 1)
         self.assertEqual(pedido.itens.get().preco_unitario, Decimal("45.90"))
+

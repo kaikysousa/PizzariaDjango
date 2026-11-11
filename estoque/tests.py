@@ -17,6 +17,11 @@ from pedidos.services import alterar_status, atualizar_itens_pedido, criar_pedid
 
 class EstoquePedidoTests(TestCase):
     def setUp(self):
+        self.staff = get_user_model().objects.create_user(
+            username="dono-estoque",
+            password="senha-teste",
+            is_staff=True,
+        )
         self.mussarela = Ingrediente.objects.create(
             nome="Mussarela",
             unidade=Ingrediente.Unidade.GRAMA,
@@ -91,6 +96,7 @@ class EstoquePedidoTests(TestCase):
         pedido = self._criar(
             [{"ids": [self.pizza.id], "quantidade": 1}],
             origem=Pedido.Origem.BALCAO,
+            usuario=self.staff,
         )
 
         self.mussarela.refresh_from_db()

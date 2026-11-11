@@ -145,6 +145,14 @@ def _necessidades_do_pedido(pedido):
 @transaction.atomic
 def consumir_pedido(pedido, usuario=None):
     """Baixa o estoque dos itens do pedido, retornando avisos."""
+    from pedidos.models import Pedido
+
+    if pedido.status != Pedido.Status.APROVADO:
+        return ["Pedido não está aprovado; estoque não foi baixado."]
+
+    if _consumo_liquido(pedido):
+        return ["Pedido já consumiu estoque; baixa ignorada."]
+
     necessidades, ingredientes, avisos = _necessidades_do_pedido(pedido)
     if not necessidades:
         return avisos
@@ -231,6 +239,45 @@ def estornar_pedido(pedido, usuario=None):
 
 @transaction.atomic
 def reprocessar_pedido(pedido, usuario=None):
-    """Estorna o consumo atual e reaplica com base nos itens vigentes."""
-    estornar_pedido(pedido, usuario=usuario)
-    return consumir_pedido(pedido, usuario=usuario)
+    """Estorna o consumo atual e reaplica com base nos itens vigentes.
+
+    Trava todos os ingredientes envolvidos em uma única consulta ordenada por
+    pk, evitando deadlock entre o estorno e o novo consumo.
+    """
+    consumos = _consumo_liquido(pedido)
+    necessidades, ingredientes, avisos = _necessidades_do_pedido(pedido)
+    ids = sorted(set(consumos) | set(necessidades))
+    if not ids:
+        return avisos
+
+    travados = {
+        ingrediente.pk: ingrediente
+        for ingrediente in Ingrediente.objects.select_for_update()
+        .filter(pk__in=ids)
+        .order_by("pk")
+    }
+
+    for ingrediente_id in sorted(consumos):
+        _aplicar_movimento(
+            travados[ingrediente_id],
+            MovimentoEstoque.Tipo.ESTORNO,
+            consumos[ingrediente_id],
+            pedido=pedido,
+            motivo=f"Estorno do pedido #{pedido.pk}",
+            usuario=usuario,
+        )
+
+    for ingrediente_id in sorted(necessidades):
+        quantidade = _quantizar(necessidades[ingrediente_id])
+        if quantidade == ZERO:
+            continue
+        _aplicar_movimento(
+            travados[ingrediente_id],
+            MovimentoEstoque.Tipo.SAIDA,
+            quantidade,
+            pedido=pedido,
+            motivo=f"Consumo do pedido #{pedido.pk}",
+            usuario=usuario,
+        )
+
+    return avisos

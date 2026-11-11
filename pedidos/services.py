@@ -95,18 +95,28 @@ def resolver_itens(itens):
     return resolved, total
 
 
-def _status_inicial(origem, status_inicial):
+def _status_inicial(origem, status_inicial, usuario=None):
     if origem not in Pedido.Origem.values:
         raise ValidationError("Origem de pedido inválida.")
 
     if status_inicial is None:
-        if origem == Pedido.Origem.BALCAO:
-            return Pedido.Status.APROVADO
-        return Pedido.Status.AGUARDANDO_APROVACAO
+        status = (
+            Pedido.Status.APROVADO
+            if origem == Pedido.Origem.BALCAO
+            else Pedido.Status.AGUARDANDO_APROVACAO
+        )
+    else:
+        if status_inicial not in STATUS_INICIAIS:
+            raise ValidationError("Status inicial inválido.")
+        status = status_inicial
 
-    if status_inicial not in STATUS_INICIAIS:
-        raise ValidationError("Status inicial inválido.")
-    return status_inicial
+    if status == Pedido.Status.APROVADO:
+        if origem != Pedido.Origem.BALCAO:
+            raise ValidationError("Pedido aprovado só pode ser criado como balcão.")
+        if usuario is None or not getattr(usuario, "is_staff", False):
+            raise ValidationError("Aprovação inicial exige usuário da loja.")
+
+    return status
 
 
 @transaction.atomic
@@ -130,7 +140,7 @@ def criar_pedido(
     if not nome or not telefone or not endereco:
         raise ValidationError("Nome, telefone e endereço são obrigatórios.")
 
-    status_inicial = _status_inicial(origem, status_inicial)
+    status_inicial = _status_inicial(origem, status_inicial, usuario)
     resolved, total = resolver_itens(itens)
     pedido = Pedido.objects.create(
         nome=nome,
