@@ -71,3 +71,6 @@ class PedidoAdmin(admin.ModelAdmin):
     )
     date_hierarchy = "criado_em"
     inlines = [ItemPedidoInline]
+
+    def has_delete_permission(self, request, obj=None):
+        return False
