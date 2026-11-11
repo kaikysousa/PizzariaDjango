@@ -42,6 +42,26 @@ class ReciboFonteTests(SimpleTestCase):
     def test_page_continua_em_80mm(self):
         self.assertIn("80mm", _bloco("@page"))
 
+    def test_recibo_longo_tem_pagina_estendida(self):
+        css_longo = (
+            Path(__file__).resolve().parents[2]
+            / "static"
+            / "css"
+            / "recibo-longo.css"
+        ).read_text(encoding="utf-8")
+        self.assertIn("@page", css_longo)
+        self.assertIn("80mm 420mm", css_longo)
+
+    def test_template_marca_recibo_longo(self):
+        template = (
+            Path(__file__).resolve().parents[2]
+            / "templates"
+            / "pedidos"
+            / "recibo.html"
+        ).read_text(encoding="utf-8")
+        self.assertIn("recibo--longo", template)
+        self.assertIn("recibo-longo.css", template)
+
     def test_impressao_usa_padding_lateral_de_2mm(self):
         impressao = re.search(r"@media print\s*\{([\s\S]*)\}\s*$", _css())
         self.assertIsNotNone(impressao)

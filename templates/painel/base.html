@@ -23,8 +23,8 @@
 
       <nav class="painel-nav" aria-label="Painel">
         <a href="{% url 'painel_pedidos' %}">Pedidos</a>
-        <a href="/painel/estoque/">Estoque</a>
-        <a href="/admin/">Admin</a>
+        <a href="{% url 'estoque:lista' %}">Estoque</a>
+        <a href="{% url 'admin:index' %}">Admin</a>
       </nav>
 
       <div class="painel-conta">
@@ -48,5 +48,7 @@
 
     {% block content %}{% endblock %}
   </main>
+
+  {% block extra_js %}{% endblock %}
 </body>
 </html>

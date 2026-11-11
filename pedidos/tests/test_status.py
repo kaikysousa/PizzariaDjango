@@ -1,4 +1,4 @@
-﻿from decimal import Decimal
+from decimal import Decimal
 
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
@@ -21,7 +21,7 @@ class StatusPedidoTests(TestCase):
             nome="Margherita", preco="45.90", categoria=Categoria.PIZZA
         )
         self.bebida = Produto.objects.create(
-            nome="Ãgua", preco="4.00", categoria=Categoria.BEBIDA
+            nome="Água", preco="4.00", categoria=Categoria.BEBIDA
         )
 
     def _criar(self, **kwargs):
@@ -96,12 +96,12 @@ class StatusPedidoTests(TestCase):
             pedido,
             Pedido.Status.CANCELADO,
             usuario=self.usuario,
-            motivo="EndereÃ§o fora da Ã¡rea",
+            motivo="Endereço fora da área",
         )
 
         self.assertEqual(pedido.status, Pedido.Status.CANCELADO)
         self.assertEqual(
-            pedido.motivo_cancelamento, "EndereÃ§o fora da Ã¡rea"
+            pedido.motivo_cancelamento, "Endereço fora da área"
         )
 
     def test_itens_editaveis_por_status(self):

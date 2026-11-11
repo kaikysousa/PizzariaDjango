@@ -1,4 +1,4 @@
-﻿# Sistema de Pedidos — Pizzaria
+# Sistema de Pedidos — Pizzaria
 
 [![CI](https://github.com/kaikysousa/PizzariaDjango/actions/workflows/ci.yml/badge.svg)](https://github.com/kaikysousa/PizzariaDjango/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/kaikysousa/PizzariaDjango)](https://github.com/kaikysousa/PizzariaDjango/releases)
@@ -49,7 +49,7 @@ python -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements-dev.txt
 copy .env.example .env
-# edite .env e defina DJANGO_DB_PATH=db.sqlite3
+# confira .env (DJANGO_DB_PATH=db.sqlite3)
 python manage.py migrate
 python manage.py createsuperuser
 python manage.py runserver
@@ -57,8 +57,7 @@ python manage.py runserver
 
 Abra `http://127.0.0.1:8000/`. O admin fica em `/admin/`. O painel da loja fica em `/painel/` e exige usuário staff.
 
-Antes de rodar `migrate`, edite o `.env` e defina `DJANGO_DB_PATH=db.sqlite3`.
-O `.env.example` traz o campo vazio, e o Django recusa a conexão sem um nome de banco.
+O `.env.example` já traz `DJANGO_DB_PATH=db.sqlite3`. Se o valor ficar vazio, o Django recusa a conexão sem um nome de banco.
 
 ## Testar localmente
 

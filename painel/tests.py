@@ -185,6 +185,13 @@ class CriarPedidoTests(PainelBaseTestCase):
         super().setUp()
         self.client.force_login(self.staff)
 
+    def test_formulario_tem_botao_para_adicionar_item(self):
+        resposta = self.client.get(self.url_novo)
+
+        self.assertEqual(resposta.status_code, 200)
+        self.assertContains(resposta, 'id="adicionar-item"')
+        self.assertContains(resposta, 'id="item-vazio"')
+
     def test_cria_pedido_manual_com_itens(self):
         resposta = self.client.post(
             self.url_novo,
@@ -371,6 +378,21 @@ class EditarPedidoTests(PainelBaseTestCase):
         self.assertIn(
             self.condominio,
             resposta.context["form"].fields["condominio"].queryset,
+        )
+
+    def test_edicao_preserva_produto_indisponivel(self):
+        pedido = self._criar_pendente()
+        self.pizza.disponivel = False
+        self.pizza.save(update_fields=["disponivel"])
+
+        resposta = self.client.get(
+            reverse("painel_pedido_editar", args=[pedido.pk])
+        )
+
+        self.assertEqual(resposta.status_code, 200)
+        self.assertIn(
+            self.pizza,
+            resposta.context["formset"].forms[0].fields["produto"].queryset,
         )
 
     def test_edicao_mostra_itens_em_leitura_apos_preparando(self):

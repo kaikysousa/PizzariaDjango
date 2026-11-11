@@ -1,4 +1,4 @@
-﻿"""Gate: imprime o recibo real em PDF e mede a largura de 80 mm."""
+"""Gate: imprime o recibo real em PDF e mede a largura de 80 mm."""
 
 import base64
 import json
@@ -45,7 +45,7 @@ run([PYTHON, "manage.py", "migrate", "--noinput"])
 seed = run([PYTHON, "manage.py", "seed_demo"])
 match = re.search(r"SEED_DEMO_TOKEN=([0-9a-f-]{36})", seed)
 if not match:
-    raise SystemExit("FAIL: seed_demo nÃ£o devolveu token")
+    raise SystemExit("FAIL: seed_demo não devolveu token")
 token = match.group(1)
 
 server = subprocess.Popen(
@@ -56,6 +56,19 @@ server = subprocess.Popen(
     stderr=subprocess.DEVNULL,
 )
 
+def wait_server(url, timeout=25):
+    deadline = time.time() + timeout
+    while time.time() < deadline:
+        try:
+            with urllib.request.urlopen(url, timeout=1) as response:
+                if response.status < 500:
+                    return
+        except Exception:
+            time.sleep(0.2)
+    raise RuntimeError(f"servidor nao respondeu: {url}")
+
+
+wait_server(f"http://127.0.0.1:{PORT}/")
 profile = tempfile.mkdtemp(prefix="receipt-pdf-")
 chrome = subprocess.Popen(
     [
@@ -137,6 +150,8 @@ try:
     print(f"largura={width_mm:.1f}mm paginas={len(reader.pages)}")
     if abs(width_mm - 80) > 1.5:
         raise SystemExit(f"FAIL: largura {width_mm:.1f}mm, esperado 80mm")
+    if len(reader.pages) != 1:
+        raise SystemExit(f"FAIL: {len(reader.pages)} paginas, esperado 1")
     if "Margherita" not in text or "Calabresa" not in text:
         raise SystemExit("FAIL: itens ausentes no PDF")
     if "Total" not in text:

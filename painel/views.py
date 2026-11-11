@@ -30,7 +30,7 @@ from .forms import (
 )
 
 ItemFormSet = formset_factory(
-    ItemPedidoForm, extra=4, max_num=20, validate_max=True
+    ItemPedidoForm, extra=4, max_num=50, validate_max=True
 )
 
 ACOES_STATUS = {
@@ -101,6 +101,11 @@ def _acoes_disponiveis(pedido):
             }
         )
     return acoes
+
+
+def _avisar_estoque(request, pedido):
+    for aviso in getattr(pedido, "avisos_estoque", []):
+        messages.warning(request, aviso)
 
 
 def _eventos_status(pedido):
@@ -287,6 +292,7 @@ def pedido_novo(request):
                 except ValidationError as erro:
                     form.add_error(None, erro)
                 else:
+                    _avisar_estoque(request, pedido)
                     messages.success(
                         request, f"Pedido #{pedido.pk} criado no balcão."
                     )
@@ -312,10 +318,25 @@ def pedido_editar(request, pk):
         pk=pk,
     )
     editavel = pedido.itens_editaveis
+    produtos_extras = set(
+        pedido.itens.values_list("produto_id", flat=True)
+    ) | set(
+        pedido.itens.exclude(segundo_produto_id=None).values_list(
+            "segundo_produto_id", flat=True
+        )
+    )
 
     if request.method == "POST":
         form = PedidoBalcaoForm(request.POST, instance=pedido)
-        formset = ItemFormSet(request.POST, prefix="itens") if editavel else None
+        formset = (
+            ItemFormSet(
+                request.POST,
+                prefix="itens",
+                form_kwargs={"produtos_extras": produtos_extras},
+            )
+            if editavel
+            else None
+        )
         itens_validos = formset.is_valid() if formset is not None else True
         if form.is_valid() and itens_validos:
             itens = itens_do_formset(formset) if formset is not None else []
@@ -334,12 +355,21 @@ def pedido_editar(request, pk):
                 except ValidationError as erro:
                     form.add_error(None, erro)
                 else:
+                    _avisar_estoque(request, pedido)
                     messages.success(request, f"Pedido #{pedido.pk} atualizado.")
                     return redirect("painel_pedido_detalhe", pk=pedido.pk)
         form.marcar_erros_acessiveis()
     else:
         form = PedidoBalcaoForm(instance=pedido)
-        formset = ItemFormSet(initial=itens_iniciais(pedido), prefix="itens") if editavel else None
+        formset = (
+            ItemFormSet(
+                initial=itens_iniciais(pedido),
+                prefix="itens",
+                form_kwargs={"produtos_extras": produtos_extras},
+            )
+            if editavel
+            else None
+        )
 
     return render(
         request,
@@ -381,6 +411,7 @@ def pedido_acao(request, pk):
         for mensagem in erro.messages:
             messages.error(request, mensagem)
     else:
+        _avisar_estoque(request, pedido)
         messages.success(
             request,
             f"Pedido #{pedido.pk} agora está em “{pedido.get_status_display()}”.",

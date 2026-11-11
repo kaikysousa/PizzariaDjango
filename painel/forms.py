@@ -29,9 +29,12 @@ class ItemPedidoForm(forms.Form):
         widget=forms.NumberInput(attrs={"placeholder": "1"}),
     )
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, produtos_extras=None, **kwargs):
         super().__init__(*args, **kwargs)
-        disponiveis = Produto.objects.filter(disponivel=True)
+        extras = set(produtos_extras or [])
+        disponiveis = Produto.objects.filter(
+            Q(disponivel=True) | Q(pk__in=extras)
+        )
         self.fields["produto"].queryset = disponiveis
         self.fields["segundo_produto"].queryset = disponiveis
 

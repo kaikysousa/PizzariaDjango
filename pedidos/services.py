@@ -175,7 +175,7 @@ def criar_pedido(
         # Import tardio evita ciclo entre pedidos e estoque na inicialização dos apps.
         from estoque.services import consumir_pedido
 
-        consumir_pedido(pedido, usuario=usuario)
+        pedido.avisos_estoque = consumir_pedido(pedido, usuario=usuario)
 
     return pedido
 

@@ -49,7 +49,7 @@ python -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements-dev.txt
 copy .env.example .env
-# edit .env and set DJANGO_DB_PATH=db.sqlite3
+# check .env (DJANGO_DB_PATH=db.sqlite3)
 python manage.py migrate
 python manage.py createsuperuser
 python manage.py runserver
@@ -57,8 +57,7 @@ python manage.py runserver
 
 Open `http://127.0.0.1:8000/`. The admin is at `/admin/`. The store panel is at `/painel/` and requires a staff user.
 
-Before running `migrate`, edit `.env` and set `DJANGO_DB_PATH=db.sqlite3`.
-The example file leaves it empty, and Django refuses to connect without a database name.
+The example file already sets `DJANGO_DB_PATH=db.sqlite3`. If the value is empty, Django refuses to connect without a database name.
 
 ## Testing locally
 

@@ -21,6 +21,7 @@
       </a>
 
       <nav class="estoque-nav" aria-label="Painel">
+        <a href="{% url 'painel_dashboard' %}">Painel</a>
         <a href="{% url 'estoque:lista' %}"{% if request.resolver_match.url_name == "lista" %} aria-current="page"{% endif %}>Ingredientes</a>
         <a href="{% url 'admin:index' %}">Admin</a>
         {% if request.user.is_authenticated %}

@@ -85,6 +85,22 @@
             </fieldset>
           {% endfor %}
         </div>
+        <button class="botao botao--fantasma" type="button" id="adicionar-item">
+          Adicionar item
+        </button>
+        <template id="item-vazio">
+          <fieldset class="item-form">
+            <legend>Item</legend>
+            <div class="grade-campos grade-campos--item">
+              {% for field in formset.empty_form %}
+                <div class="campo">
+                  <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                  {{ field }}
+                </div>
+              {% endfor %}
+            </div>
+          </fieldset>
+        </template>
       {% else %}
         <p class="aviso">Itens em modo leitura.</p>
         <div class="tabela-wrap">
@@ -120,4 +136,28 @@
          href="{% if pedido %}{% url 'painel_pedido_detalhe' pedido.pk %}{% else %}{% url 'painel_pedidos' %}{% endif %}">Cancelar</a>
     </div>
   </form>
+{% endblock %}
+
+{% block extra_js %}
+<script nonce="{{ request.csp_nonce }}">
+  (function () {
+    const total = document.getElementById("id_itens-TOTAL_FORMS");
+    const container = document.querySelector(".itens-formset");
+    const botao = document.getElementById("adicionar-item");
+    const template = document.getElementById("item-vazio");
+    if (!total || !container || !botao || !template) return;
+
+    botao.addEventListener("click", function () {
+      const indice = parseInt(total.value, 10);
+      const html = template.innerHTML.replace(/__prefix__/g, indice);
+      const wrapper = document.createElement("div");
+      wrapper.innerHTML = html.trim();
+      const fieldset = wrapper.querySelector(".item-form");
+      if (!fieldset) return;
+      fieldset.querySelector("legend").textContent = "Item " + (indice + 1);
+      container.appendChild(fieldset);
+      total.value = indice + 1;
+    });
+  })();
+</script>
 {% endblock %}

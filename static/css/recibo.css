@@ -1,8 +1,8 @@
 @page {
-  size: 80mm auto;
   size: 80mm 297mm;
   margin: 0;
 }
+
 
 * {
   box-sizing: border-box;
@@ -142,3 +142,4 @@ body {
     padding: 0 2mm;
   }
 }
+

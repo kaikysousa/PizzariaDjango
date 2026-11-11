@@ -1,6 +1,6 @@
 {% extends "painel/base.html" %}
 
-{% block title %}Dashboard — Painel{% endblock %}
+{% block title %}Dashboard â€” Painel{% endblock %}
 
 {% block content %}
   <div class="pagina-cabecalho">
@@ -43,7 +43,7 @@
           {% for pedido in pendentes %}
             <li>
               <a class="lista-compacta__principal" href="{% url 'painel_pedido_detalhe' pedido.pk %}">
-                <strong>#{{ pedido.pk }} — {{ pedido.nome }}</strong>
+                <strong>#{{ pedido.pk }} â€” {{ pedido.nome }}</strong>
                 <span class="texto-suave">{{ pedido.telefone }}</span>
               </a>
               <span class="lista-compacta__meta">
@@ -67,7 +67,7 @@
           {% for pedido in em_andamento %}
             <li>
               <a class="lista-compacta__principal" href="{% url 'painel_pedido_detalhe' pedido.pk %}">
-                <strong>#{{ pedido.pk }} — {{ pedido.nome }}</strong>
+                <strong>#{{ pedido.pk }} â€” {{ pedido.nome }}</strong>
                 <span class="texto-suave">R$ {{ pedido.total|floatformat:2 }}</span>
               </a>
               <span class="lista-compacta__meta">
@@ -86,7 +86,7 @@
   <section class="painel-bloco" aria-labelledby="titulo-estoque">
     <div class="painel-bloco__cabecalho">
       <h2 id="titulo-estoque">Ingredientes abaixo do mínimo</h2>
-      <a class="link" href="/painel/estoque/">Gerenciar estoque</a>
+      <a class="link" href="{% url 'estoque:lista' %}">Gerenciar estoque</a>
     </div>
     {% if ingredientes_baixos %}
       <div class="tabela-wrap">
@@ -121,8 +121,9 @@
     <ul class="grade-atalhos">
       <li><a class="atalho" href="{% url 'painel_pedidos' %}"><strong>Pedidos</strong><span>Filtrar, editar e avançar status.</span></a></li>
       <li><a class="atalho" href="{% url 'painel_pedido_novo' %}"><strong>Novo pedido</strong><span>Registrar venda de balcão.</span></a></li>
-      <li><a class="atalho" href="/painel/estoque/"><strong>Estoque</strong><span>Ajustar ingredientes e ver movimentos.</span></a></li>
-      <li><a class="atalho" href="/admin/"><strong>Admin</strong><span>Produtos, condomínios e fichas técnicas.</span></a></li>
+      <li><a class="atalho" href="{% url 'estoque:lista' %}"><strong>Estoque</strong><span>Ajustar ingredientes e ver movimentos.</span></a></li>
+      <li><a class="atalho" href="{% url 'admin:index' %}"><strong>Admin</strong><span>Produtos, condomínios e fichas técnicas.</span></a></li>
     </ul>
   </section>
 {% endblock %}
+

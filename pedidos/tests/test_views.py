@@ -1,4 +1,4 @@
-﻿import json
+import json
 from decimal import Decimal
 
 from django.test import Client, TestCase
