@@ -11,6 +11,7 @@ urlpatterns = [
     path("carrinho/revisar/", views.revisar_pedido, name="revisar_pedido"),
     path("checkout/", views.checkout, name="checkout"),
     path("pedido/<uuid:token>/recibo/", views.recibo, name="recibo"),
+    path("painel/estoque/", include("estoque.urls")),
     path("painel/", include("painel.urls")),
 ]
 

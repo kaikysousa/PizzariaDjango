@@ -1,6 +1,27 @@
 from django.contrib import admin
 
+from estoque.models import FichaTecnica
+
 from .models import ItemPedido, Pedido, Produto
+
+
+class FichaTecnicaInline(admin.TabularInline):
+    model = FichaTecnica
+    extra = 0
+    fields = ("ingrediente", "quantidade", "unidade")
+    readonly_fields = ("unidade",)
+    autocomplete_fields = ("ingrediente",)
+    verbose_name = "Ficha técnica"
+    verbose_name_plural = "Fichas técnicas"
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related("ingrediente")
+
+    @admin.display(description="Unidade")
+    def unidade(self, obj):
+        if not obj or not obj.ingrediente_id:
+            return "—"
+        return obj.ingrediente.get_unidade_display()
 
 
 @admin.register(Produto)
@@ -9,6 +30,7 @@ class ProdutoAdmin(admin.ModelAdmin):
     list_filter = ("categoria", "disponivel")
     search_fields = ("nome", "descricao")
     list_editable = ("disponivel",)
+    inlines = [FichaTecnicaInline]
 
 
 class ItemPedidoInline(admin.TabularInline):
