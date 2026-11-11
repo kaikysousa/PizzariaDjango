@@ -1,4 +1,4 @@
-# Sistema de Pedidos — Pizzaria
+# Sistema de Pedidos â€” Pizzaria
 
 [![CI](https://github.com/kaikysousa/PizzariaDjango/actions/workflows/ci.yml/badge.svg)](https://github.com/kaikysousa/PizzariaDjango/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/kaikysousa/PizzariaDjango)](https://github.com/kaikysousa/PizzariaDjango/releases)
@@ -87,7 +87,7 @@ Com `DJANGO_DEBUG=0` no ambiente, rode `DJANGO_DEBUG=1 python manage.py test`. A
 
 ### Qualidade
 
-- 160 testes em `pedidos/tests/`, `enderecos/tests.py`, `estoque/tests.py` e `painel/tests.py`, cobrindo catálogo, intake, condomínios, status, estoque, painel, recibo e o fluxo E2E completo.
+- 168 testes em `pedidos/tests/`, `enderecos/tests.py`, `estoque/tests.py` e `painel/tests.py`, cobrindo catálogo, intake, condomínios, status, estoque, painel, recibo e o fluxo E2E completo.
 - CI em `.github/workflows/ci.yml`: testes, gate de segredos, gate de segurança, gate de deploy e Ruff.
 - Comandos dos gates: `python scripts/check_secrets.py`, `python scripts/check_security.py`, `python scripts/check_deploy.py`.
 - Gate do recibo: `python scripts/check_receipt_pdf.py` imprime o recibo em PDF e confere a largura de 80 mm.
@@ -140,3 +140,4 @@ scripts/              gates de auditoria
 - Não emite documento fiscal. O CNPJ é opcional e vem de `PIZZARIA_CNPJ`.
 - Não há autenticação de cliente; o recibo usa token UUID com `noindex`.
 - SQLite é o banco padrão de desenvolvimento.
+
