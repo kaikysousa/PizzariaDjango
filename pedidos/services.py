@@ -232,13 +232,13 @@ def atualizar_itens_pedido(pedido, itens, usuario=None):
             "Os itens deste pedido não podem mais ser editados."
         )
 
-    ids_atuais = set(
-        pedido_travado.itens.values_list("produto_id", flat=True)
-    ) | set(
-        pedido_travado.itens.exclude(segundo_produto_id=None).values_list(
-            "segundo_produto_id", flat=True
-        )
-    )
+    ids_atuais = set()
+    for produto_id, segundo_id in pedido_travado.itens.values_list(
+        "produto_id", "segundo_produto_id"
+    ):
+        ids_atuais.add(produto_id)
+        if segundo_id:
+            ids_atuais.add(segundo_id)
     resolved, total = resolver_itens(itens, ids_permitidos=ids_atuais)
     pedido_travado.itens.all().delete()
     ItemPedido.objects.bulk_create(

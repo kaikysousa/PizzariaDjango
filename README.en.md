@@ -87,7 +87,7 @@ When `DJANGO_DEBUG=0` is set in the environment, run `DJANGO_DEBUG=1 python mana
 
 ### Quality
 
-- 168 tests in `pedidos/tests/`, `enderecos/tests.py`, `estoque/tests.py`, and `painel/tests.py`, covering catalog, intake, condominiums, status, stock, panel, receipt, and the full E2E flow.
+- 169 tests in `pedidos/tests/`, `enderecos/tests.py`, `estoque/tests.py`, and `painel/tests.py`, covering catalog, intake, condominiums, status, stock, panel, receipt, and the full E2E flow.
 - CI in `.github/workflows/ci.yml`: tests, secret gate, security gate, deploy gate, and Ruff.
 - Receipt gate: `python scripts/check_receipt_pdf.py` prints the receipt to PDF and checks the 80 mm width.
 
@@ -132,3 +132,4 @@ scripts/              audit gates
 - Does not issue fiscal documents. CNPJ is optional and comes from `PIZZARIA_CNPJ`.
 - No customer authentication; the receipt uses a UUID token with `noindex`.
 - SQLite is the default development database.
+

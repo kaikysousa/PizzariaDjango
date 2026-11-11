@@ -486,7 +486,7 @@ Regras de estoque:
 - nenhuma linha estoura a largura ou é cortada;
 - a marca é maior que o corpo, e o total é o maior texto;
 - a largura da página é 80 mm e o conteúdo cabe em uma página;
-- pedidos com mais de 12 itens usam a página estendida de 600 mm; com mais de 30 itens ou observação longa, usam a página de 1500 mm;
+- pedidos com mais de 12 itens ou observação acima de 120 caracteres usam a página de 600 mm; com mais de 30 itens, observação acima de 250, endereço acima de 240 ou complemento acima de 60, usam a página de 1500 mm;
 - o texto continua legível: corpo 13 px, marca 16 px, título 13 px, total 17 px;
 - a margem lateral de impressão é de 2 mm.
 
@@ -555,10 +555,10 @@ Distribuição da suíte nesta branch:
 
 | App | Testes | Foco |
 | --- | ---: | --- |
-| `pedidos` | 102 | catálogo, intake, status, condomínios, recibo, robustez, views e 12 testes E2E |
+| `pedidos` | 106 | catálogo, intake, status, condomínios, recibo, robustez, views e 12 testes E2E |
 | `enderecos` | 3 | endereço completo e ordenação de condomínios |
-| `estoque` | 27 | baixa, meia pizza, estorno, edição, ajustes manuais, admin |
-| `painel` | 28 | autenticação, dashboard, lista, criação, edição e ações |
+| `estoque` | 28 | baixa, meia pizza, estorno, edição, ajustes manuais, admin |
+| `painel` | 32 | autenticação, dashboard, lista, criação, edição e ações |
 | **Total** | **169** | |
 
 O gate do recibo precisa de Chrome ou Edge e das dependências de desenvolvimento

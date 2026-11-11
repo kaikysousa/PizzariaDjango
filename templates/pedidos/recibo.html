@@ -7,7 +7,7 @@
   <title>Pedido #{{ pedido.id }} — Pizzaria do Aislan</title>
   <meta name="robots" content="noindex, nofollow">
   <link rel="stylesheet" href="{% static 'css/recibo.css' %}">
-  {% if pedido.itens.all|length > 30 or pedido.observacoes|length > 250 or pedido.endereco|length > 240 %}
+  {% if pedido.itens.all|length > 30 or pedido.observacoes|length > 250 or pedido.endereco|length > 240 or pedido.endereco2|length > 60 %}
     <link rel="stylesheet" href="{% static 'css/recibo-muito-longo.css' %}">
   {% elif pedido.itens.all|length > 12 or pedido.observacoes|length > 120 %}
     <link rel="stylesheet" href="{% static 'css/recibo-longo.css' %}">
