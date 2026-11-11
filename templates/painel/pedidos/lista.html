@@ -1,0 +1,95 @@
+{% extends "painel/base.html" %}
+
+{% block title %}Pedidos — Painel{% endblock %}
+
+{% block content %}
+  <div class="pagina-cabecalho">
+    <div>
+      <p class="sobrescrito">Operação</p>
+      <h1>Pedidos</h1>
+      <p class="texto-suave">{{ page_obj.paginator.count }} pedido{{ page_obj.paginator.count|pluralize }} encontrado{{ page_obj.paginator.count|pluralize }}.</p>
+    </div>
+    <div class="pagina-cabecalho__acoes">
+      <a class="botao botao--primario" href="{% url 'painel_pedido_novo' %}">Novo pedido</a>
+    </div>
+  </div>
+
+  <form class="filtros" method="get" action="{% url 'painel_pedidos' %}" role="search">
+    <div class="campo">
+      <label for="filtro-q">Buscar por nome ou telefone</label>
+      <input type="search" id="filtro-q" name="q" value="{{ busca }}" placeholder="Ex.: Ana ou 11999999999">
+    </div>
+    <div class="campo">
+      <label for="filtro-status">Status</label>
+      <select id="filtro-status" name="status">
+        <option value="">Todos</option>
+        {% for valor, rotulo in statuses %}
+          <option value="{{ valor }}"{% if status_filtro == valor %} selected{% endif %}>{{ rotulo }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="filtros__acoes">
+      <button class="botao botao--primario" type="submit">Filtrar</button>
+      <a class="botao botao--fantasma" href="{% url 'painel_pedidos' %}">Limpar</a>
+    </div>
+  </form>
+
+  {% if page_obj.object_list %}
+    <div class="tabela-wrap">
+      <table class="tabela tabela--pedidos">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Cliente</th>
+            <th scope="col">Origem</th>
+            <th scope="col">Total</th>
+            <th scope="col">Status</th>
+            <th scope="col">Horário</th>
+            <th scope="col">Ação</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for pedido in page_obj %}
+            <tr>
+              <th scope="row"><a href="{% url 'painel_pedido_detalhe' pedido.pk %}">#{{ pedido.pk }}</a></th>
+              <td data-label="Cliente">
+                <span class="celula-principal">{{ pedido.nome }}</span>
+                <span class="texto-suave">{{ pedido.telefone }}</span>
+              </td>
+              <td data-label="Origem">{{ pedido.get_origem_display }}</td>
+              <td data-label="Total" class="numero">R$ {{ pedido.total|floatformat:2 }}</td>
+              <td data-label="Status">
+                <span class="badge badge--{{ pedido.status }}">{{ pedido.get_status_display }}</span>
+              </td>
+              <td data-label="Horário">
+                <time datetime="{{ pedido.criado_em|date:'c' }}">{{ pedido.criado_em|date:"d/m/Y H:i" }}</time>
+              </td>
+              <td data-label="Ação">
+                <a class="link" href="{% url 'painel_pedido_detalhe' pedido.pk %}">Abrir</a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    {% if page_obj.paginator.num_pages > 1 %}
+      <nav class="paginacao" aria-label="Paginação de pedidos">
+        {% if page_obj.has_previous %}
+          <a class="botao botao--fantasma botao--pequeno"
+             href="?page={{ page_obj.previous_page_number }}{% if busca %}&amp;q={{ busca|urlencode }}{% endif %}{% if status_filtro %}&amp;status={{ status_filtro }}{% endif %}">Anterior</a>
+        {% endif %}
+        <span class="paginacao__estado">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+          <a class="botao botao--fantasma botao--pequeno"
+             href="?page={{ page_obj.next_page_number }}{% if busca %}&amp;q={{ busca|urlencode }}{% endif %}{% if status_filtro %}&amp;status={{ status_filtro }}{% endif %}">Próxima</a>
+        {% endif %}
+      </nav>
+    {% endif %}
+  {% else %}
+    <div class="vazio vazio--bloco">
+      <p>Nenhum pedido encontrado com esses filtros.</p>
+      <a class="link" href="{% url 'painel_pedidos' %}">Limpar filtros</a>
+    </div>
+  {% endif %}
+{% endblock %}

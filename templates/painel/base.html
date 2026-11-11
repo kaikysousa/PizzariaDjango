@@ -1,0 +1,52 @@
+{% load static %}
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#1f5a3d">
+  <title>{% block title %}Painel — Pizzaria do Aislan{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/tokens.css' %}">
+  <link rel="stylesheet" href="{% static 'css/painel.css' %}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="painel">
+  <a class="pular" href="#conteudo">Pular para o conteúdo</a>
+
+  <header class="painel-topo">
+    <div class="painel-topo__interno">
+      <a class="painel-marca" href="{% url 'painel_dashboard' %}">
+        Pizzaria <strong>do Aislan</strong>
+        <span class="painel-marca__rotulo">Painel</span>
+      </a>
+
+      <nav class="painel-nav" aria-label="Painel">
+        <a href="{% url 'painel_pedidos' %}">Pedidos</a>
+        <a href="/painel/estoque/">Estoque</a>
+        <a href="/admin/">Admin</a>
+      </nav>
+
+      <div class="painel-conta">
+        <span class="painel-conta__usuario">{{ request.user.get_username }}</span>
+        <form method="post" action="{% url 'painel_sair' %}">
+          {% csrf_token %}
+          <button class="botao botao--fantasma botao--pequeno" type="submit">Sair</button>
+        </form>
+      </div>
+    </div>
+  </header>
+
+  <main id="conteudo" class="painel-conteudo">
+    {% if messages %}
+      <div class="mensagens" role="status" aria-live="polite">
+        {% for message in messages %}
+          <p class="alerta alerta--{{ message.tags }}">{{ message }}</p>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

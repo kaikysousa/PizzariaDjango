@@ -1,0 +1,123 @@
+{% extends "painel/base.html" %}
+
+{% block title %}{% if pedido %}Editar pedido #{{ pedido.pk }}{% else %}Novo pedido{% endif %} — Painel{% endblock %}
+
+{% block content %}
+  <p class="migalha">
+    <a class="link" href="{% url 'painel_pedidos' %}">Pedidos</a>
+    {% if pedido %}
+      / <a class="link" href="{% url 'painel_pedido_detalhe' pedido.pk %}">#{{ pedido.pk }}</a>
+    {% endif %}
+  </p>
+
+  <div class="pagina-cabecalho">
+    <div>
+      <p class="sobrescrito">{% if pedido %}Edição{% else %}Balcão{% endif %}</p>
+      <h1>{% if pedido %}Editar pedido #{{ pedido.pk }}{% else %}Novo pedido{% endif %}</h1>
+      <p class="texto-suave">
+        {% if pedido and not itens_editaveis %}
+          Os itens deste pedido já foram travados. Só os dados de cliente e entrega podem mudar.
+        {% elif pedido %}
+          O total é recalculado pelo servidor ao salvar. Itens só podem mudar até o preparo.
+        {% else %}
+          O pedido nasce aprovado e com origem balcão. O total é calculado pelo servidor.
+        {% endif %}
+      </p>
+    </div>
+  </div>
+
+  <form class="formulario" method="post" action="" novalidate>
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+      <div class="alerta alerta--error" role="alert">
+        {% for erro in form.non_field_errors %}<p>{{ erro }}</p>{% endfor %}
+      </div>
+    {% endif %}
+
+    <section class="painel-bloco" aria-labelledby="titulo-dados">
+      <h2 id="titulo-dados">Cliente e entrega</h2>
+      <div class="grade-campos">
+        {% for field in form %}
+          <div class="campo{% if field.errors %} campo--erro{% endif %}{% if field.name == 'observacoes' %} campo--largo{% endif %}">
+            <label for="{{ field.id_for_label }}">
+              {{ field.label }}{% if field.field.required %} <span class="obrigatorio" aria-hidden="true">*</span>{% endif %}
+            </label>
+            {{ field }}
+            {% if field.help_text %}<p class="ajuda">{{ field.help_text }}</p>{% endif %}
+            {% for erro in field.errors %}<p class="erro" id="erro-{{ field.name }}">{{ erro }}</p>{% endfor %}
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="painel-bloco" aria-labelledby="titulo-itens-form">
+      <div class="painel-bloco__cabecalho">
+        <h2 id="titulo-itens-form">Itens</h2>
+        {% if formset %}<span class="texto-suave">Preencha ao menos um item.</span>{% endif %}
+      </div>
+
+      {% if formset %}
+        {{ formset.management_form }}
+        {% if formset.non_form_errors %}
+          <div class="alerta alerta--error" role="alert">
+            {% for erro in formset.non_form_errors %}<p>{{ erro }}</p>{% endfor %}
+          </div>
+        {% endif %}
+        <div class="itens-formset">
+          {% for item_form in formset %}
+            <fieldset class="item-form">
+              <legend>Item {{ forloop.counter }}</legend>
+              {% if item_form.non_field_errors %}
+                <div class="alerta alerta--error" role="alert">
+                  {% for erro in item_form.non_field_errors %}<p>{{ erro }}</p>{% endfor %}
+                </div>
+              {% endif %}
+              <div class="grade-campos grade-campos--item">
+                {% for field in item_form %}
+                  <div class="campo{% if field.errors %} campo--erro{% endif %}">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% for erro in field.errors %}<p class="erro">{{ erro }}</p>{% endfor %}
+                  </div>
+                {% endfor %}
+              </div>
+            </fieldset>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="aviso">Itens em modo leitura.</p>
+        <div class="tabela-wrap">
+          <table class="tabela">
+            <thead>
+              <tr>
+                <th scope="col">Qtd.</th>
+                <th scope="col">Item</th>
+                <th scope="col">Subtotal</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in itens %}
+                <tr>
+                  <td class="numero">{{ item.quantidade }}x</td>
+                  <th scope="row">{{ item.nome }}</th>
+                  <td class="numero">R$ {{ item.subtotal|floatformat:2 }}</td>
+                </tr>
+              {% empty %}
+                <tr><td colspan="3">Nenhum item registrado.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% endif %}
+    </section>
+
+    <div class="formulario__acoes">
+      <button class="botao botao--primario" type="submit">
+        {% if pedido %}Salvar alterações{% else %}Criar pedido{% endif %}
+      </button>
+      <a class="botao botao--fantasma"
+         href="{% if pedido %}{% url 'painel_pedido_detalhe' pedido.pk %}{% else %}{% url 'painel_pedidos' %}{% endif %}">Cancelar</a>
+    </div>
+  </form>
+{% endblock %}
