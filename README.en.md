@@ -9,6 +9,14 @@ Django application for menu browsing, cart, checkout, and receipt printing on an
 
 [Ler em português](README.md)
 
+## Screenshots
+
+![Menu](docs/screenshots/cardapio.png)
+
+### 80 mm receipt
+
+<img src="docs/screenshots/recibo.png" alt="80 mm receipt" width="360">
+
 ## Features
 
 - Menu with search, category filter, and pagination.

@@ -9,6 +9,14 @@ Aplicação Django para cardápio, carrinho, checkout e impressão de recibo em 
 
 [Read in English](README.en.md)
 
+## Screenshots
+
+![Cardápio](docs/screenshots/cardapio.png)
+
+### Recibo de 80 mm
+
+<img src="docs/screenshots/recibo.png" alt="Recibo de 80 mm" width="360">
+
 ## Funcionalidades
 
 - Cardápio com busca, filtro por categoria e paginação.
