@@ -19,8 +19,8 @@ body {
 
 body {
   font-family: "Courier New", Courier, monospace;
-  font-size: 11px;
-  line-height: 1.35;
+  font-size: 13px;
+  line-height: 1.45;
   padding: 3mm;
 }
 
@@ -33,31 +33,31 @@ body {
   text-align: center;
   border-top: 1px dashed #000;
   border-bottom: 1px dashed #000;
-  padding: 2mm 0;
-  margin-bottom: 2mm;
+  padding: 2.5mm 0;
+  margin-bottom: 2.5mm;
 }
 
 .recibo__marca {
-  font-size: 13px;
+  font-size: 16px;
   font-weight: 700;
-  letter-spacing: .08em;
+  letter-spacing: .06em;
 }
 
 .recibo__titulo {
-  font-size: 11px;
-  letter-spacing: .2em;
-  margin-top: 1mm;
+  font-size: 13px;
+  letter-spacing: .16em;
+  margin-top: 1.5mm;
 }
 
 .recibo__bloco {
   border-bottom: 1px dashed #000;
-  padding-bottom: 2mm;
-  margin-bottom: 2mm;
+  padding-bottom: 2.5mm;
+  margin-bottom: 2.5mm;
   break-inside: avoid;
 }
 
 .recibo__bloco p {
-  margin: 0 0 1mm;
+  margin: 0 0 1.2mm;
   overflow-wrap: anywhere;
 }
 
@@ -71,7 +71,7 @@ body {
   display: flex;
   justify-content: space-between;
   gap: 2mm;
-  padding: 1mm 0;
+  padding: 1.5mm 0;
   border-bottom: 1px dotted #666;
   break-inside: avoid;
 }
@@ -82,22 +82,23 @@ body {
 
 .recibo__itens span:first-child {
   flex: 1;
+  overflow-wrap: anywhere;
 }
 
 .recibo__totais {
   border-top: 2px solid #000;
   border-bottom: 2px solid #000;
-  padding: 2mm 0;
-  margin-bottom: 2mm;
+  padding: 2.5mm 0;
+  margin-bottom: 2.5mm;
   text-align: right;
 }
 
 .recibo__totais p {
-  margin: 0 0 1mm;
+  margin: 0 0 1.2mm;
 }
 
 .recibo__totais strong {
-  font-size: 14px;
+  font-size: 17px;
 }
 
 .recibo__rodape {

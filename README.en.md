@@ -16,7 +16,7 @@ Django application for menu browsing, cart, checkout, and receipt printing on an
 
 ### 80 mm receipt
 
-<img src="docs/screenshots/recibo.png" alt="80 mm receipt" width="360">
+<img src="docs/screenshots/recibo.png" alt="80 mm receipt" width="300">
 
 ## Features
 
