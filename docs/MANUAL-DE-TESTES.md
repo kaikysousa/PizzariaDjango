@@ -52,16 +52,16 @@ Se o PowerShell bloquear a ativação, libere apenas a sessão atual:
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
 
-### Ajuste obrigatório no `.env`
+### Confira o `.env`
 
-O `.env.example` vem com `DJANGO_DB_PATH=` vazio. Com o valor vazio, o `migrate` falha com:
+O `.env.example` já vem com `DJANGO_DB_PATH=db.sqlite3`. Se a linha ficar vazia, o `migrate` falha com:
 
 ```text
 django.core.exceptions.ImproperlyConfigured: settings.DATABASES is improperly configured.
 Please supply the NAME value.
 ```
 
-Abra o `.env` e deixe:
+Abra o `.env` e mantenha:
 
 ```dotenv
 DJANGO_DEBUG=1
