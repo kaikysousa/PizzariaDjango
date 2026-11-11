@@ -149,4 +149,3 @@ class ItemPedido(models.Model):
     @property
     def subtotal(self):
         return self.preco_unitario * self.quantidade
-

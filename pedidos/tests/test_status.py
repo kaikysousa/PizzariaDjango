@@ -134,4 +134,3 @@ class StatusPedidoTests(TestCase):
         self.assertEqual(pedido.total, Decimal("91.80"))
         self.assertEqual(pedido.itens.count(), 1)
         self.assertEqual(pedido.itens.get().preco_unitario, Decimal("45.90"))
-

@@ -132,4 +132,3 @@ scripts/              audit gates
 - Does not issue fiscal documents. CNPJ is optional and comes from `PIZZARIA_CNPJ`.
 - No customer authentication; the receipt uses a UUID token with `noindex`.
 - SQLite is the default development database.
-
