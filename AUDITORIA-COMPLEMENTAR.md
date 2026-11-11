@@ -1,5 +1,7 @@
 # Auditoria complementar — Pizzaria Django
 
+> **Status:** os problemas descritos nesta auditoria foram corrigidos. Ver [RELATORIO-CORRECAO.md](RELATORIO-CORRECAO.md).
+
 Data: 27/10/2026  
 Base: commit `ea4b2d9`, branch `fix/auditoria-20261027`  
 Método: Django 5.1.6, banco temporário com 6 produtos, Chrome headless via CDP em 390×844, 768×1024 e 1280×900, Lighthouse 12 mobile.

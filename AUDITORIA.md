@@ -1,5 +1,7 @@
 # Auditoria — Pizzaria Django
 
+> **Status:** os problemas descritos nesta auditoria foram corrigidos. Ver [RELATORIO-CORRECAO.md](RELATORIO-CORRECAO.md).
+
 Data: 27/10/2026  
 Commit auditado: `ea4b2d9`  
 Escopo: fase 1, somente leitura. Nenhum código de aplicação foi alterado.

@@ -1,6 +1,13 @@
 ﻿# Sistema de Pedidos — Pizzaria
 
+[![CI](https://github.com/kaikysousa/PizzariaDjango/actions/workflows/ci.yml/badge.svg)](https://github.com/kaikysousa/PizzariaDjango/actions/workflows/ci.yml)
+[![Python 3.12+](https://img.shields.io/badge/python-3.12%2B-blue.svg)](https://www.python.org/)
+[![Django 5.2](https://img.shields.io/badge/django-5.2-092E20.svg)](https://www.djangoproject.com/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+
 Aplicação Django para cardápio, carrinho, checkout e impressão de recibo em impressora térmica de 80 mm.
+
+[Read in English](README.en.md)
 
 ## Funcionalidades
 
@@ -53,7 +60,18 @@ python manage.py test
 
 Com `DJANGO_DEBUG=0` no ambiente, rode `DJANGO_DEBUG=1 python manage.py test`. A suíte depende do modo de desenvolvimento: em produção o `collectstatic` exige manifest e o `SECURE_SSL_REDIRECT` responde 301.
 
-Os gates de auditoria ficam em `GATES.md` e podem ser verificados com a skill `unlazy`.
+### Qualidade
+
+- 51 testes em `pedidos/tests/` cobrindo catálogo, intake, robustez e views.
+- CI em `.github/workflows/ci.yml`: testes, gate de segredos, gate de segurança, gate de deploy e Ruff.
+- Comandos dos gates: `python scripts/check_secrets.py`, `python scripts/check_security.py`, `python scripts/check_deploy.py`.
+
+## Decisões técnicas
+
+- O total do pedido é recalculado no servidor. O navegador não define o preço final.
+- O recibo usa CSS `@page` de 80 mm e listener com nonce para funcionar com CSP.
+- Configuração por variáveis de ambiente, com `DEBUG=0` obrigando `DJANGO_SECRET_KEY`.
+- SQLite no desenvolvimento; a camada de persistência fica isolada no Django ORM.
 
 ## Produção
 
