@@ -16,6 +16,8 @@ class IngredienteAdmin(admin.ModelAdmin):
     search_fields = ("nome",)
     list_filter = ("unidade", "ativo")
     list_editable = ("ativo",)
+    # Saldo só muda pelo painel de estoque, sempre com movimento registrado.
+    readonly_fields = ("estoque_atual",)
 
     @admin.display(boolean=True, description="Abaixo do mínimo")
     def abaixo_minimo(self, obj):
@@ -26,7 +28,7 @@ class IngredienteAdmin(admin.ModelAdmin):
 class FichaTecnicaAdmin(admin.ModelAdmin):
     list_display = ("produto", "ingrediente", "quantidade")
     search_fields = ("produto__nome", "ingrediente__nome")
-    list_filter = ("ingrediente",)
+    list_filter = ("produto", "ingrediente")
     list_editable = ("quantidade",)
     list_select_related = ("produto", "ingrediente")
 
@@ -61,4 +63,7 @@ class MovimentoEstoqueAdmin(admin.ModelAdmin):
         return False
 
     def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
         return False

@@ -1,0 +1,157 @@
+{% extends "estoque/base.html" %}
+
+{% block title %}Ajustar {{ ingrediente.nome }} — Estoque{% endblock %}
+
+{% block content %}
+<section class="pagina pagina--estreita" aria-labelledby="ajuste-titulo">
+  <p class="migalha"><a href="{% url 'estoque:lista' %}">← Voltar para o estoque</a></p>
+
+  <header class="pagina__cabecalho">
+    <div>
+      <p class="olho">Ajuste manual</p>
+      <h1 id="ajuste-titulo">{{ ingrediente.nome }}</h1>
+      <p class="pagina__apoio">
+        Unidade: {{ ingrediente.get_unidade_display }}
+        {% if not ingrediente.ativo %}<span class="selo selo--inativo">Inativo</span>{% endif %}
+      </p>
+    </div>
+  </header>
+
+  <div class="resumo resumo--compacto">
+    <article class="resumo__cartao">
+      <span class="resumo__rotulo">Saldo antes</span>
+      <strong class="resumo__valor">{{ saldo_antes|floatformat:3 }} {{ ingrediente.unidade }}</strong>
+    </article>
+    <article class="resumo__cartao{% if ingrediente.abaixo_minimo %} resumo__cartao--alerta{% endif %}">
+      <span class="resumo__rotulo">Estoque mínimo</span>
+      <strong class="resumo__valor">{{ ingrediente.estoque_minimo|floatformat:3 }} {{ ingrediente.unidade }}</strong>
+    </article>
+    <article class="resumo__cartao">
+      <span class="resumo__rotulo">Saldo depois (previsto)</span>
+      <strong class="resumo__valor">
+        <output
+          id="saldo-depois"
+          data-saldo="{{ saldo_inicial_js }}"
+          data-unidade="{{ ingrediente.unidade }}"
+          aria-live="polite"
+        >—</output>
+      </strong>
+    </article>
+  </div>
+
+  <div class="grade">
+    <section class="cartao" aria-labelledby="form-titulo">
+      <header class="cartao__cabecalho">
+        <h2 id="form-titulo">Registrar movimento</h2>
+      </header>
+
+      <form method="post" class="formulario" novalidate>
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+          <div class="alerta alerta--error" role="alert">{{ form.non_field_errors }}</div>
+        {% endif %}
+
+        {% if form.errors %}
+          <div class="alerta alerta--error" role="alert">
+            <p>Revise os campos abaixo:</p>
+            <ul>
+              {% for field in form %}
+                {% if field.errors %}<li><a href="#{{ field.id_for_label }}">{{ field.label }}</a></li>{% endif %}
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+
+        <div class="campo{% if form.tipo.errors %} campo--erro{% endif %}">
+          <label for="{{ form.tipo.id_for_label }}">{{ form.tipo.label }}</label>
+          {{ form.tipo }}
+          <p class="ajuda">Entrada e ajuste somam ao saldo; perda subtrai. Saída e estorno são gerados automaticamente pelo sistema e não podem ser lançados aqui.</p>
+          {% if form.tipo.errors %}<p class="erro" role="alert">{% for erro in form.tipo.errors %}{{ erro }}{% endfor %}</p>{% endif %}
+        </div>
+
+        <div class="campo{% if form.quantidade.errors %} campo--erro{% endif %}">
+          <label for="{{ form.quantidade.id_for_label }}">{{ form.quantidade.label }} ({{ ingrediente.unidade }})</label>
+          {{ form.quantidade }}
+          <p class="ajuda">Use até três casas decimais. A quantidade deve ser maior que zero.</p>
+          {% if form.quantidade.errors %}<p class="erro" role="alert">{% for erro in form.quantidade.errors %}{{ erro }}{% endfor %}</p>{% endif %}
+        </div>
+
+        <div class="campo{% if form.motivo.errors %} campo--erro{% endif %}">
+          <label for="{{ form.motivo.id_for_label }}">{{ form.motivo.label }}</label>
+          {{ form.motivo }}
+          <p class="ajuda">Obrigatório. Fica gravado no movimento e no histórico de auditoria.</p>
+          {% if form.motivo.errors %}<p class="erro" role="alert">{% for erro in form.motivo.errors %}{{ erro }}{% endfor %}</p>{% endif %}
+        </div>
+
+        <div class="formulario__acoes">
+          <button class="botao botao--primario" type="submit">Confirmar ajuste</button>
+          <a class="botao botao--texto" href="{% url 'estoque:lista' %}">Cancelar</a>
+        </div>
+      </form>
+    </section>
+
+    <section class="cartao" aria-labelledby="historico-titulo">
+      <header class="cartao__cabecalho">
+        <h2 id="historico-titulo">Últimos movimentos</h2>
+        <a class="botao botao--texto" href="{% url 'admin:estoque_movimentoestoque_changelist' %}?ingrediente__id__exact={{ ingrediente.pk }}">Ver todos</a>
+      </header>
+
+      {% if movimentos %}
+        <ol class="movimentos">
+          {% for movimento in movimentos %}
+            <li class="movimento movimento--{{ movimento.tipo }}">
+              <div class="movimento__topo">
+                <strong>{{ movimento.get_tipo_display }}</strong>
+                <span>{{ movimento.criado_em|date:"d/m/Y H:i" }}</span>
+              </div>
+              <p class="movimento__quantidade">
+                {{ movimento.quantidade|floatformat:3 }} {{ ingrediente.unidade }}
+                <span class="texto-suave">→ saldo {{ movimento.saldo_apos|floatformat:3 }} {{ ingrediente.unidade }}</span>
+              </p>
+              <p class="movimento__motivo">{{ movimento.motivo|default:"Sem motivo informado" }}</p>
+              <p class="movimento__usuario">
+                {% if movimento.criado_por %}por {{ movimento.criado_por.get_username }}{% else %}sistema{% endif %}
+              </p>
+            </li>
+          {% endfor %}
+        </ol>
+      {% else %}
+        <p class="texto-suave">Nenhum movimento registrado para este ingrediente.</p>
+      {% endif %}
+    </section>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script nonce="{{ request.csp_nonce }}">
+  (function () {
+    const saida = document.getElementById("saldo-depois");
+    const tipo = document.getElementById("id_tipo");
+    const quantidade = document.getElementById("id_quantidade");
+    if (!saida || !tipo || !quantidade) return;
+
+    const saldoAtual = Number(saida.dataset.saldo);
+    const unidade = saida.dataset.unidade || "";
+    const formato = new Intl.NumberFormat("pt-BR", {
+      minimumFractionDigits: 3,
+      maximumFractionDigits: 3
+    });
+
+    function atualizar() {
+      const valor = Number(String(quantidade.value).replace(",", "."));
+      if (!Number.isFinite(valor) || valor <= 0 || !Number.isFinite(saldoAtual)) {
+        saida.textContent = "—";
+        return;
+      }
+      const delta = tipo.value === "perda" ? -valor : valor;
+      saida.textContent = formato.format(saldoAtual + delta) + " " + unidade;
+    }
+
+    tipo.addEventListener("change", atualizar);
+    quantidade.addEventListener("input", atualizar);
+    atualizar();
+  })();
+</script>
+{% endblock %}

@@ -1,0 +1,142 @@
+{% extends "estoque/base.html" %}
+
+{% block title %}Estoque — Pizzaria do Aislan{% endblock %}
+
+{% block content %}
+<section class="pagina" aria-labelledby="estoque-titulo">
+  <header class="pagina__cabecalho">
+    <div>
+      <p class="olho">Operação</p>
+      <h1 id="estoque-titulo">Estoque de ingredientes</h1>
+      <p class="pagina__apoio">Acompanhe saldos, mínimos e produtos que ainda não baixam estoque.</p>
+    </div>
+    <a class="botao botao--primario" href="{% url 'admin:estoque_ingrediente_add' %}">Novo ingrediente</a>
+  </header>
+
+  <div class="resumo" aria-label="Resumo do estoque">
+    <article class="resumo__cartao">
+      <span class="resumo__rotulo">Ingredientes cadastrados</span>
+      <strong class="resumo__valor">{{ total_ingredientes }}</strong>
+    </article>
+    <article class="resumo__cartao resumo__cartao--alerta">
+      <span class="resumo__rotulo">Ativos abaixo do mínimo</span>
+      <strong class="resumo__valor">{{ total_abaixo_minimo }}</strong>
+    </article>
+    <article class="resumo__cartao">
+      <span class="resumo__rotulo">Produtos sem ficha técnica</span>
+      <strong class="resumo__valor">{{ produtos_sem_ficha_total }}</strong>
+    </article>
+  </div>
+
+  {% if total_abaixo_minimo %}
+    <p class="alerta alerta--warning" role="status">
+      {{ total_abaixo_minimo }} ingrediente{{ total_abaixo_minimo|pluralize }} ativo{{ total_abaixo_minimo|pluralize }} abaixo do mínimo. Reponha ou revise o estoque mínimo.
+    </p>
+  {% endif %}
+
+  <form class="filtros" method="get" role="search" action="{% url 'estoque:lista' %}">
+    <div class="filtros__campo">
+      <label for="busca">Buscar ingrediente</label>
+      <input id="busca" name="q" type="search" value="{{ busca }}" placeholder="Nome do ingrediente" autocomplete="off">
+    </div>
+    <div class="filtros__campo">
+      <label for="status">Status</label>
+      <select id="status" name="status">
+        {% for valor, rotulo in status_choices %}
+          <option value="{{ valor }}"{% if valor == status_ativo %} selected{% endif %}>{{ rotulo }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="filtros__acoes">
+      <button class="botao botao--primario" type="submit">Filtrar</button>
+      {% if busca or status_ativo %}
+        <a class="botao botao--texto" href="{% url 'estoque:lista' %}">Limpar</a>
+      {% endif %}
+    </div>
+  </form>
+
+  <div class="tabela-envolucro">
+    <table class="tabela">
+      <caption class="visualmente-oculto">Ingredientes com saldo, mínimo, status e última movimentação</caption>
+      <thead>
+        <tr>
+          <th scope="col">Ingrediente</th>
+          <th scope="col">Unidade</th>
+          <th scope="col" class="numero">Saldo</th>
+          <th scope="col" class="numero">Mínimo</th>
+          <th scope="col">Status</th>
+          <th scope="col">Última movimentação</th>
+          <th scope="col"><span class="visualmente-oculto">Ações</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for ingrediente in ingredientes %}
+          <tr{% if ingrediente.abaixo_minimo and ingrediente.ativo %} class="tabela__linha--alerta"{% endif %}>
+            <th scope="row">{{ ingrediente.nome }}</th>
+            <td>{{ ingrediente.get_unidade_display }}</td>
+            <td class="numero">{{ ingrediente.estoque_atual|floatformat:3 }}</td>
+            <td class="numero">{{ ingrediente.estoque_minimo|floatformat:3 }}</td>
+            <td>
+              {% if not ingrediente.ativo %}
+                <span class="selo selo--inativo">Inativo</span>
+              {% elif ingrediente.abaixo_minimo %}
+                <span class="selo selo--alerta">Abaixo do mínimo</span>
+              {% else %}
+                <span class="selo selo--ok">OK</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if ingrediente.ultima_movimentacao %}
+                {{ ingrediente.ultima_movimentacao|date:"d/m/Y H:i" }}
+              {% else %}
+                <span class="texto-suave">Sem movimentação</span>
+              {% endif %}
+            </td>
+            <td class="tabela__acoes">
+              <a class="botao botao--pequeno" href="{% url 'estoque:ajustar' ingrediente.pk %}">Ajustar</a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="7" class="tabela__vazia">
+              Nenhum ingrediente encontrado com esses filtros.
+              {% if not busca and not status_ativo %}Cadastre um ingrediente no admin para começar.{% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <section class="cartao cartao--aviso" aria-labelledby="sem-ficha-titulo">
+    <header class="cartao__cabecalho">
+      <h2 id="sem-ficha-titulo">Produtos sem ficha técnica</h2>
+      <span class="selo{% if produtos_sem_ficha_total %} selo--alerta{% else %} selo--ok{% endif %}">
+        {{ produtos_sem_ficha_total }}
+      </span>
+    </header>
+
+    {% if produtos_sem_ficha %}
+      <p>
+        Estes produtos disponíveis não têm ficha técnica. Eles continuam vendáveis, mas não baixam estoque na aprovação.
+        Cadastre os ingredientes e as quantidades no admin do produto.
+      </p>
+      <ul class="chips">
+        {% for produto in produtos_sem_ficha %}
+          <li>
+            <a href="{% url 'admin:pedidos_produto_change' produto.pk %}">{{ produto.nome }}</a>
+            <span>{{ produto.get_categoria_display }}</span>
+          </li>
+        {% endfor %}
+      </ul>
+      {% if produtos_sem_ficha_restantes %}
+        <p class="texto-suave">
+          E mais {{ produtos_sem_ficha_restantes }} produto{{ produtos_sem_ficha_restantes|pluralize }} sem ficha.
+        </p>
+      {% endif %}
+    {% else %}
+      <p>Todos os produtos disponíveis têm ficha técnica cadastrada.</p>
+    {% endif %}
+  </section>
+</section>
+{% endblock %}
