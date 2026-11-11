@@ -59,7 +59,7 @@ class Pedido(models.Model):
     token = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
     nome = models.CharField("nome", max_length=100)
     telefone = models.CharField("telefone", max_length=20)
-    endereco = models.CharField("endereço", max_length=150)
+    endereco = models.CharField("endereço", max_length=255)
     endereco2 = models.CharField("complemento", max_length=100, blank=True)
     observacoes = models.TextField("observações", blank=True)
     total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
@@ -149,3 +149,4 @@ class ItemPedido(models.Model):
     @property
     def subtotal(self):
         return self.preco_unitario * self.quantidade
+
