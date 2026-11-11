@@ -83,7 +83,7 @@ Também foram feitos: `python-dotenv`, WhiteNoise, Django 5.2.18 LTS, HSTS de 1 
 
 ## Gates
 
-`GATES.md` reporta **15 cumpridos, 1 abandonado**:
+O relatório local de gates (não versionado) reporta **15 cumpridos, 1 abandonado**:
 
 - `G14` — impressão física. Não há impressora nem dono presentes. PDF de 80,1 mm gerado, CSS documentado e procedimento abaixo.
 
@@ -93,8 +93,9 @@ Para repetir:
 .venv\Scripts\python.exe scripts\run_tests.py
 .venv\Scripts\python.exe scripts\check_ui.py
 .venv\Scripts\python.exe scripts\check_receipt_pdf.py
-node ~/.agents/skills/unlazy/scripts/gate-check.mjs GATES.md
 ```
+
+A verificação dos gates usa um arquivo local não versionado (`GATES.md`).
 
 ## Impressão física — pendência do dono
 
