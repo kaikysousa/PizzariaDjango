@@ -1,0 +1,236 @@
+from decimal import Decimal
+
+from django.core.exceptions import ValidationError
+from django.test import TestCase
+
+from estoque.models import FichaTecnica, Ingrediente, MovimentoEstoque
+from estoque.services import (
+    consumir_pedido,
+    estornar_pedido,
+    registrar_movimento,
+)
+from pedidos.models import Categoria, Pedido, Produto
+from pedidos.services import alterar_status, atualizar_itens_pedido, criar_pedido
+
+
+class EstoquePedidoTests(TestCase):
+    def setUp(self):
+        self.mussarela = Ingrediente.objects.create(
+            nome="Mussarela",
+            unidade=Ingrediente.Unidade.GRAMA,
+            estoque_atual="1000",
+            estoque_minimo="100",
+        )
+        self.calabresa = Ingrediente.objects.create(
+            nome="Calabresa",
+            unidade=Ingrediente.Unidade.GRAMA,
+            estoque_atual="500",
+            estoque_minimo="100",
+        )
+        self.pizza = Produto.objects.create(
+            nome="Margherita", preco="45.90", categoria=Categoria.PIZZA
+        )
+        self.pizza_calabresa = Produto.objects.create(
+            nome="Calabresa", preco="49.90", categoria=Categoria.PIZZA
+        )
+        self.bebida = Produto.objects.create(
+            nome="Água", preco="4.00", categoria=Categoria.BEBIDA
+        )
+        FichaTecnica.objects.create(
+            produto=self.pizza,
+            ingrediente=self.mussarela,
+            quantidade="200",
+        )
+        FichaTecnica.objects.create(
+            produto=self.pizza_calabresa,
+            ingrediente=self.calabresa,
+            quantidade="200",
+        )
+
+    def _criar(self, itens, **kwargs):
+        dados = {
+            "itens": itens,
+            "nome": "Ana",
+            "telefone": "11999999999",
+            "endereco": "Rua A, 1",
+        }
+        dados.update(kwargs)
+        return criar_pedido(**dados)
+
+    def _aprovar(self, pedido):
+        return alterar_status(pedido, Pedido.Status.APROVADO)
+
+    def test_baixa_de_pizza_inteira(self):
+        pedido = self._criar([{"ids": [self.pizza.id], "quantidade": 2}])
+
+        self._aprovar(pedido)
+
+        self.mussarela.refresh_from_db()
+        self.assertEqual(self.mussarela.estoque_atual, Decimal("600"))
+        movimento = MovimentoEstoque.objects.get(
+            pedido=pedido, tipo=MovimentoEstoque.Tipo.SAIDA
+        )
+        self.assertEqual(movimento.quantidade, Decimal("400"))
+        self.assertEqual(movimento.saldo_apos, Decimal("600"))
+
+    def test_baixa_de_meia_pizza(self):
+        pedido = self._criar(
+            [{"ids": [self.pizza.id, self.pizza_calabresa.id], "quantidade": 2}]
+        )
+
+        self._aprovar(pedido)
+
+        self.mussarela.refresh_from_db()
+        self.calabresa.refresh_from_db()
+        self.assertEqual(self.mussarela.estoque_atual, Decimal("800"))
+        self.assertEqual(self.calabresa.estoque_atual, Decimal("300"))
+
+    def test_criacao_de_balcao_ja_consome_estoque(self):
+        pedido = self._criar(
+            [{"ids": [self.pizza.id], "quantidade": 1}],
+            origem=Pedido.Origem.BALCAO,
+        )
+
+        self.mussarela.refresh_from_db()
+        self.assertEqual(pedido.status, Pedido.Status.APROVADO)
+        self.assertEqual(self.mussarela.estoque_atual, Decimal("800"))
+
+    def test_estorno_em_cancelamento(self):
+        pedido = self._criar([{"ids": [self.pizza.id], "quantidade": 2}])
+        pedido = self._aprovar(pedido)
+        self.mussarela.refresh_from_db()
+        self.assertEqual(self.mussarela.estoque_atual, Decimal("600"))
+
+        alterar_status(
+            pedido,
+            Pedido.Status.CANCELADO,
+            motivo="Cliente desistiu",
+        )
+
+        self.mussarela.refresh_from_db()
+        self.assertEqual(self.mussarela.estoque_atual, Decimal("1000"))
+        self.assertTrue(
+            MovimentoEstoque.objects.filter(
+                pedido=pedido, tipo=MovimentoEstoque.Tipo.ESTORNO
+            ).exists()
+        )
+
+    def test_estorno_nao_duplica(self):
+        pedido = self._criar([{"ids": [self.pizza.id], "quantidade": 2}])
+        pedido = self._aprovar(pedido)
+        alterar_status(pedido, Pedido.Status.CANCELADO, motivo="Cliente desistiu")
+
+        self.assertEqual(estornar_pedido(pedido), [])
+
+        self.mussarela.refresh_from_db()
+        self.assertEqual(self.mussarela.estoque_atual, Decimal("1000"))
+        self.assertEqual(
+            MovimentoEstoque.objects.filter(
+                pedido=pedido, tipo=MovimentoEstoque.Tipo.ESTORNO
+            ).count(),
+            1,
+        )
+
+    def test_cancelamento_apos_preparando_nao_estorna(self):
+        pedido = self._criar([{"ids": [self.pizza.id], "quantidade": 1}])
+        pedido = self._aprovar(pedido)
+        pedido = alterar_status(pedido, Pedido.Status.PREPARANDO)
+
+        alterar_status(pedido, Pedido.Status.CANCELADO, motivo="Perda")
+
+        self.mussarela.refresh_from_db()
+        self.assertEqual(self.mussarela.estoque_atual, Decimal("800"))
+        self.assertFalse(
+            MovimentoEstoque.objects.filter(
+                pedido=pedido, tipo=MovimentoEstoque.Tipo.ESTORNO
+            ).exists()
+        )
+
+    def test_edicao_apos_aprovacao_nao_duplica_baixa(self):
+        pedido = self._criar([{"ids": [self.pizza.id], "quantidade": 1}])
+        pedido = self._aprovar(pedido)
+        self.mussarela.refresh_from_db()
+        self.assertEqual(self.mussarela.estoque_atual, Decimal("800"))
+
+        pedido = atualizar_itens_pedido(
+            pedido, [{"ids": [self.pizza.id], "quantidade": 2}]
+        )
+        self.mussarela.refresh_from_db()
+        self.assertEqual(self.mussarela.estoque_atual, Decimal("600"))
+        self.assertEqual(pedido.total, Decimal("91.80"))
+
+        atualizar_itens_pedido(
+            pedido, [{"ids": [self.pizza.id], "quantidade": 2}]
+        )
+        self.mussarela.refresh_from_db()
+        self.assertEqual(self.mussarela.estoque_atual, Decimal("600"))
+
+    def test_produto_sem_ficha_nao_quebra(self):
+        pedido = self._criar([{"ids": [self.bebida.id], "quantidade": 3}])
+
+        pedido = self._aprovar(pedido)
+        avisos = consumir_pedido(pedido)
+
+        self.assertEqual(pedido.status, Pedido.Status.APROVADO)
+        self.assertTrue(any("sem ficha técnica" in aviso for aviso in avisos))
+        self.assertFalse(
+            MovimentoEstoque.objects.filter(pedido=pedido).exists()
+        )
+        self.mussarela.refresh_from_db()
+        self.assertEqual(self.mussarela.estoque_atual, Decimal("1000"))
+
+    def test_movimento_manual_atualiza_saldo(self):
+        movimento = registrar_movimento(
+            self.mussarela,
+            MovimentoEstoque.Tipo.ENTRADA,
+            "250",
+            motivo="Compra",
+        )
+
+        self.mussarela.refresh_from_db()
+        self.assertEqual(self.mussarela.estoque_atual, Decimal("1250"))
+        self.assertEqual(movimento.saldo_apos, Decimal("1250"))
+
+    def test_abaixo_minimo(self):
+        self.assertFalse(self.mussarela.abaixo_minimo)
+
+        self.mussarela.estoque_atual = Decimal("50")
+        self.mussarela.save(update_fields=["estoque_atual"])
+        self.mussarela.refresh_from_db()
+
+        self.assertTrue(self.mussarela.abaixo_minimo)
+
+
+class FichaTecnicaTests(TestCase):
+    def setUp(self):
+        self.ingrediente = Ingrediente.objects.create(
+            nome="Farinha", unidade=Ingrediente.Unidade.GRAMA
+        )
+        self.produto = Produto.objects.create(
+            nome="Pizza", preco="40.00", categoria=Categoria.PIZZA
+        )
+
+    def test_quantidade_deve_ser_positiva(self):
+        ficha = FichaTecnica(
+            produto=self.produto,
+            ingrediente=self.ingrediente,
+            quantidade="0",
+        )
+
+        with self.assertRaises(ValidationError):
+            ficha.full_clean()
+
+    def test_unique_together(self):
+        FichaTecnica.objects.create(
+            produto=self.produto,
+            ingrediente=self.ingrediente,
+            quantidade="100",
+        )
+        duplicada = FichaTecnica(
+            produto=self.produto,
+            ingrediente=self.ingrediente,
+            quantidade="50",
+        )
+
+        with self.assertRaises(ValidationError):
+            duplicada.full_clean()

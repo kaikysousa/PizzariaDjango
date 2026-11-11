@@ -1,5 +1,6 @@
 ﻿import uuid
 
+from django.conf import settings
 from django.core.validators import MaxValueValidator
 from django.db import models
 from django.db.models import Case, IntegerField, Value, When
@@ -39,11 +40,16 @@ class Produto(models.Model):
 
 class Pedido(models.Model):
     class Status(models.TextChoices):
-        NOVO = "novo", "Novo"
+        AGUARDANDO_APROVACAO = "aguardando_aprovacao", "Aguardando aprovação"
+        APROVADO = "aprovado", "Aprovado"
         PREPARANDO = "preparando", "Preparando"
         SAIU = "saiu", "Saiu para entrega"
         ENTREGUE = "entregue", "Entregue"
         CANCELADO = "cancelado", "Cancelado"
+
+    class Origem(models.TextChoices):
+        CLIENTE = "cliente", "Cliente"
+        BALCAO = "balcao", "Balcão"
 
     class Pagamento(models.TextChoices):
         DINHEIRO = "dinheiro", "Dinheiro"
@@ -58,11 +64,32 @@ class Pedido(models.Model):
     observacoes = models.TextField("observações", blank=True)
     total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     status = models.CharField(
-        max_length=20, choices=Status.choices, default=Status.NOVO
+        max_length=20,
+        choices=Status.choices,
+        default=Status.AGUARDANDO_APROVACAO,
+    )
+    origem = models.CharField(
+        max_length=20, choices=Origem.choices, default=Origem.CLIENTE
     )
     pagamento = models.CharField(
         max_length=20, choices=Pagamento.choices, default=Pagamento.DINHEIRO
     )
+    condominio = models.ForeignKey(
+        "enderecos.Condominio",
+        related_name="pedidos",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+    )
+    aprovado_por = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name="pedidos_aprovados",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+    )
+    aprovado_em = models.DateTimeField(null=True, blank=True)
+    motivo_cancelamento = models.TextField(blank=True)
     legacy_items = models.TextField(blank=True, default="")
     criado_em = models.DateTimeField(auto_now_add=True)
     atualizado_em = models.DateTimeField(auto_now=True)
@@ -72,6 +99,13 @@ class Pedido(models.Model):
 
     def __str__(self):
         return f"Pedido #{self.pk} — {self.nome}"
+
+    @property
+    def itens_editaveis(self):
+        return self.status in {
+            self.Status.AGUARDANDO_APROVACAO,
+            self.Status.APROVADO,
+        }
 
     def recalcular_total(self, salvar=True):
         total = sum((item.subtotal for item in self.itens.all()), start=0)
