@@ -1,0 +1,128 @@
+{% extends "painel/base.html" %}
+
+{% block title %}Dashboard — Painel{% endblock %}
+
+{% block content %}
+  <div class="pagina-cabecalho">
+    <div>
+      <p class="sobrescrito">Operação</p>
+      <h1>Dashboard</h1>
+      <p class="texto-suave">Visão rápida dos pedidos e dos insumos da loja.</p>
+    </div>
+    <div class="pagina-cabecalho__acoes">
+      <a class="botao botao--primario" href="{% url 'painel_pedido_novo' %}">Novo pedido</a>
+      <a class="botao botao--fantasma" href="{% url 'painel_pedidos' %}">Ver todos os pedidos</a>
+    </div>
+  </div>
+
+  <section aria-labelledby="titulo-status">
+    <h2 class="titulo-secao" id="titulo-status">Pedidos por status</h2>
+    <ul class="grade-status">
+      {% for cartao in cartoes_status %}
+        <li>
+          <a class="cartao-status cartao-status--{{ cartao.status }}"
+             href="{% url 'painel_pedidos' %}?status={{ cartao.status }}">
+            <span class="cartao-status__numero">{{ cartao.total }}</span>
+            <span class="cartao-status__rotulo">{{ cartao.rotulo }}</span>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </section>
+
+  <div class="grade-duas">
+    <section class="painel-bloco" aria-labelledby="titulo-pendentes">
+      <div class="painel-bloco__cabecalho">
+        <h2 id="titulo-pendentes">Aguardando aprovação</h2>
+        {% if total_pendentes %}
+          <span class="contador-pill">{{ total_pendentes }}</span>
+        {% endif %}
+      </div>
+      {% if pendentes %}
+        <ul class="lista-compacta">
+          {% for pedido in pendentes %}
+            <li>
+              <a class="lista-compacta__principal" href="{% url 'painel_pedido_detalhe' pedido.pk %}">
+                <strong>#{{ pedido.pk }} — {{ pedido.nome }}</strong>
+                <span class="texto-suave">{{ pedido.telefone }}</span>
+              </a>
+              <span class="lista-compacta__meta">
+                <span class="badge badge--{{ pedido.status }}">{{ pedido.get_status_display }}</span>
+                <time datetime="{{ pedido.criado_em|date:'c' }}">{{ pedido.criado_em|date:"d/m H:i" }}</time>
+              </span>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="vazio">Nenhum pedido aguardando aprovação.</p>
+      {% endif %}
+    </section>
+
+    <section class="painel-bloco" aria-labelledby="titulo-andamento">
+      <div class="painel-bloco__cabecalho">
+        <h2 id="titulo-andamento">Em preparo e saída</h2>
+      </div>
+      {% if em_andamento %}
+        <ul class="lista-compacta">
+          {% for pedido in em_andamento %}
+            <li>
+              <a class="lista-compacta__principal" href="{% url 'painel_pedido_detalhe' pedido.pk %}">
+                <strong>#{{ pedido.pk }} — {{ pedido.nome }}</strong>
+                <span class="texto-suave">R$ {{ pedido.total|floatformat:2 }}</span>
+              </a>
+              <span class="lista-compacta__meta">
+                <span class="badge badge--{{ pedido.status }}">{{ pedido.get_status_display }}</span>
+                <time datetime="{{ pedido.criado_em|date:'c' }}">{{ pedido.criado_em|date:"d/m H:i" }}</time>
+              </span>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="vazio">Nenhum pedido em preparo ou saída.</p>
+      {% endif %}
+    </section>
+  </div>
+
+  <section class="painel-bloco" aria-labelledby="titulo-estoque">
+    <div class="painel-bloco__cabecalho">
+      <h2 id="titulo-estoque">Ingredientes abaixo do mínimo</h2>
+      <a class="link" href="{% url 'estoque:lista' %}">Gerenciar estoque</a>
+    </div>
+    {% if ingredientes_baixos %}
+      <div class="tabela-wrap">
+        <table class="tabela">
+          <thead>
+            <tr>
+              <th scope="col">Ingrediente</th>
+              <th scope="col">Atual</th>
+              <th scope="col">Mínimo</th>
+              <th scope="col">Unidade</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for ingrediente in ingredientes_baixos %}
+              <tr>
+                <th scope="row">{{ ingrediente.nome }}</th>
+                <td class="numero numero--alerta">{{ ingrediente.estoque_atual|floatformat:3 }}</td>
+                <td class="numero">{{ ingrediente.estoque_minimo|floatformat:3 }}</td>
+                <td>{{ ingrediente.get_unidade_display }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p class="vazio">Todos os ingredientes estão no nível mínimo ou acima.</p>
+    {% endif %}
+  </section>
+
+  <section aria-labelledby="titulo-atalhos">
+    <h2 class="titulo-secao" id="titulo-atalhos">Atalhos</h2>
+    <ul class="grade-atalhos">
+      <li><a class="atalho" href="{% url 'painel_pedidos' %}"><strong>Pedidos</strong><span>Filtrar, editar e avançar status.</span></a></li>
+      <li><a class="atalho" href="{% url 'painel_pedido_novo' %}"><strong>Novo pedido</strong><span>Registrar venda de balcão.</span></a></li>
+      <li><a class="atalho" href="{% url 'estoque:lista' %}"><strong>Estoque</strong><span>Ajustar ingredientes e ver movimentos.</span></a></li>
+      <li><a class="atalho" href="{% url 'admin:index' %}"><strong>Admin</strong><span>Produtos, condomínios e fichas técnicas.</span></a></li>
+    </ul>
+  </section>
+{% endblock %}

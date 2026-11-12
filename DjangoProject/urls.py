@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path
+from django.urls import include, path
 
 from pedidos import views
 
@@ -10,7 +10,14 @@ urlpatterns = [
     path("", views.index, name="index"),
     path("carrinho/revisar/", views.revisar_pedido, name="revisar_pedido"),
     path("checkout/", views.checkout, name="checkout"),
+    path(
+        "pedido/<uuid:token>/acompanhar/",
+        views.acompanhar_pedido,
+        name="acompanhar_pedido",
+    ),
     path("pedido/<uuid:token>/recibo/", views.recibo, name="recibo"),
+    path("painel/estoque/", include("estoque.urls")),
+    path("painel/", include("painel.urls")),
 ]
 
 if settings.DEBUG:

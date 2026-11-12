@@ -1,0 +1,165 @@
+{% extends "painel/base.html" %}
+
+{% block title %}Pedido #{{ pedido.pk }} — Painel{% endblock %}
+
+{% block content %}
+  <p class="migalha"><a class="link" href="{% url 'painel_pedidos' %}">Pedidos</a> / #{{ pedido.pk }}</p>
+
+  <div class="pagina-cabecalho">
+    <div>
+      <p class="sobrescrito">Pedido #{{ pedido.pk }}</p>
+      <h1>{{ pedido.nome }}</h1>
+      <p class="pagina-cabecalho__meta">
+        <span class="badge badge--{{ pedido.status }}">{{ pedido.get_status_display }}</span>
+        <span class="texto-suave">Criado em {{ pedido.criado_em|date:"d/m/Y H:i" }}</span>
+      </p>
+    </div>
+    <div class="pagina-cabecalho__acoes">
+      <a class="botao botao--fantasma" href="{% url 'painel_pedido_editar' pedido.pk %}">Editar pedido</a>
+      <a class="botao botao--primario" href="{% url 'recibo' pedido.token %}" target="_blank" rel="noopener">Imprimir recibo</a>
+    </div>
+  </div>
+
+  <div class="grade-detalhe">
+    <section class="painel-bloco" aria-labelledby="titulo-cliente">
+      <h2 id="titulo-cliente">Cliente</h2>
+      <dl class="dados">
+        <div><dt>Nome</dt><dd>{{ pedido.nome }}</dd></div>
+        <div><dt>Telefone</dt><dd>{{ pedido.telefone }}</dd></div>
+        <div><dt>Origem</dt><dd>{{ pedido.get_origem_display }}</dd></div>
+      </dl>
+    </section>
+
+    <section class="painel-bloco" aria-labelledby="titulo-entrega">
+      <h2 id="titulo-entrega">Entrega</h2>
+      <dl class="dados">
+        {% if pedido.condominio_exibicao %}
+          <div><dt>Condomínio</dt><dd>{{ pedido.condominio_exibicao }}</dd></div>
+          {% if pedido.condominio %}
+            <div><dt>Endereço do condomínio</dt><dd>{{ pedido.condominio.endereco_completo }}</dd></div>
+          {% endif %}
+        {% endif %}
+        <div><dt>Endereço</dt><dd>{{ pedido.endereco }}</dd></div>
+        {% if pedido.endereco2 %}
+          <div><dt>Complemento</dt><dd>{{ pedido.endereco2 }}</dd></div>
+        {% endif %}
+        <div><dt>Pagamento</dt><dd>{{ pedido.get_pagamento_display }}</dd></div>
+      </dl>
+    </section>
+
+    {% if pedido.observacoes or pedido.motivo_cancelamento %}
+      <section class="painel-bloco painel-bloco--largo" aria-labelledby="titulo-observacoes">
+        <h2 id="titulo-observacoes">Observações</h2>
+        {% if pedido.observacoes %}
+          <p>{{ pedido.observacoes|linebreaksbr }}</p>
+        {% endif %}
+        {% if pedido.motivo_cancelamento %}
+          <p class="aviso aviso--perigo"><strong>Motivo do cancelamento:</strong> {{ pedido.motivo_cancelamento }}</p>
+        {% endif %}
+      </section>
+    {% endif %}
+  </div>
+
+  <section class="painel-bloco" aria-labelledby="titulo-itens">
+    <div class="painel-bloco__cabecalho">
+      <h2 id="titulo-itens">Itens</h2>
+      {% if pedido.itens_editaveis %}
+        <a class="link" href="{% url 'painel_pedido_editar' pedido.pk %}">Editar itens</a>
+      {% else %}
+        <span class="texto-suave">Itens travados neste status.</span>
+      {% endif %}
+    </div>
+    <div class="tabela-wrap">
+      <table class="tabela">
+        <thead>
+          <tr>
+            <th scope="col">Qtd.</th>
+            <th scope="col">Item</th>
+            <th scope="col">Unitário</th>
+            <th scope="col">Subtotal</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in pedido.itens.all %}
+            <tr>
+              <td class="numero">{{ item.quantidade }}x</td>
+              <th scope="row">{{ item.nome }}</th>
+              <td class="numero">R$ {{ item.preco_unitario|floatformat:2 }}</td>
+              <td class="numero">R$ {{ item.subtotal|floatformat:2 }}</td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="4">Nenhum item registrado.</td></tr>
+          {% endfor %}
+        </tbody>
+        <tfoot>
+          <tr>
+            <th scope="row" colspan="3">Total</th>
+            <td class="numero total">R$ {{ pedido.total|floatformat:2 }}</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </section>
+
+  {% if progresso %}
+    <section class="painel-bloco" aria-labelledby="titulo-progresso">
+      <h2 id="titulo-progresso">Progresso do pedido</h2>
+      <ol class="progresso" aria-label="Etapas do pedido">
+        {% for etapa in progresso %}
+          <li class="progresso__etapa progresso__etapa--{{ etapa.estado }}"
+              {% if etapa.estado == "atual" %}aria-current="step"{% endif %}>
+            <span class="progresso__marca" aria-hidden="true"></span>
+            <span class="progresso__rotulo">{{ etapa.rotulo }}</span>
+          </li>
+        {% endfor %}
+      </ol>
+    </section>
+  {% endif %}
+
+  <div class="grade-duas">
+    <section class="painel-bloco" aria-labelledby="titulo-historico">
+      <h2 id="titulo-historico">Linha do tempo</h2>
+      <ol class="linha-tempo">
+        {% for evento in eventos %}
+          <li{% if evento.perigo %} class="linha-tempo__item--perigo"{% endif %}>
+            <span class="linha-tempo__ponto" aria-hidden="true"></span>
+            <div>
+              <strong>{{ evento.rotulo }}</strong>
+              <time datetime="{{ evento.quando|date:'c' }}">{{ evento.quando|date:"d/m/Y H:i" }}</time>
+              {% if evento.detalhe %}<p class="texto-suave">{{ evento.detalhe }}</p>{% endif %}
+            </div>
+          </li>
+        {% endfor %}
+      </ol>
+    </section>
+
+    <section class="painel-bloco" aria-labelledby="titulo-acoes">
+      <h2 id="titulo-acoes">Ações</h2>
+      {% if acoes %}
+        <div class="acoes-status">
+          {% for acao in acoes %}
+            {% if acao.motivo %}
+              <form class="acao acao--motivo" method="post" action="{% url 'painel_pedido_acao' pedido.pk %}">
+                {% csrf_token %}
+                <input type="hidden" name="acao" value="{{ acao.acao }}">
+                <div class="campo">
+                  <label for="motivo-{{ acao.acao }}">Motivo para {{ acao.rotulo|lower }}</label>
+                  <textarea id="motivo-{{ acao.acao }}" name="motivo" rows="2" required></textarea>
+                </div>
+                <button class="botao {% if acao.perigo %}botao--perigo{% else %}botao--primario{% endif %}" type="submit">{{ acao.rotulo }}</button>
+              </form>
+            {% else %}
+              <form class="acao" method="post" action="{% url 'painel_pedido_acao' pedido.pk %}">
+                {% csrf_token %}
+                <input type="hidden" name="acao" value="{{ acao.acao }}">
+                <button class="botao botao--primario" type="submit">{{ acao.rotulo }}</button>
+              </form>
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="vazio">Nenhuma transição disponível para este status.</p>
+      {% endif %}
+    </section>
+  </div>
+{% endblock %}

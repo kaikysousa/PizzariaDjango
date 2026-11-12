@@ -1,0 +1,52 @@
+{% load static %}
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Estoque — Pizzaria do Aislan{% endblock %}</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="{% static 'css/tokens.css' %}">
+  <link rel="stylesheet" href="{% static 'css/estoque.css' %}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="estoque">
+  <a class="pular" href="#conteudo">Pular para o conteúdo</a>
+
+  <header class="estoque-topo">
+    <div class="estoque-topo__interno">
+      <a class="estoque-marca" href="{% url 'estoque:lista' %}">
+        Pizzaria <strong>do Aislan</strong>
+        <span>Estoque</span>
+      </a>
+
+      <nav class="estoque-nav" aria-label="Painel">
+        <a href="{% url 'painel_dashboard' %}">Painel</a>
+        <a href="{% url 'estoque:lista' %}"{% if request.resolver_match.url_name == "lista" %} aria-current="page"{% endif %}>Ingredientes</a>
+        <a href="{% url 'admin:index' %}">Admin</a>
+        {% if request.user.is_authenticated %}
+          <span class="estoque-usuario">{{ request.user.get_username }}</span>
+        {% endif %}
+      </nav>
+    </div>
+  </header>
+
+  <main id="conteudo" class="estoque-conteudo">
+    {% if messages %}
+      <div class="mensagens" role="status" aria-live="polite">
+        {% for message in messages %}
+          <p class="alerta alerta--{{ message.tags }}">{{ message }}</p>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="estoque-rodape">
+    <p>Pizzaria do Aislan — operação de estoque. Toda alteração de saldo gera um movimento auditável.</p>
+  </footer>
+
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

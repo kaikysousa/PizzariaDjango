@@ -885,3 +885,130 @@ body:has(dialog[open]) {
   min-height: 44px;
 }
 
+/* Acompanhamento */
+.acompanhamento {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: clamp(2rem, 4vw, 3.5rem) 1.25rem 4rem;
+}
+
+.acompanhamento__cabecalho {
+  max-width: 60ch;
+  margin-bottom: 1.5rem;
+}
+
+.acompanhamento__apoio {
+  color: var(--tinta-suave);
+}
+
+.acompanhamento__status {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  background: var(--superficie);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio-pill);
+  padding: 0.55rem 1rem;
+  margin: 0 0 1rem;
+}
+
+.acompanhamento__status--aguardando_aprovacao {
+  border-color: #e0b45c;
+}
+
+.acompanhamento__status--cancelado {
+  border-color: var(--erro);
+  color: var(--erro);
+}
+
+.acompanhamento__aviso {
+  margin: 0 0 1.25rem;
+}
+
+.timeline {
+  list-style: none;
+  display: grid;
+  gap: 0.15rem;
+  margin: 0 0 1.5rem;
+  padding: 1rem 1.2rem;
+  background: var(--superficie);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+  box-shadow: var(--sombra-suave);
+}
+
+.timeline__etapa {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.45rem 0;
+  color: var(--tinta-suave);
+}
+
+.timeline__marcador {
+  width: 0.8rem;
+  height: 0.8rem;
+  border: 2px solid var(--borda);
+  border-radius: 50%;
+  flex: none;
+}
+
+.timeline__etapa--concluida,
+.timeline__etapa--atual {
+  color: var(--tinta);
+  font-weight: 600;
+}
+
+.timeline__etapa--concluida .timeline__marcador,
+.timeline__etapa--atual .timeline__marcador {
+  background: var(--acento);
+  border-color: var(--acento);
+}
+
+.timeline__atual {
+  margin-left: auto;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tinta-suave);
+}
+
+.acompanhamento__grade {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.acompanhamento__dados {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.35rem 1rem;
+  margin: 0 0 1rem;
+}
+
+.acompanhamento__dados dt {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--tinta-suave);
+}
+
+.acompanhamento__dados dd {
+  margin: 0;
+}
+
+.acompanhamento__observacoes {
+  margin: 0 0 1rem;
+}
+
+.acompanhamento .botao--texto {
+  display: inline-block;
+  margin-top: 0.75rem;
+}
+
+@media (max-width: 900px) {
+  .acompanhamento__grade {
+    grid-template-columns: 1fr;
+  }
+}
+

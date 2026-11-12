@@ -16,16 +16,25 @@ Django application for menu browsing, cart, checkout, and receipt printing on an
 
 ### 80 mm receipt
 
-<img src="docs/screenshots/recibo.png" alt="80 mm receipt" width="360">
+<img src="docs/screenshots/recibo.png" alt="80 mm receipt" width="300">
+
+### Owner panel
+
+![Owner dashboard](docs/screenshots/gestao-dashboard.png)
+
+![Order list](docs/screenshots/gestao-pedidos.png)
 
 ## Features
 
 - Menu with search, category filter, and pagination.
 - Browser cart with half-and-half pizzas (two flavors).
-- Checkout with customer details and payment method.
-- Order persisted with normalized items and server-side total recalculation.
-- 80 mm receipt ready for browser printing.
-- Product and order management through the Django admin.
+- Checkout with customer details, registered or free-form condominium, and payment method.
+- Customer orders with store approval and token-based tracking.
+- Owner panel to approve, refuse, edit, and advance orders.
+- Counter orders created by the owner, with server-side total recalculation.
+- Optional ingredient and recipe stock control with low-stock alerts.
+- 80 mm receipt with larger type, ready for browser printing.
+- Product, condominium, ingredient, and recipe management through the Django admin.
 
 ## Requirements
 
@@ -40,12 +49,19 @@ python -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements-dev.txt
 copy .env.example .env
+# check .env (DJANGO_DB_PATH=db.sqlite3)
 python manage.py migrate
 python manage.py createsuperuser
 python manage.py runserver
 ```
 
-Open `http://127.0.0.1:8000/`. The admin is at `/admin/`.
+Open `http://127.0.0.1:8000/`. The admin is at `/admin/`. The store panel is at `/painel/` and requires a staff user.
+
+The example file already sets `DJANGO_DB_PATH=db.sqlite3`. If the value is empty, Django refuses to connect without a database name.
+
+## Testing locally
+
+The [test manual](docs/MANUAL-DE-TESTES.md) is in Portuguese and covers prerequisites, test data, ten manual scripts with expected results and evidence, automated tests, and troubleshooting.
 
 ## Environment variables
 
@@ -71,8 +87,9 @@ When `DJANGO_DEBUG=0` is set in the environment, run `DJANGO_DEBUG=1 python mana
 
 ### Quality
 
-- 51 tests in `pedidos/tests/` covering catalog, intake, robustness, and views.
+- 174 tests in `pedidos/tests/`, `enderecos/tests.py`, `estoque/tests.py`, and `painel/tests.py`, covering catalog, intake, condominiums, status, stock, panel, receipt, and the full E2E flow.
 - CI in `.github/workflows/ci.yml`: tests, secret gate, security gate, deploy gate, and Ruff.
+- Receipt gate: `python scripts/check_receipt_pdf.py` prints the receipt to PDF and checks the 80 mm width.
 
 ## Production
 
@@ -100,7 +117,10 @@ The browser does not send Bluetooth print jobs directly. Pairing and drivers bel
 ```
 DjangoProject/        configuration
 pedidos/              app: models, services, views, forms, admin, tests
-templates/            base, menu, checkout, and receipt
+enderecos/            condominiums
+estoque/              ingredients, recipes, and stock movements
+painel/               owner panel
+templates/            base, menu, checkout, panel, and receipt
 static/css/           tokens, styles, and receipt CSS
 static/js/            cart and motion
 scripts/              audit gates

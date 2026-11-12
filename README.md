@@ -1,4 +1,4 @@
-﻿# Sistema de Pedidos — Pizzaria
+# Sistema de Pedidos — Pizzaria
 
 [![CI](https://github.com/kaikysousa/PizzariaDjango/actions/workflows/ci.yml/badge.svg)](https://github.com/kaikysousa/PizzariaDjango/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/kaikysousa/PizzariaDjango)](https://github.com/kaikysousa/PizzariaDjango/releases)
@@ -16,16 +16,25 @@ Aplicação Django para cardápio, carrinho, checkout e impressão de recibo em 
 
 ### Recibo de 80 mm
 
-<img src="docs/screenshots/recibo.png" alt="Recibo de 80 mm" width="360">
+<img src="docs/screenshots/recibo.png" alt="Recibo de 80 mm" width="300">
+
+### Painel do dono
+
+![Dashboard do painel](docs/screenshots/gestao-dashboard.png)
+
+![Lista de pedidos](docs/screenshots/gestao-pedidos.png)
 
 ## Funcionalidades
 
 - Cardápio com busca, filtro por categoria e paginação.
 - Carrinho no navegador, com meia pizza (dois sabores).
-- Checkout com dados do cliente e forma de pagamento.
-- Pedido persistido com itens normalizados e total recalculado no servidor.
-- Recibo de 80 mm pronto para impressão pelo navegador.
-- Administração de produtos e pedidos no Django admin.
+- Checkout com dados do cliente, condomínio cadastrado ou livre e forma de pagamento.
+- Pedido do cliente com aprovação da loja e acompanhamento por token.
+- Painel do dono para aprovar, recusar, editar e avançar pedidos.
+- Pedido de balcão criado pelo dono, com total recalculado no servidor.
+- Controle opcional de estoque por ingrediente e ficha técnica, com alerta de mínimo.
+- Recibo de 80 mm com fonte maior, pronto para impressão pelo navegador.
+- Administração de produtos, condomínios, ingredientes e fichas no Django admin.
 
 ## Requisitos
 
@@ -40,12 +49,19 @@ python -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements-dev.txt
 copy .env.example .env
+# confira .env (DJANGO_DB_PATH=db.sqlite3)
 python manage.py migrate
 python manage.py createsuperuser
 python manage.py runserver
 ```
 
-Abra `http://127.0.0.1:8000/`. O admin fica em `/admin/`.
+Abra `http://127.0.0.1:8000/`. O admin fica em `/admin/`. O painel da loja fica em `/painel/` e exige usuário staff.
+
+O `.env.example` já traz `DJANGO_DB_PATH=db.sqlite3`. Se o valor ficar vazio, o Django recusa a conexão sem um nome de banco.
+
+## Testar localmente
+
+O [Manual de testes](docs/MANUAL-DE-TESTES.md) reúne pré-requisitos, massa de dados, dez roteiros manuais com resultado esperado e evidência, testes automatizados e solução de problemas.
 
 ## Variáveis de ambiente
 
@@ -71,9 +87,10 @@ Com `DJANGO_DEBUG=0` no ambiente, rode `DJANGO_DEBUG=1 python manage.py test`. A
 
 ### Qualidade
 
-- 51 testes em `pedidos/tests/` cobrindo catálogo, intake, robustez e views.
+- 174 testes em `pedidos/tests/`, `enderecos/tests.py`, `estoque/tests.py` e `painel/tests.py`, cobrindo catálogo, intake, condomínios, status, estoque, painel, recibo e o fluxo E2E completo.
 - CI em `.github/workflows/ci.yml`: testes, gate de segredos, gate de segurança, gate de deploy e Ruff.
 - Comandos dos gates: `python scripts/check_secrets.py`, `python scripts/check_security.py`, `python scripts/check_deploy.py`.
+- Gate do recibo: `python scripts/check_receipt_pdf.py` imprime o recibo em PDF e confere a largura de 80 mm.
 
 ## Decisões técnicas
 
@@ -108,7 +125,10 @@ O navegador não envia trabalho por Bluetooth diretamente. O pareamento e o driv
 ```
 DjangoProject/        configuração
 pedidos/              app: models, services, views, forms, admin, tests
-templates/            base, cardápio, checkout e recibo
+enderecos/            condomínios
+estoque/              ingredientes, fichas técnicas e movimentos
+painel/               painel do dono
+templates/            base, cardápio, checkout, painel e recibo
 static/css/           tokens, estilos e CSS do recibo
 static/js/            carrinho e motion
 scripts/              gates de auditoria

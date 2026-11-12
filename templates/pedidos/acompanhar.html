@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}Acompanhar pedido #{{ pedido.id }} — Pizzaria do Aislan{% endblock %}
+{% block description %}Acompanhe o status e os detalhes do seu pedido.{% endblock %}
+{% block extra_head %}<meta name="robots" content="noindex, nofollow">{% endblock %}
+
+{% block content %}
+<section class="acompanhamento" aria-labelledby="acompanhamento-titulo">
+  <header class="acompanhamento__cabecalho">
+    <p class="olho">Pedido #{{ pedido.id }}</p>
+    <h1 id="acompanhamento-titulo">Acompanhar pedido</h1>
+    <p class="acompanhamento__apoio">Feito em {{ pedido.criado_em|date:"d/m/Y H:i" }}</p>
+  </header>
+
+  <p class="acompanhamento__status acompanhamento__status--{{ pedido.status }}">
+    Status: <strong>{{ pedido.get_status_display }}</strong>
+  </p>
+
+  {% if aguardando_aprovacao %}
+    <div class="alerta acompanhamento__aviso" role="status">
+      Aguardando aprovação da loja. O recibo é liberado assim que o pedido for aprovado.
+    </div>
+  {% endif %}
+
+  {% if cancelado %}
+    <div class="alerta acompanhamento__aviso" role="alert">
+      <p>Este pedido foi cancelado.</p>
+      {% if pedido.motivo_cancelamento %}
+        <p>Motivo: {{ pedido.motivo_cancelamento }}</p>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  {% if etapas %}
+    <ol class="timeline" aria-label="Etapas do pedido">
+      {% for etapa in etapas %}
+        <li class="timeline__etapa timeline__etapa--{{ etapa.estado }}">
+          <span class="timeline__marcador" aria-hidden="true"></span>
+          <span class="timeline__rotulo">{{ etapa.rotulo }}</span>
+          {% if etapa.estado == "atual" %}<span class="timeline__atual">Agora</span>{% endif %}
+        </li>
+      {% endfor %}
+    </ol>
+  {% endif %}
+
+  <div class="acompanhamento__grade">
+    <section class="resumo" aria-labelledby="acompanhamento-itens">
+      <h2 id="acompanhamento-itens">Seu pedido</h2>
+      <ul class="resumo__itens">
+        {% for item in pedido.itens.all %}
+          <li>
+            <div>
+              <strong>{{ item.quantidade }}x {{ item.nome }}</strong>
+              <span>R$ {{ item.preco_unitario|floatformat:2 }} cada</span>
+            </div>
+            <span>R$ {{ item.subtotal|floatformat:2 }}</span>
+          </li>
+        {% endfor %}
+      </ul>
+      <p class="resumo__total">Total <strong>R$ {{ pedido.total|floatformat:2 }}</strong></p>
+    </section>
+
+    <section class="dados" aria-labelledby="acompanhamento-entrega">
+      <h2 id="acompanhamento-entrega">Entrega</h2>
+      <dl class="acompanhamento__dados">
+        <dt>Cliente</dt>
+        <dd>{{ pedido.nome }}</dd>
+
+        <dt>Endereço</dt>
+        <dd>{{ pedido.endereco }}{% if pedido.endereco2 %} — {{ pedido.endereco2 }}{% endif %}</dd>
+
+        {% if pedido.condominio_exibicao %}
+          <dt>Condomínio</dt>
+          <dd>{{ pedido.condominio_exibicao }}</dd>
+        {% endif %}
+
+        <dt>Pagamento</dt>
+        <dd>{{ pedido.get_pagamento_display }}</dd>
+
+        <dt>Data</dt>
+        <dd>{{ pedido.criado_em|date:"d/m/Y H:i" }}</dd>
+      </dl>
+
+      {% if pedido.observacoes %}
+        <p class="acompanhamento__observacoes"><strong>Observações:</strong> {{ pedido.observacoes }}</p>
+      {% endif %}
+
+      {% if mostrar_recibo %}
+        <a class="botao botao--primario botao--largo" href="{% url 'recibo' token=pedido.token %}">Ver recibo</a>
+      {% endif %}
+
+      <a class="botao botao--texto" href="{% url 'index' %}">Voltar ao cardápio</a>
+    </section>
+  </div>
+</section>
+{% endblock %}

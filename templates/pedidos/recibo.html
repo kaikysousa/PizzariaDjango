@@ -7,9 +7,14 @@
   <title>Pedido #{{ pedido.id }} — Pizzaria do Aislan</title>
   <meta name="robots" content="noindex, nofollow">
   <link rel="stylesheet" href="{% static 'css/recibo.css' %}">
+  {% if pedido.itens.all|length > 30 or pedido.observacoes|length > 250 or pedido.endereco|length > 240 or pedido.endereco2|length > 60 %}
+    <link rel="stylesheet" href="{% static 'css/recibo-muito-longo.css' %}">
+  {% elif pedido.itens.all|length > 12 or pedido.observacoes|length > 120 %}
+    <link rel="stylesheet" href="{% static 'css/recibo-longo.css' %}">
+  {% endif %}
 </head>
 <body>
-  <main class="recibo" aria-labelledby="recibo-titulo">
+  <main class="recibo{% if pedido.itens.all|length > 12 %} recibo--longo{% endif %}" aria-labelledby="recibo-titulo">
     <header class="recibo__cabecalho">
       <p class="recibo__marca">PIZZARIA DO AISLAN</p>
       {% if pizzaria_cnpj %}<p>CNPJ: {{ pizzaria_cnpj }}</p>{% endif %}
@@ -22,6 +27,7 @@
     <section class="recibo__bloco">
       <p><strong>Cliente:</strong> {{ pedido.nome }}</p>
       <p><strong>Telefone:</strong> {{ pedido.telefone }}</p>
+      {% if pedido.condominio_exibicao %}<p><strong>Condomínio:</strong> {{ pedido.condominio_exibicao }}</p>{% endif %}
       <p><strong>Endereço:</strong> {{ pedido.endereco }}{% if pedido.endereco2 %} — {{ pedido.endereco2 }}{% endif %}</p>
     </section>
 
