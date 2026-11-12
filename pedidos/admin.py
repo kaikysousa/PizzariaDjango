@@ -65,6 +65,7 @@ class PedidoAdmin(admin.ModelAdmin):
         "criado_em",
     )
     list_filter = ("status", "pagamento", "criado_em")
+    list_select_related = ("condominio",)
     search_fields = (
         "nome",
         "telefone",
