@@ -122,6 +122,20 @@
     }
 
     selectCondominio.addEventListener("change", aplicarEnderecoDoCondominio);
+
+    if (campoCondominioNome) {
+      campoCondominioNome.addEventListener("input", function () {
+        if (!this.value.trim()) return;
+        selectCondominio.value = "";
+        if (
+          enderecoAutomatico &&
+          campoEndereco.value.trim() === enderecoAutomatico
+        ) {
+          campoEndereco.value = "";
+        }
+        enderecoAutomatico = "";
+      });
+    }
   })();
 </script>
 {% endblock %}
