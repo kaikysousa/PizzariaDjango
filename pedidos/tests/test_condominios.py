@@ -94,7 +94,11 @@ class CondominioCheckoutTests(TestCase):
 
         self.assertContains(
             response,
-            "Selecione o condomínio para preencher o endereço automaticamente.",
+            "Escolha um condomínio cadastrado para preencher o endereço automaticamente.",
+        )
+        self.assertContains(
+            response,
+            "Se o condomínio não estiver na lista, digite o nome e informe o endereço.",
         )
 
     def test_widget_inclui_dados_do_endereco_nas_opcoes(self):
@@ -114,7 +118,29 @@ class CondominioCheckoutTests(TestCase):
 
         pedido = Pedido.objects.get()
         self.assertEqual(pedido.condominio, self.condominio)
+        self.assertEqual(pedido.condominio_nome, self.condominio.nome)
         self.assertEqual(pedido.endereco, "Rua A, 1")
+
+    def test_form_salva_condominio_livre(self):
+        self._enviar(condominio="", condominio_nome="Condomínio Livre")
+
+        pedido = Pedido.objects.get()
+        self.assertIsNone(pedido.condominio)
+        self.assertEqual(pedido.condominio_nome, "Condomínio Livre")
+        self.assertEqual(pedido.condominio_exibicao, "Condomínio Livre")
+
+    def test_form_rejeita_condominio_cadastrado_e_livre_juntos(self):
+        response = self._enviar(
+            condominio=self.condominio.pk,
+            condominio_nome="Outro condomínio",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Pedido.objects.count(), 0)
+        self.assertContains(
+            response,
+            "Escolha um condomínio cadastrado ou digite um nome, não os dois.",
+        )
 
     def test_endereco_vazio_preenchido_pelo_condominio(self):
         self._enviar(condominio=self.condominio.pk, endereco="")
@@ -257,6 +283,24 @@ class CondominioCheckoutTests(TestCase):
 
         self.assertContains(response, ENDERECO_COMPLETO)
         self.assertContains(response, self.condominio.nome)
+
+    def test_acompanhamento_mostra_condominio_livre(self):
+        pedido = self._pedido(condominio_nome="Condomínio Livre")
+
+        response = self.client.get(
+            reverse("acompanhar_pedido", kwargs={"token": pedido.token})
+        )
+
+        self.assertContains(response, "Condomínio Livre")
+
+    def test_recibo_mostra_condominio_livre(self):
+        pedido = self._pedido(condominio_nome="Condomínio Livre")
+
+        response = self.client.get(
+            reverse("recibo", kwargs={"token": pedido.token})
+        )
+
+        self.assertContains(response, "Condomínio Livre")
 
     def test_acompanhamento_token_invalido_da_404(self):
         response = self.client.get(

@@ -81,6 +81,9 @@ class Pedido(models.Model):
         blank=True,
         on_delete=models.SET_NULL,
     )
+    condominio_nome = models.CharField(
+        "condomínio", max_length=120, blank=True
+    )
     aprovado_por = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         related_name="pedidos_aprovados",
@@ -106,6 +109,12 @@ class Pedido(models.Model):
             self.Status.AGUARDANDO_APROVACAO,
             self.Status.APROVADO,
         }
+
+    @property
+    def condominio_exibicao(self):
+        if self.condominio_id:
+            return self.condominio.nome
+        return self.condominio_nome
 
     def recalcular_total(self, salvar=True):
         total = sum((item.subtotal for item in self.itens.all()), start=0)

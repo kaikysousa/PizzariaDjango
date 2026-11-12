@@ -33,9 +33,11 @@
     <section class="painel-bloco" aria-labelledby="titulo-entrega">
       <h2 id="titulo-entrega">Entrega</h2>
       <dl class="dados">
-        {% if pedido.condominio %}
-          <div><dt>Condomínio</dt><dd>{{ pedido.condominio.nome }}</dd></div>
-          <div><dt>Endereço do condomínio</dt><dd>{{ pedido.condominio.endereco_completo }}</dd></div>
+        {% if pedido.condominio_exibicao %}
+          <div><dt>Condomínio</dt><dd>{{ pedido.condominio_exibicao }}</dd></div>
+          {% if pedido.condominio %}
+            <div><dt>Endereço do condomínio</dt><dd>{{ pedido.condominio.endereco_completo }}</dd></div>
+          {% endif %}
         {% endif %}
         <div><dt>Endereço</dt><dd>{{ pedido.endereco }}</dd></div>
         {% if pedido.endereco2 %}

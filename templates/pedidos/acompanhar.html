@@ -69,9 +69,9 @@
         <dt>Endereço</dt>
         <dd>{{ pedido.endereco }}{% if pedido.endereco2 %} — {{ pedido.endereco2 }}{% endif %}</dd>
 
-        {% if pedido.condominio %}
+        {% if pedido.condominio_exibicao %}
           <dt>Condomínio</dt>
-          <dd>{{ pedido.condominio.nome }}</dd>
+          <dd>{{ pedido.condominio_exibicao }}</dd>
         {% endif %}
 
         <dt>Pagamento</dt>

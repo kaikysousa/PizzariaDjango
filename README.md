@@ -28,7 +28,7 @@ Aplicação Django para cardápio, carrinho, checkout e impressão de recibo em 
 
 - Cardápio com busca, filtro por categoria e paginação.
 - Carrinho no navegador, com meia pizza (dois sabores).
-- Checkout com dados do cliente, condomínio e forma de pagamento.
+- Checkout com dados do cliente, condomínio cadastrado ou livre e forma de pagamento.
 - Pedido do cliente com aprovação da loja e acompanhamento por token.
 - Painel do dono para aprovar, recusar, editar e avançar pedidos.
 - Pedido de balcão criado pelo dono, com total recalculado no servidor.
@@ -87,7 +87,7 @@ Com `DJANGO_DEBUG=0` no ambiente, rode `DJANGO_DEBUG=1 python manage.py test`. A
 
 ### Qualidade
 
-- 169 testes em `pedidos/tests/`, `enderecos/tests.py`, `estoque/tests.py` e `painel/tests.py`, cobrindo catálogo, intake, condomínios, status, estoque, painel, recibo e o fluxo E2E completo.
+- 174 testes em `pedidos/tests/`, `enderecos/tests.py`, `estoque/tests.py` e `painel/tests.py`, cobrindo catálogo, intake, condomínios, status, estoque, painel, recibo e o fluxo E2E completo.
 - CI em `.github/workflows/ci.yml`: testes, gate de segredos, gate de segurança, gate de deploy e Ruff.
 - Comandos dos gates: `python scripts/check_secrets.py`, `python scripts/check_security.py`, `python scripts/check_deploy.py`.
 - Gate do recibo: `python scripts/check_receipt_pdf.py` imprime o recibo em PDF e confere a largura de 80 mm.

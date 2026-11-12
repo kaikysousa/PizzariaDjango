@@ -62,6 +62,7 @@ class PedidoBalcaoForm(forms.ModelForm):
             "nome",
             "telefone",
             "condominio",
+            "condominio_nome",
             "endereco",
             "endereco2",
             "pagamento",
@@ -72,9 +73,27 @@ class PedidoBalcaoForm(forms.ModelForm):
             "telefone": forms.TextInput(
                 attrs={"autocomplete": "tel", "inputmode": "tel"}
             ),
+            "condominio_nome": forms.TextInput(
+                attrs={
+                    "autocomplete": "organization",
+                    "placeholder": "Ex.: Residencial Jardim das Flores",
+                }
+            ),
             "endereco": forms.TextInput(attrs={"autocomplete": "street-address"}),
             "endereco2": forms.TextInput(attrs={"autocomplete": "address-line2"}),
             "observacoes": forms.Textarea(attrs={"rows": 3}),
+        }
+        labels = {
+            "condominio": "Condomínio cadastrado",
+            "condominio_nome": "Ou digite o condomínio",
+        }
+        help_texts = {
+            "condominio": (
+                "Escolha um cadastrado para preencher o endereço automaticamente."
+            ),
+            "condominio_nome": (
+                "Se não estiver na lista, digite o nome e informe o endereço."
+            ),
         }
 
     def __init__(self, *args, **kwargs):
@@ -113,7 +132,18 @@ class PedidoBalcaoForm(forms.ModelForm):
     def clean(self):
         cleaned = super().clean()
         condominio = cleaned.get("condominio")
+        condominio_nome = (cleaned.get("condominio_nome") or "").strip()
         endereco = (cleaned.get("endereco") or "").strip()
+
+        if condominio is not None:
+            if condominio_nome and condominio_nome != condominio.nome:
+                self.add_error(
+                    "condominio_nome",
+                    "Escolha um condomínio cadastrado ou digite um nome, não os dois.",
+                )
+            else:
+                condominio_nome = condominio.nome
+        cleaned["condominio_nome"] = condominio_nome
 
         if not endereco and condominio is not None:
             endereco = self._endereco_do_condominio()

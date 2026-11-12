@@ -281,6 +281,7 @@ Regras de estoque:
 5. Clique em **Revisar pedido**.
 6. Em **Dados para entrega**, preencha **Nome** e **Telefone** com DDD.
 7. Selecione **Condomínio** = `Residencial Jardim das Flores`.
+   Para testar condomínio livre, repita em outro pedido digitando o nome em **Ou digite o condomínio** e preencha o endereço.
 8. Confira se o campo **Endereço** foi preenchido automaticamente.
 9. Preencha **Complemento** com um valor fictício, por exemplo `Apto 42`.
 10. Clique em **Finalizar pedido**.
@@ -357,6 +358,7 @@ Regras de estoque:
 
 1. Abra <http://127.0.0.1:8000/painel/pedidos/novo/>.
 2. Preencha **Nome**, **Telefone** e **Endereço** (ou escolha o condomínio).
+   Se o condomínio não estiver cadastrado, digite o nome em **Ou digite o condomínio** e preencha o endereço.
 3. Em **Itens**, selecione **Margherita** na primeira linha.
 4. Informe **Quantidade** `2`.
 5. Clique em **Criar pedido**.
@@ -545,7 +547,7 @@ de desenvolvimento.
 
 | Comando | O que cobre | Resultado esperado |
 | --- | --- | --- |
-| `python manage.py test` | Catálogo, carrinho, checkout, condomínios, status, painel, estoque, recibo, segurança e o fluxo E2E completo. | `Ran 169 tests` e `OK`. |
+| `python manage.py test` | Catálogo, carrinho, checkout, condomínios, status, painel, estoque, recibo, segurança e o fluxo E2E completo. | `Ran 174 tests` e `OK`. |
 | `python manage.py makemigrations --check --dry-run` | Detecta modelo alterado sem migração. | `No changes detected`. |
 | `python manage.py check` | Configuração e consistência do projeto. | `System check identified no issues (0 silenced).` |
 | `ruff check .` | Estilo e erros estáticos de Python. | `All checks passed!`. |
@@ -555,11 +557,11 @@ Distribuição da suíte nesta branch:
 
 | App | Testes | Foco |
 | --- | ---: | --- |
-| `pedidos` | 106 | catálogo, intake, status, condomínios, recibo, robustez, views e 12 testes E2E |
+| `pedidos` | 110 | catálogo, intake, status, condomínios, recibo, robustez, views e 12 testes E2E |
 | `enderecos` | 3 | endereço completo e ordenação de condomínios |
 | `estoque` | 28 | baixa, meia pizza, estorno, edição, ajustes manuais, admin |
-| `painel` | 32 | autenticação, dashboard, lista, criação, edição e ações |
-| **Total** | **169** | |
+| `painel` | 33 | autenticação, dashboard, lista, criação, edição e ações |
+| **Total** | **174** | |
 
 O gate do recibo precisa de Chrome ou Edge e das dependências de desenvolvimento
 (`pypdf` e `websocket-client`, já incluídas em `requirements-dev.txt`). Ele usa as portas
@@ -717,7 +719,7 @@ Marque cada item depois de conferir a evidência.
 
 ### Qualidade
 
-- [ ] `python manage.py test` com 169 testes e `OK`.
+- [ ] `python manage.py test` com 174 testes e `OK`.
 - [ ] `python manage.py makemigrations --check --dry-run` com `No changes detected`.
 - [ ] `python manage.py check` sem issues.
 - [ ] `ruff check .` com `All checks passed!`.

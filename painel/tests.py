@@ -212,6 +212,24 @@ class CriarPedidoTests(PainelBaseTestCase):
         self.assertEqual(pedido.itens.get().quantidade, 2)
         self.assertEqual(pedido.aprovado_por, self.staff)
 
+    def test_pedido_manual_com_condominio_livre(self):
+        resposta = self.client.post(
+            self.url_novo,
+            self._dados_form(
+                **{
+                    "condominio": "",
+                    "condominio_nome": "Condomínio Livre",
+                    "endereco": "Rua Livre, 10",
+                }
+            ),
+        )
+
+        pedido = Pedido.objects.latest("pk")
+        self.assertEqual(resposta.status_code, 302)
+        self.assertIsNone(pedido.condominio)
+        self.assertEqual(pedido.condominio_nome, "Condomínio Livre")
+        self.assertEqual(pedido.condominio_exibicao, "Condomínio Livre")
+
     def test_pedido_manual_nasce_aprovado(self):
         self.client.post(self.url_novo, self._dados_form())
 

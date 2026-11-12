@@ -156,7 +156,7 @@ def checkout(request):
 @never_cache
 def recibo(request, token):
     pedido = get_object_or_404(
-        Pedido.objects.prefetch_related(
+        Pedido.objects.select_related("condominio").prefetch_related(
             "itens__produto", "itens__segundo_produto"
         ),
         token=token,

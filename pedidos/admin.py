@@ -55,9 +55,23 @@ class ItemPedidoInline(admin.TabularInline):
 
 @admin.register(Pedido)
 class PedidoAdmin(admin.ModelAdmin):
-    list_display = ("id", "nome", "total", "status", "pagamento", "criado_em")
+    list_display = (
+        "id",
+        "nome",
+        "condominio_exibicao",
+        "total",
+        "status",
+        "pagamento",
+        "criado_em",
+    )
     list_filter = ("status", "pagamento", "criado_em")
-    search_fields = ("nome", "telefone", "endereco")
+    search_fields = (
+        "nome",
+        "telefone",
+        "endereco",
+        "condominio_nome",
+        "condominio__nome",
+    )
     readonly_fields = (
         "token",
         "total",
@@ -74,3 +88,7 @@ class PedidoAdmin(admin.ModelAdmin):
 
     def has_delete_permission(self, request, obj=None):
         return False
+
+    @admin.display(description="Condomínio")
+    def condominio_exibicao(self, obj):
+        return obj.condominio_exibicao or "-"

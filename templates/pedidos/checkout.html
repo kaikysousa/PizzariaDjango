@@ -71,6 +71,7 @@
 
   (function () {
     const selectCondominio = document.getElementById("id_condominio");
+    const campoCondominioNome = document.getElementById("id_condominio_nome");
     const campoEndereco = document.getElementById("id_endereco");
     if (!selectCondominio || !campoEndereco) return;
 
@@ -107,6 +108,7 @@
         campoEndereco.value = novo;
         enderecoAutomatico = novo;
       }
+      if (novo && campoCondominioNome) campoCondominioNome.value = "";
     }
 
     if (selectCondominio.value) {

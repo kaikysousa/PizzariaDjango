@@ -138,14 +138,24 @@ def criar_pedido(
     pagamento=Pedido.Pagamento.DINHEIRO,
     origem=Pedido.Origem.CLIENTE,
     condominio=None,
+    condominio_nome="",
     status_inicial=None,
     usuario=None,
 ):
     nome = (nome or "").strip()
     telefone = (telefone or "").strip()
     endereco = (endereco or "").strip()
+    condominio_nome = (condominio_nome or "").strip()
     if not nome or not telefone or not endereco:
         raise ValidationError("Nome, telefone e endereço são obrigatórios.")
+    if condominio is not None:
+        if condominio_nome and condominio_nome != condominio.nome:
+            raise ValidationError(
+                "Escolha um condomínio cadastrado ou digite um nome, não os dois."
+            )
+        condominio_nome = condominio.nome
+    if len(condominio_nome) > 120:
+        raise ValidationError("O nome do condomínio deve ter no máximo 120 caracteres.")
 
     status_inicial = _status_inicial(origem, status_inicial, usuario)
     resolved, total = resolver_itens(itens)
@@ -158,6 +168,7 @@ def criar_pedido(
         pagamento=pagamento,
         origem=origem,
         condominio=condominio,
+        condominio_nome=condominio_nome,
         status=status_inicial,
         total=total,
     )

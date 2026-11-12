@@ -81,6 +81,7 @@ preparando           -> cancelado
 
 - `origem`: `cliente` | `balcao`, default `cliente`
 - `condominio`: FK `enderecos.Condominio`, null, blank, `on_delete=SET_NULL`
+- `condominio_nome`: CharField(120), blank; nome livre quando não há cadastro
 - `aprovado_por`: FK usuário, null, blank
 - `aprovado_em`: DateTimeField null, blank
 - `motivo_cancelamento`: TextField blank
@@ -134,7 +135,7 @@ preparando           -> cancelado
 
 ### pedidos/services.py
 
-- `criar_pedido(...)` aceita `origem`, `condominio`, `status_inicial`.
+- `criar_pedido(...)` aceita `origem`, `condominio`, `condominio_nome`, `status_inicial`.
 - `alterar_status(pedido, novo_status, usuario=None, motivo="")` valida transição, grava aprovação/cancelamento e emite `pedido_status_alterado`.
 - `atualizar_itens_pedido(pedido, itens, usuario=None)` permitido só se `pedido.itens_editaveis`; recalcula total; emite `pedido_itens_alterados`.
 - `pedido.itens_editaveis`: status em `aguardando_aprovacao` ou `aprovado`.
