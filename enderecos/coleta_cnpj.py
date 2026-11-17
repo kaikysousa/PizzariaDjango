@@ -172,18 +172,24 @@ def processar_parte(
     codigo_municipio = codigo_municipio.strip()
 
     selecionados = []
-    for linha in _ler_csv_zip(estabelecimentos_zip):
-        if len(linha) < 21:
-            continue
-        if linha[5].strip() != SITUACAO_ATIVA:
-            continue
-        if linha[19].strip().upper() != uf:
-            continue
-        if linha[20].strip() != codigo_municipio:
-            continue
-        if linha[11].strip() != cnae:
-            continue
-        selecionados.append(linha)
+    try:
+        for linha in _ler_csv_zip(estabelecimentos_zip):
+            if len(linha) < 21:
+                continue
+            if linha[5].strip() != SITUACAO_ATIVA:
+                continue
+            if linha[19].strip().upper() != uf:
+                continue
+            if linha[20].strip() != codigo_municipio:
+                continue
+            if linha[11].strip() != cnae:
+                continue
+            selecionados.append(linha)
+    except csv.Error as erro:
+        raise ValueError(
+            "CSV corrompido em "
+            f"{Path(estabelecimentos_zip).name}: {erro}"
+        ) from erro
 
     if not selecionados:
         return []

@@ -129,6 +129,7 @@ Para importar linhas não revisadas (não recomendado):
 | Acentos quebrados no Excel | arquivo sem BOM | use o CSV gerado pelo script |
 | Muitos duplicados | nome/endereço divergentes | ajuste o nome na revisão e rode o dry-run |
 | Linha sumiu | foi para pendências | veja `condominios-pendencias.csv` |
+| `line contains NUL` | zip corrompido no cache | apague o `.zip` correspondente em `.cache-cnpj/` e rode de novo |
 
 ## Rotina sugerida
 

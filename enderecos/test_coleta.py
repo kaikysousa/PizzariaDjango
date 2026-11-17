@@ -147,6 +147,37 @@ class CnpjTests(SimpleTestCase):
         )
 
 
+class CsvCorrompidoTests(SimpleTestCase):
+    def test_erro_indica_arquivo_corrompido(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            pasta = Path(tmp)
+
+            def criar(nome, conteudo):
+                caminho = pasta / nome
+                with zipfile.ZipFile(caminho, "w") as arquivo:
+                    arquivo.writestr(
+                        nome.replace(".zip", ".csv"), conteudo
+                    )
+                return caminho
+
+            empresas = criar("Empresas0.zip", "00000001;X\n")
+            estabelecimentos = criar(
+                "Estabelecimentos0.zip",
+                "00000001;0001;00;1;X\x00Y;02\n",
+            )
+
+            with self.assertRaisesMessage(
+                ValueError, "Estabelecimentos0.zip"
+            ):
+                processar_parte(
+                    empresas,
+                    estabelecimentos,
+                    "1066",
+                    "GO",
+                    "8112500",
+                )
+
+
 class CompetenciaTests(SimpleTestCase):
     def test_extrai_competencias_do_propfind(self):
         conteudo = b"""<?xml version="1.0"?>
