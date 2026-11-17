@@ -245,11 +245,19 @@ server {
     gzip_types text/css application/javascript application/json image/svg+xml;
     gzip_min_length 1024;
 
+    # Admin e painel ficam protegidos pelo login do Django.
+    # O rate limit de POST freia forca bruta sem depender do IP do dono.
     location /admin/ {
-        # Troque pelo seu IP fixo. Sem isso o admin fica aberto na internet.
-        allow SEU_IP_RESIDENCIAL;
-        allow 127.0.0.1;
-        deny all;
+        limit_req zone=post_zone burst=20 nodelay;
+        proxy_pass http://127.0.0.1:8001;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location /painel/ {
+        limit_req zone=post_zone burst=20 nodelay;
         proxy_pass http://127.0.0.1:8001;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
@@ -286,6 +294,8 @@ server {
 ```
 
 O `map` limita apenas POST, então navegar pelo checkout continua livre.
+
+> Se quiser restringir `/admin/` por IP, adicione `allow SEU_IP; deny all;` dentro do location. Evite fazer isso com IP residencial: quando o IP muda, admin e painel passam a responder 403. Para acesso remoto estável, prefira VPN (Tailscale/WireGuard) ou Cloudflare Tunnel.
 
 Ative e teste:
 
