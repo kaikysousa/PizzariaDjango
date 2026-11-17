@@ -113,6 +113,21 @@ class CondominioCheckoutTests(TestCase):
         self.assertIn('data-cep="01000-000"', html)
         self.assertNotIn("data-referencia=", html)
 
+    def test_checkout_inclui_combobox_com_busca(self):
+        self._revisar()
+        response = self.client.get(reverse("checkout"))
+
+        self.assertContains(response, 'role="combobox"')
+        self.assertContains(response, 'id="id_condominio_busca"')
+        self.assertContains(response, 'aria-controls="condominio-opcoes"')
+        self.assertContains(response, 'aria-autocomplete="list"')
+        self.assertContains(response, 'id="condominio-opcoes"')
+        self.assertContains(response, 'role="listbox"')
+        self.assertContains(
+            response, 'placeholder="Digite o nome do condomínio"'
+        )
+        self.assertContains(response, 'id="id_condominio"')
+
     def test_form_salva_condominio(self):
         self._enviar(condominio=self.condominio.pk)
 

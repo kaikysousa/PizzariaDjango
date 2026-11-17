@@ -50,8 +50,34 @@
         {% endif %}
         {% for field in form %}
           <div class="campo {% if field.errors %}campo--erro{% endif %}">
-            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-            {{ field }}
+            {% if field.name == "condominio" %}
+              <label id="label-{{ field.id_for_label }}" for="{{ field.id_for_label }}">{{ field.label }}</label>
+              <div class="combo" data-combo-condominio hidden>
+                <div class="combo__campo">
+                  <input
+                    type="text"
+                    id="id_condominio_busca"
+                    class="combo__entrada"
+                    role="combobox"
+                    aria-expanded="false"
+                    aria-controls="condominio-opcoes"
+                    aria-autocomplete="list"
+                    aria-haspopup="listbox"
+                    aria-labelledby="label-{{ field.id_for_label }}"
+                    aria-describedby="erro-{{ field.id_for_label }}"
+                    autocomplete="off"
+                    placeholder="Digite o nome do condomínio"
+                  >
+                  <button type="button" class="combo__limpar" aria-label="Limpar condomínio" hidden>&times;</button>
+                </div>
+                <ul class="combo__lista" id="condominio-opcoes" role="listbox" aria-labelledby="label-{{ field.id_for_label }}" hidden></ul>
+                <p class="combo__vazio" role="status" hidden>Nenhum condomínio encontrado. Digite o nome no campo abaixo.</p>
+              </div>
+              {{ field }}
+            {% else %}
+              <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+              {{ field }}
+            {% endif %}
             {% if field.help_text %}<p class="ajuda">{{ field.help_text }}</p>{% endif %}
             <p class="erro" id="erro-{{ field.id_for_label }}"{% if not field.errors %} hidden{% endif %}>{% for erro in field.errors %}{{ erro }}{% endfor %}</p>
           </div>
@@ -66,19 +92,16 @@
 
 {% block extra_js %}
 <script nonce="{{ request.csp_nonce }}">
-  const primeiroErro = document.querySelector(".campo--erro input, .campo--erro textarea, .campo--erro select");
-  if (primeiroErro) primeiroErro.focus();
-
   (function () {
-    const selectCondominio = document.getElementById("id_condominio");
-    const campoCondominioNome = document.getElementById("id_condominio_nome");
+    const select = document.getElementById("id_condominio");
+    const campoNome = document.getElementById("id_condominio_nome");
     const campoEndereco = document.getElementById("id_endereco");
-    if (!selectCondominio || !campoEndereco) return;
+    if (!select || !campoEndereco) return;
 
     let enderecoAutomatico = "";
 
     function enderecoDaOpcao() {
-      const opcao = selectCondominio.options[selectCondominio.selectedIndex];
+      const opcao = select.options[select.selectedIndex];
       if (!opcao || !opcao.value) return "";
       const dados = opcao.dataset;
       const principal = dados.numero
@@ -108,10 +131,10 @@
         campoEndereco.value = novo;
         enderecoAutomatico = novo;
       }
-      if (novo && campoCondominioNome) campoCondominioNome.value = "";
+      if (novo && campoNome) campoNome.value = "";
     }
 
-    if (selectCondominio.value) {
+    if (select.value) {
       const inicial = enderecoDaOpcao();
       if (!campoEndereco.value.trim()) {
         campoEndereco.value = inicial;
@@ -121,12 +144,242 @@
       }
     }
 
-    selectCondominio.addEventListener("change", aplicarEnderecoDoCondominio);
+    select.addEventListener("change", aplicarEnderecoDoCondominio);
 
-    if (campoCondominioNome) {
-      campoCondominioNome.addEventListener("input", function () {
+    function normalizar(texto) {
+      return (texto || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .trim();
+    }
+
+    const combo = document.querySelector("[data-combo-condominio]");
+    const busca = combo ? combo.querySelector(".combo__entrada") : null;
+    const lista = combo ? combo.querySelector(".combo__lista") : null;
+    const vazio = combo ? combo.querySelector(".combo__vazio") : null;
+    const limpar = combo ? combo.querySelector(".combo__limpar") : null;
+    const rotulo =
+      document.getElementById("label-id_condominio") ||
+      document.querySelector('label[for="id_condominio"]');
+
+    if (combo && busca && lista && vazio && limpar) {
+      const itens = Array.from(select.options)
+        .filter((opcao) => opcao.value)
+        .map((opcao) => ({
+          id: opcao.value,
+          nome: opcao.textContent.trim(),
+          bairro: (opcao.dataset.bairro || "").trim(),
+          busca: normalizar(
+            opcao.textContent + " " + (opcao.dataset.bairro || "")
+          ),
+        }));
+
+      itens.forEach((item) => {
+        const opcao = document.createElement("li");
+        opcao.className = "combo__opcao";
+        opcao.id = "condominio-opcao-" + item.id;
+        opcao.setAttribute("role", "option");
+        opcao.setAttribute("aria-selected", "false");
+        opcao.dataset.id = item.id;
+        const nome = document.createElement("span");
+        nome.className = "combo__nome";
+        nome.textContent = item.nome;
+        opcao.appendChild(nome);
+        if (item.bairro) {
+          const bairro = document.createElement("span");
+          bairro.className = "combo__bairro";
+          bairro.textContent = item.bairro;
+          opcao.appendChild(bairro);
+        }
+        opcao.addEventListener("mousedown", (evento) =>
+          evento.preventDefault()
+        );
+        opcao.addEventListener("click", () => escolher(item));
+        lista.appendChild(opcao);
+      });
+
+      select.hidden = true;
+      combo.hidden = false;
+      if (rotulo) rotulo.htmlFor = "id_condominio_busca";
+      document
+        .querySelectorAll('a[href="#id_condominio"]')
+        .forEach((link) =>
+          link.setAttribute("href", "#id_condominio_busca")
+        );
+
+      let ativo = -1;
+
+      function itemSelecionado() {
+        return itens.find((item) => item.id === select.value) || null;
+      }
+
+      function atualizarLimpar() {
+        limpar.hidden = !busca.value && !select.value;
+      }
+
+      function marcarSelecionado() {
+        Array.from(lista.children).forEach((opcao) => {
+          opcao.setAttribute(
+            "aria-selected",
+            opcao.dataset.id === select.value ? "true" : "false"
+          );
+        });
+      }
+
+      function visiveis() {
+        return Array.from(lista.children).filter(
+          (opcao) => !opcao.hidden
+        );
+      }
+
+      function abrir() {
+        lista.hidden = false;
+        busca.setAttribute("aria-expanded", "true");
+      }
+
+      function fechar() {
+        lista.hidden = true;
+        vazio.hidden = true;
+        busca.setAttribute("aria-expanded", "false");
+        busca.removeAttribute("aria-activedescendant");
+        ativo = -1;
+        lista
+          .querySelectorAll(".combo__opcao--ativo")
+          .forEach((opcao) =>
+            opcao.classList.remove("combo__opcao--ativo")
+          );
+      }
+
+      function marcarAtivo(opcao) {
+        lista
+          .querySelectorAll(".combo__opcao--ativo")
+          .forEach((outra) =>
+            outra.classList.remove("combo__opcao--ativo")
+          );
+        if (!opcao) {
+          busca.removeAttribute("aria-activedescendant");
+          return;
+        }
+        opcao.classList.add("combo__opcao--ativo");
+        busca.setAttribute("aria-activedescendant", opcao.id);
+        opcao.scrollIntoView({ block: "nearest" });
+      }
+
+      function escolher(item) {
+        select.value = item.id;
+        busca.value = item.nome;
+        select.dispatchEvent(new Event("change", { bubbles: true }));
+        marcarSelecionado();
+        fechar();
+        atualizarLimpar();
+      }
+
+      function filtrar() {
+        const termo = normalizar(busca.value);
+        let total = 0;
+        Array.from(lista.children).forEach((opcao, indice) => {
+          const combina =
+            !termo || itens[indice].busca.includes(termo);
+          opcao.hidden = !combina;
+          if (combina) total += 1;
+        });
+        ativo = -1;
+        marcarAtivo(null);
+        if (total > 0) {
+          vazio.hidden = true;
+          abrir();
+        } else {
+          fechar();
+          vazio.hidden = false;
+        }
+      }
+
+      busca.addEventListener("input", function () {
+        const selecionado = itemSelecionado();
+        if (selecionado && busca.value.trim() !== selecionado.nome) {
+          select.value = "";
+          select.dispatchEvent(
+            new Event("change", { bubbles: true })
+          );
+          marcarSelecionado();
+        }
+        atualizarLimpar();
+        filtrar();
+      });
+
+      busca.addEventListener("focus", filtrar);
+
+      busca.addEventListener("keydown", function (evento) {
+        if (evento.key === "ArrowDown" || evento.key === "ArrowUp") {
+          evento.preventDefault();
+          abrir();
+          const opcoes = visiveis();
+          if (!opcoes.length) return;
+          if (evento.key === "ArrowDown") {
+            ativo = (ativo + 1) % opcoes.length;
+          } else {
+            ativo = ativo <= 0 ? opcoes.length - 1 : ativo - 1;
+          }
+          marcarAtivo(opcoes[ativo]);
+          return;
+        }
+        if (evento.key === "Enter") {
+          const opcoes = visiveis();
+          if (ativo >= 0 && opcoes[ativo]) {
+            evento.preventDefault();
+            const item = itens.find(
+              (candidato) =>
+                candidato.id === opcoes[ativo].dataset.id
+            );
+            if (item) escolher(item);
+            return;
+          }
+          const termo = normalizar(busca.value);
+          const exato = itens.find(
+            (item) => normalizar(item.nome) === termo
+          );
+          if (exato) {
+            evento.preventDefault();
+            escolher(exato);
+          }
+          return;
+        }
+        if (evento.key === "Escape" || evento.key === "Tab") {
+          fechar();
+        }
+      });
+
+      limpar.addEventListener("click", function () {
+        busca.value = "";
+        select.value = "";
+        select.dispatchEvent(new Event("change", { bubbles: true }));
+        marcarSelecionado();
+        atualizarLimpar();
+        filtrar();
+        busca.focus();
+      });
+
+      combo.addEventListener("focusout", function () {
+        window.setTimeout(function () {
+          if (!combo.contains(document.activeElement)) fechar();
+        }, 120);
+      });
+
+      const inicial = itemSelecionado();
+      if (inicial) busca.value = inicial.nome;
+      marcarSelecionado();
+      atualizarLimpar();
+      filtrar();
+      fechar();
+    }
+
+    if (campoNome) {
+      campoNome.addEventListener("input", function () {
         if (!this.value.trim()) return;
-        selectCondominio.value = "";
+        select.value = "";
+        if (busca) busca.value = "";
+        if (limpar) limpar.hidden = true;
         if (
           enderecoAutomatico &&
           campoEndereco.value.trim() === enderecoAutomatico
@@ -136,6 +389,11 @@
         enderecoAutomatico = "";
       });
     }
+
+    const primeiroErro = document.querySelector(
+      ".campo--erro input:not([type='hidden']):not([hidden]), .campo--erro textarea, .campo--erro select:not([hidden])"
+    );
+    if (primeiroErro) primeiroErro.focus();
   })();
 </script>
 {% endblock %}

@@ -745,6 +745,95 @@ body:has(dialog[open]) {
   border-color: var(--erro);
 }
 
+/* Combobox de condomínio */
+
+.combo {
+  position: relative;
+}
+
+.combo__campo {
+  position: relative;
+}
+
+.combo__campo .combo__entrada {
+  padding-right: 2.6rem;
+}
+
+.combo__limpar {
+  position: absolute;
+  top: 50%;
+  right: 0.55rem;
+  transform: translateY(-50%);
+  width: 2rem;
+  height: 2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--tinta-suave);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.combo__limpar:hover {
+  background: var(--superficie-alt);
+  color: var(--tinta);
+}
+
+.combo__lista {
+  position: absolute;
+  z-index: 30;
+  left: 0;
+  right: 0;
+  max-height: 18rem;
+  overflow-y: auto;
+  margin: 0.35rem 0 0;
+  padding: 0.3rem;
+  list-style: none;
+  background: #fff;
+  border: 1px solid var(--borda);
+  border-radius: 12px;
+  box-shadow: var(--sombra-suave);
+}
+
+.combo__opcao {
+  padding: 0.55rem 0.65rem;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.combo__opcao:hover,
+.combo__opcao--ativo {
+  background: var(--superficie-alt);
+}
+
+.combo__opcao[aria-selected="true"] {
+  background: var(--superficie-alt);
+  box-shadow: inset 3px 0 0 var(--secundaria);
+}
+
+.combo__nome {
+  display: block;
+  font-size: 0.95rem;
+  color: var(--tinta);
+}
+
+.combo__bairro {
+  display: block;
+  margin-top: 0.1rem;
+  font-size: 0.8rem;
+  color: var(--tinta-suave);
+}
+
+.combo__vazio {
+  margin: 0.4rem 0 0;
+  color: var(--tinta-suave);
+  font-size: 0.85rem;
+}
+
 .erro {
   color: var(--erro);
   font-size: 0.85rem;
