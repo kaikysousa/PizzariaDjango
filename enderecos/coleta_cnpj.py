@@ -2,9 +2,11 @@
 
 import csv
 import io
+import re
 import shutil
 import time
 import urllib.request
+import xml.etree.ElementTree as ET
 import zipfile
 from pathlib import Path
 
@@ -17,7 +19,12 @@ from .coleta import (
     sem_acento,
 )
 
-URL_BASE = "https://dadosabertos.rfb.gov.br/CNPJ/"
+SHARE_URL = (
+    "https://arquivos.receitafederal.gov.br/"
+    "public.php/dav/files/YggdBLfdninEJX9/"
+)
+COMPETENCIA_PADRAO = "2026-11"
+URL_BASE = SHARE_URL
 USER_AGENT = "PizzariaDjango/1.0 (coleta de condominios)"
 UF_PADRAO = "GO"
 MUNICIPIO_PADRAO = "VALPARAISO DE GOIAS"
@@ -28,6 +35,37 @@ SITUACAO_ATIVA = "02"
 
 def _chave_texto(valor):
     return sem_acento(normalizar_espacos(valor)).upper()
+
+
+def _competencias_de_xml(conteudo):
+    """Extrai as pastas AAAA-MM de um PROPFIND do Nextcloud."""
+    raiz = ET.fromstring(conteudo)
+    competencias = set()
+    for elemento in raiz.iter():
+        if elemento.tag.endswith("href") and elemento.text:
+            achado = re.search(r"/(\d{4}-\d{2})/?$", elemento.text)
+            if achado:
+                competencias.add(achado.group(1))
+    return sorted(competencias)
+
+
+def descobrir_competencia(share_url=SHARE_URL, log=print):
+    """Descobre a competencia mais recente publicada pela Receita."""
+    try:
+        requisicao = urllib.request.Request(
+            share_url,
+            method="PROPFIND",
+            headers={"Depth": "1", "User-Agent": USER_AGENT},
+        )
+        with urllib.request.urlopen(requisicao, timeout=60) as resposta:
+            competencias = _competencias_de_xml(resposta.read())
+        if competencias:
+            log(f"competencia: {competencias[-1]}")
+            return competencias[-1]
+    except Exception as falha:  # noqa: BLE001 - fallback local
+        log(f"aviso: nao descobri a competencia ({falha})")
+    log(f"usando competencia padrao: {COMPETENCIA_PADRAO}")
+    return COMPETENCIA_PADRAO
 
 
 def baixar_arquivo(
@@ -195,10 +233,16 @@ def coletar_cnpj(
     cnae=CNAE_PADRAO,
     partes=range(10),
     cidade=CIDADE_PADRAO,
-    url_base=URL_BASE,
+    competencia=None,
+    url_base=None,
     log=print,
 ):
     """Baixa, filtra e devolve os condominios de uma cidade."""
+    if url_base is None:
+        competencia = competencia or descobrir_competencia(log=log)
+        url_base = f"{SHARE_URL}{competencia}/"
+    log(f"fonte cnpj: {url_base}")
+
     cache_dir = Path(cache_dir)
     municipios = baixar_arquivo(
         "Municipios.zip", cache_dir, log, url_base=url_base

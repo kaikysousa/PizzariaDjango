@@ -1,6 +1,7 @@
 """Coleta de condominios no OpenStreetMap via Overpass."""
 
 import json
+import re
 import time
 import urllib.parse
 import urllib.request
@@ -31,6 +32,11 @@ CONSULTA = """
 out center tags 2000;
 """
 _GENERICOS = {"residencial", "condominio", "condominio residencial", "edificio"}
+_RELEVANTE = re.compile(
+    r"condominio|residencial|colinas|ville|village|club",
+    re.IGNORECASE,
+)
+_POI_TAGS = ("shop", "amenity", "office", "tourism", "leisure")
 
 
 def _limitar(valor, tamanho):
@@ -41,6 +47,15 @@ def _nome_generico(nome):
     return sem_acento(nome).lower() in _GENERICOS
 
 
+def _relevante(nome, tags):
+    """Mantem condominios por nome ou por endereco completo."""
+    if any(tag in tags for tag in _POI_TAGS):
+        return False
+    if _RELEVANTE.search(sem_acento(nome)):
+        return True
+    return bool(tags.get("addr:street") and tags.get("addr:suburb"))
+
+
 def extrair_condominios(dados, cidade=CIDADE_PADRAO):
     """Converte a resposta do Overpass em linhas do CSV de revisao."""
     linhas = []
@@ -48,6 +63,8 @@ def extrair_condominios(dados, cidade=CIDADE_PADRAO):
         tags = elemento.get("tags") or {}
         nome = normalizar_espacos(tags.get("name", ""))
         if not nome or _nome_generico(nome):
+            continue
+        if not _relevante(nome, tags):
             continue
 
         linhas.append(

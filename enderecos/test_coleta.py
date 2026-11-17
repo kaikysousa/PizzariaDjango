@@ -13,7 +13,11 @@ from enderecos.coleta import (
     nome_para_exibicao,
     valor_revisado,
 )
-from enderecos.coleta_cnpj import ler_municipio, processar_parte
+from enderecos.coleta_cnpj import (
+    _competencias_de_xml,
+    ler_municipio,
+    processar_parte,
+)
 from enderecos.coleta_merge import mesclar, separar_pendencias
 from enderecos.coleta_osm import extrair_condominios
 from enderecos.models import Condominio
@@ -140,6 +144,20 @@ class CnpjTests(SimpleTestCase):
         )
 
 
+class CompetenciaTests(SimpleTestCase):
+    def test_extrai_competencias_do_propfind(self):
+        conteudo = b"""<?xml version="1.0"?>
+        <d:multistatus xmlns:d="DAV:">
+          <d:response><d:href>/public.php/dav/files/TOKEN/2026-10/</d:href></d:response>
+          <d:response><d:href>/public.php/dav/files/TOKEN/2026-11/</d:href></d:response>
+          <d:response><d:href>/public.php/dav/files/TOKEN/cnpj.tar.gz</d:href></d:response>
+        </d:multistatus>"""
+
+        self.assertEqual(
+            _competencias_de_xml(conteudo), ["2026-10", "2026-11"]
+        )
+
+
 class OsmTests(SimpleTestCase):
     def test_extrai_apenas_elementos_com_nome(self):
         dados = {
@@ -186,6 +204,77 @@ class OsmTests(SimpleTestCase):
 
         self.assertEqual(
             extrair_condominios(dados, "Valparaíso de Goiás"), []
+        )
+
+    def test_descarta_comercio_sem_endereco_completo(self):
+        dados = {
+            "elements": [
+                {
+                    "type": "node",
+                    "id": 3,
+                    "tags": {
+                        "name": "Nillmart Supermercados - Jardim Oriente",
+                        "shop": "supermarket",
+                        "addr:street": "Rua Capitão da PM Carlos Silva",
+                        "addr:suburb": "Jardim Oriente",
+                    },
+                }
+            ]
+        }
+
+        self.assertEqual(
+            extrair_condominios(dados, "Valparaíso de Goiás"), []
+        )
+
+    def test_descarta_quadra_sem_nome_de_condominio(self):
+        dados = {
+            "elements": [
+                {
+                    "type": "node",
+                    "id": 6,
+                    "tags": {"name": "Qc-02 Conjunto B"},
+                }
+            ]
+        }
+
+        self.assertEqual(
+            extrair_condominios(dados, "Valparaíso de Goiás"), []
+        )
+
+    def test_mantem_condominio_sem_endereco(self):
+        dados = {
+            "elements": [
+                {
+                    "type": "way",
+                    "id": 4,
+                    "tags": {
+                        "name": "Condomínio Residencial Flores do Bosque"
+                    },
+                }
+            ]
+        }
+
+        self.assertEqual(
+            len(extrair_condominios(dados, "Valparaíso de Goiás")), 1
+        )
+
+    def test_mantem_nome_comum_com_endereco_completo(self):
+        dados = {
+            "elements": [
+                {
+                    "type": "way",
+                    "id": 5,
+                    "tags": {
+                        "name": "Jardim das Flores",
+                        "addr:street": "Rua A",
+                        "addr:suburb": "Centro",
+                    },
+                }
+            ]
+        }
+
+        self.assertEqual(
+            len(extrair_condominios(dados, "Valparaíso de Goiás")), 1
         )
 
 

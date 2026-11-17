@@ -10,6 +10,11 @@ nunca na VM de produção.
    - município `VALPARAISO DE GOIAS`;
    - CNAE `8112-5/00` (condomínios prediais);
    - situação cadastral ativa (`02`).
+
+   A Receita mudou o repositório em 2026: os arquivos agora ficam na pasta
+   pública `arquivos.receitafederal.gov.br` (share `YggdBLfdninEJX9`), com uma
+   subpasta por mês (`AAAA-MM`). O coletor descobre a competência mais recente
+   via WebDAV e usa `2026-11` como fallback.
 2. Consulta o OpenStreetMap (Overpass) para achar residenciais horizontais.
 3. Junta as fontes, remove duplicados e gera:
    - `dados/condominios.csv` — lista para revisão;
@@ -25,8 +30,9 @@ nunca na VM de produção.
 - O CNPJ cobre principalmente **condomínios prediais**. Horizontais e
   associações de moradores podem não ter CNAE 8112-5/00; entram por OSM, LAI ou
   cadastro manual.
-- O download completo do CNPJ tem **vários GB** (10 pares de arquivos). O
-  script guarda cache em `.cache-cnpj/`; a primeira execução demora.
+- O download completo do CNPJ tem **~6,9 GB** (10 partes de Empresas + 10 de
+  Estabelecimentos). O script guarda cache em `.cache-cnpj/`; a primeira
+  execução demora (cerca de 1 hora a 2 MB/s por conexão).
 - O volume esperado é de **500 a 700** registros, não dezenas.
 
 ## Pré-requisitos
@@ -61,12 +67,13 @@ Opções úteis:
 --uf GO
 --cnae 8112500
 --bbox "-16.12,-48.03,-16.01,-47.92"
---url-base "https://dadosabertos.rfb.gov.br/CNPJ/"
+--competencia 2026-11
+--url-base "https://arquivos.receitafederal.gov.br/public.php/dav/files/YggdBLfdninEJX9/2026-11/"
 ```
 
-Se a Receita estiver fora ou bloquear a rede, troque `--url-base` por um
-espelho dos mesmos arquivos. O script usa cache: um arquivo já baixado não é
-baixado de novo.
+Se a Receita mudar a pasta do mês, use `--competencia AAAA-MM` ou aponte
+`--url-base` para a pasta completa. O script usa cache: um arquivo já baixado
+não é baixado de novo.
 
 Se o OSM falhar, o comando `tudo` continua e gera o CSV só com o CNPJ.
 
@@ -116,7 +123,7 @@ Para importar linhas não revisadas (não recomendado):
 
 | Sintoma | Causa | Correção |
 |---|---|---|
-| `HTTP 403/000` na Receita | site fora ou bloqueio de rede | tente de novo; use outra rede |
+| `HTTP 403/000` na Receita | site fora ou bloqueio de rede | tente de novo; o host novo é `arquivos.receitafederal.gov.br` |
 | Overpass indisponível | API lenta/fora | rode `--fonte cnpj` e tente o OSM depois |
 | CSV inteiro em uma coluna | Excel salvou com vírgula | salve como CSV UTF-8 com `;` |
 | Acentos quebrados no Excel | arquivo sem BOM | use o CSV gerado pelo script |
