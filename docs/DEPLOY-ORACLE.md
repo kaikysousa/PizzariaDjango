@@ -383,7 +383,7 @@ sudo systemctl restart pizzaria
 Todo push na `main` dispara o workflow `CI`. Se ele passar, o workflow `Deploy` executa `scripts/deploy.sh` na VM via SSH:
 
 1. backup do SQLite em `/home/ubuntu/backups` (retenção de 30 dias);
-2. `git pull --ff-only` da `main`;
+2. checkout do **commit exato que passou no CI** (não do topo da `main`);
 3. `pip install -r requirements.txt`, `migrate` e `collectstatic`;
 4. restart do `pizzaria.service`;
 5. health check local e smoke test público.

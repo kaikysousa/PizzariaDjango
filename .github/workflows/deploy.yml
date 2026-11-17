@@ -47,10 +47,12 @@ jobs:
           PROD_HOST: ${{ secrets.PROD_HOST }}
           PROD_USER: ${{ secrets.PROD_USER }}
           PROD_APP_DIR: ${{ secrets.PROD_APP_DIR }}
+          TARGET_SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
         run: |
           ssh -i ~/.ssh/deploy_key -o BatchMode=yes -o StrictHostKeyChecking=yes \
             "$PROD_USER@$PROD_HOST" \
-            "APP_DIR='$PROD_APP_DIR' BRANCH=main bash -s" < scripts/deploy.sh
+            "APP_DIR='$PROD_APP_DIR' BRANCH=main TARGET_SHA='$TARGET_SHA' bash -s" \
+            < scripts/deploy.sh
 
       - name: Smoke test
         run: |

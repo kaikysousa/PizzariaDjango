@@ -21,9 +21,21 @@ if [ -f db.sqlite3 ]; then
   echo "backup: $backup"
 fi
 
-log "Atualizando codigo ($BRANCH)"
-git fetch --prune origin "$BRANCH"
-git pull --ff-only origin "$BRANCH"
+log "Atualizando codigo"
+if [ -n "${TARGET_SHA:-}" ]; then
+  echo "commit testado: $TARGET_SHA"
+  git fetch --prune origin
+  git checkout --detach "$TARGET_SHA"
+  if [ "$(git rev-parse HEAD)" != "$TARGET_SHA" ]; then
+    echo "FALHA: HEAD diferente do commit testado" >&2
+    exit 1
+  fi
+else
+  echo "branch: $BRANCH"
+  git fetch --prune origin "$BRANCH"
+  git checkout "$BRANCH"
+  git pull --ff-only origin "$BRANCH"
+fi
 git log -1 --oneline
 
 log "Dependencias"
