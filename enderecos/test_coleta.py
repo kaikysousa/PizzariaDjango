@@ -82,6 +82,8 @@ class CnpjTests(SimpleTestCase):
         cnae="8112500",
         uf="GO",
         municipio="9357",
+        tipo="RUA",
+        logradouro="DAS FLORES",
     ):
         campos = [""] * 30
         campos[0] = base
@@ -91,8 +93,8 @@ class CnpjTests(SimpleTestCase):
         campos[4] = nome
         campos[5] = situacao
         campos[11] = cnae
-        campos[13] = "RUA"
-        campos[14] = "DAS FLORES"
+        campos[13] = tipo
+        campos[14] = logradouro
         campos[15] = "10"
         campos[17] = "CENTRO"
         campos[18] = "72870000"
@@ -145,6 +147,27 @@ class CnpjTests(SimpleTestCase):
         self.assertEqual(
             ler_municipio(caminho, "Valparaíso de Goiás"), "9357"
         )
+
+    def test_nao_duplica_tipo_do_logradouro(self):
+        empresas = self._zip(
+            "Empresas0.zip",
+            "00000001;CONDOMINIO RESIDENCIAL TESTE\n",
+        )
+        estabelecimentos = self._zip(
+            "Estabelecimentos0.zip",
+            self._estab(
+                "00000001",
+                "CONDOMINIO TESTE",
+                logradouro="RUA DAS FLORES",
+            )
+            + "\n",
+        )
+
+        linhas = processar_parte(
+            empresas, estabelecimentos, "9357", "GO", "8112500"
+        )
+
+        self.assertEqual(linhas[0]["endereco"], "Rua das Flores")
 
 
 class CsvComNulTests(SimpleTestCase):
@@ -370,6 +393,24 @@ class OsmTests(SimpleTestCase):
         self.assertEqual(
             len(extrair_condominios(dados, "Valparaíso de Goiás")), 1
         )
+
+    def test_cidade_usa_a_cidade_alvo(self):
+        dados = {
+            "elements": [
+                {
+                    "type": "way",
+                    "id": 7,
+                    "tags": {
+                        "name": "Condomínio Teste",
+                        "addr:city": "Brasília",
+                    },
+                }
+            ]
+        }
+
+        linhas = extrair_condominios(dados, "Valparaíso de Goiás")
+
+        self.assertEqual(linhas[0]["cidade"], "Valparaíso de Goiás")
 
 
 BASE = {

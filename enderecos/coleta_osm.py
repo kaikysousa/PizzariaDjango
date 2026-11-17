@@ -77,10 +77,7 @@ def extrair_condominios(dados, cidade=CIDADE_PADRAO):
                 "bairro": _limitar(
                     capitalizar_texto(tags.get("addr:suburb", "")), 80
                 ),
-                "cidade": _limitar(
-                    capitalizar_texto(tags.get("addr:city", "")) or cidade,
-                    80,
-                ),
+                "cidade": _limitar(cidade, 80),
                 "cep": formatar_cep(tags.get("addr:postcode", ""))[:9],
                 "referencia": f"osm:{elemento.get('type')}/{elemento.get('id')}",
                 "ativo": "sim",

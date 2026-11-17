@@ -223,9 +223,16 @@ def processar_parte(
 
         tipo = linha[13].strip()
         logradouro = linha[14].strip()
-        endereco = capitalizar_texto(
-            normalizar_espacos(f"{tipo} {logradouro}")
-        )
+        inicio = logradouro.upper()
+        if tipo and (
+            inicio == tipo.upper()
+            or inicio.startswith(tipo.upper() + " ")
+        ):
+            endereco = capitalizar_texto(logradouro)
+        else:
+            endereco = capitalizar_texto(
+                normalizar_espacos(f"{tipo} {logradouro}")
+            )
         complemento = normalizar_espacos(linha[16])
         condominios.append(
             {
