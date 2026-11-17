@@ -111,6 +111,14 @@ def baixar_arquivo(
     raise RuntimeError(f"falha ao baixar {nome}: {erro}")
 
 
+def _sanitizar_nul(linhas):
+    """Troca NUL por espaco; a base oficial tem casos isolados."""
+    for linha in linhas:
+        if "\x00" in linha:
+            linha = linha.replace("\x00", " ")
+        yield linha
+
+
 def _ler_csv_zip(caminho):
     """Le o primeiro arquivo de dados de um zip da Receita (Latin-1, ';')."""
     with zipfile.ZipFile(caminho) as arquivo:
@@ -123,7 +131,11 @@ def _ler_csv_zip(caminho):
             raise ValueError(f"nenhum arquivo em {caminho}")
         with arquivo.open(nomes[0]) as bruto:
             texto = io.TextIOWrapper(bruto, encoding="latin-1", newline="")
-            yield from csv.reader(texto, delimiter=";", quotechar='"')
+            yield from csv.reader(
+                _sanitizar_nul(texto),
+                delimiter=";",
+                quotechar='"',
+            )
 
 
 def ler_municipio(caminho_zip, municipio):

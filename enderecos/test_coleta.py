@@ -147,8 +147,8 @@ class CnpjTests(SimpleTestCase):
         )
 
 
-class CsvCorrompidoTests(SimpleTestCase):
-    def test_erro_indica_arquivo_corrompido(self):
+class CsvComNulTests(SimpleTestCase):
+    def test_nul_nao_quebra_a_leitura(self):
         with tempfile.TemporaryDirectory() as tmp:
             pasta = Path(tmp)
 
@@ -160,22 +160,41 @@ class CsvCorrompidoTests(SimpleTestCase):
                     )
                 return caminho
 
-            empresas = criar("Empresas0.zip", "00000001;X\n")
+            empresas = criar(
+                "Empresas0.zip",
+                "00000001;CONDOMINIO RESIDENCIAL TESTE\n",
+            )
+            campos = [""] * 30
+            campos[0] = "00000001"
+            campos[1] = "0001"
+            campos[2] = "00"
+            campos[3] = "1"
+            campos[4] = "CONDOMINIO TESTE"
+            campos[5] = "02"
+            campos[11] = "8112500"
+            campos[13] = "RUA"
+            campos[14] = "DAS FLORES"
+            campos[15] = "10"
+            campos[16] = "BLOCO\x00A"
+            campos[17] = "CENTRO"
+            campos[18] = "72870000"
+            campos[19] = "GO"
+            campos[20] = "1066"
             estabelecimentos = criar(
-                "Estabelecimentos0.zip",
-                "00000001;0001;00;1;X\x00Y;02\n",
+                "Estabelecimentos0.zip", ";".join(campos) + "\n"
             )
 
-            with self.assertRaisesMessage(
-                ValueError, "Estabelecimentos0.zip"
-            ):
-                processar_parte(
-                    empresas,
-                    estabelecimentos,
-                    "1066",
-                    "GO",
-                    "8112500",
-                )
+            linhas = processar_parte(
+                empresas,
+                estabelecimentos,
+                "1066",
+                "GO",
+                "8112500",
+            )
+
+            self.assertEqual(len(linhas), 1)
+            self.assertNotIn("\x00", linhas[0]["referencia"])
+            self.assertIn("Bloco", linhas[0]["referencia"])
 
 
 class CompetenciaTests(SimpleTestCase):
