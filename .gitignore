@@ -161,3 +161,7 @@ templates/pedidos/index.html.save
 # Firecrawl local
 .firecrawl/
 
+# Coleta de condominios (dados derivados)
+dados/
+.cache-cnpj/
+
