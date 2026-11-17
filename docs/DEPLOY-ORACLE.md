@@ -378,6 +378,30 @@ python manage.py collectstatic --noinput
 sudo systemctl restart pizzaria
 ```
 
+### Deploy automático (GitHub Actions)
+
+Todo push na `main` dispara o workflow `CI`. Se ele passar, o workflow `Deploy` executa `scripts/deploy.sh` na VM via SSH:
+
+1. backup do SQLite em `/home/ubuntu/backups` (retenção de 30 dias);
+2. `git pull --ff-only` da `main`;
+3. `pip install -r requirements.txt`, `migrate` e `collectstatic`;
+4. restart do `pizzaria.service`;
+5. health check local e smoke test público.
+
+Secrets do repositório (Settings → Secrets and variables → Actions):
+
+| Secret | Valor |
+|---|---|
+| `PROD_HOST` | IP ou domínio da VM |
+| `PROD_USER` | `ubuntu` |
+| `PROD_APP_DIR` | `/home/ubuntu/pizzaria` |
+| `PROD_SSH_KEY` | chave privada dedicada (ed25519) do deploy |
+| `PROD_KNOWN_HOSTS` | linhas de `known_hosts` da VM |
+
+A chave pública correspondente fica em `~/.ssh/authorized_keys` do usuário `ubuntu`. Para trocar a chave, gere um novo par, adicione a pública na VM e atualize `PROD_SSH_KEY`.
+
+Para rodar de novo sem novo commit: Actions → **Deploy** → *Run workflow*. Para rollback, restaure o backup e rode `git reset --hard <commit>` na VM, seguido de `sudo systemctl restart pizzaria`.
+
 Logs e status:
 
 ```bash
