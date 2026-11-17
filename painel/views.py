@@ -9,6 +9,7 @@ from django.db import transaction
 from django.db.models import Count, F, Q
 from django.forms import formset_factory
 from django.shortcuts import get_object_or_404, redirect, render
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.http import require_POST
 
 from estoque.models import Ingrediente
@@ -106,6 +107,18 @@ def _acoes_disponiveis(pedido):
 def _avisar_estoque(request, pedido):
     for aviso in getattr(pedido, "avisos_estoque", []):
         messages.warning(request, aviso)
+
+
+def _voltar_da_acao(request, pedido):
+    """Volta para a página de origem quando o destino é local; senão, ao detalhe."""
+    destino = (request.POST.get("next") or "").strip()
+    if destino and url_has_allowed_host_and_scheme(
+        destino,
+        allowed_hosts={request.get_host()},
+        require_https=request.is_secure(),
+    ):
+        return redirect(destino)
+    return redirect("painel_pedido_detalhe", pk=pedido.pk)
 
 
 def _eventos_status(pedido):
@@ -391,16 +404,16 @@ def pedido_acao(request, pk):
     novo_status = ACOES_STATUS.get(acao)
     if novo_status is None:
         messages.error(request, "Ação inválida.")
-        return redirect("painel_pedido_detalhe", pk=pedido.pk)
+        return _voltar_da_acao(request, pedido)
 
     if acao == "recusar" and pedido.status != Pedido.Status.AGUARDANDO_APROVACAO:
         messages.error(request, "Só é possível recusar pedidos aguardando aprovação.")
-        return redirect("painel_pedido_detalhe", pk=pedido.pk)
+        return _voltar_da_acao(request, pedido)
 
     motivo = (request.POST.get("motivo") or "").strip()
     if acao in ACOES_COM_MOTIVO and not motivo:
         messages.error(request, "Informe o motivo para recusar ou cancelar.")
-        return redirect("painel_pedido_detalhe", pk=pedido.pk)
+        return _voltar_da_acao(request, pedido)
 
     try:
         pedido = alterar_status(
@@ -415,7 +428,7 @@ def pedido_acao(request, pk):
             request,
             f"Pedido #{pedido.pk} agora está em “{pedido.get_status_display()}”.",
         )
-    return redirect("painel_pedido_detalhe", pk=pedido.pk)
+    return _voltar_da_acao(request, pedido)
 
 
 @staff_member_required

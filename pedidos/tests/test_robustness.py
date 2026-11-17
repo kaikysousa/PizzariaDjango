@@ -136,3 +136,10 @@ class RobustnessTests(TestCase):
         self.assertRedirects(response, "/")
         self.assertNotIn("carrinho", self.client.session)
 
+
+class ExclusaoDePedidoTests(TestCase):
+    def test_admin_continua_sem_permissao_de_excluir(self):
+        model_admin = PedidoAdmin(Pedido, admin.site)
+
+        self.assertFalse(model_admin.has_delete_permission(request=None))
+

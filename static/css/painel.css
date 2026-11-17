@@ -885,6 +885,44 @@ summary:focus-visible {
   margin-bottom: 0.5rem;
 }
 
+/* Ações rápidas na listagem de pedidos */
+
+.acoes-linha {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 0.45rem;
+}
+
+.acoes-linha form {
+  margin: 0;
+}
+
+.acoes-linha .link {
+  align-self: center;
+}
+
+.acao-rapida summary {
+  list-style: none;
+}
+
+.acao-rapida summary::-webkit-details-marker {
+  display: none;
+}
+
+.acao-rapida__form {
+  margin: 0.55rem 0 0;
+  padding: 0.7rem;
+  min-width: 15rem;
+  border: 1px solid var(--borda, #e7ded2);
+  border-radius: 0.7rem;
+  background: var(--superficie-alt, #f3e9db);
+}
+
+.acao-rapida__form .campo textarea {
+  min-height: 3.5rem;
+}
+
 .linha-tempo {
   list-style: none;
   margin: 0;

@@ -571,3 +571,84 @@ class CsrfPainelTests(PainelBaseTestCase):
         pedido.refresh_from_db()
         self.assertEqual(resposta.status_code, 302)
         self.assertEqual(pedido.status, Pedido.Status.APROVADO)
+
+
+class AcoesNaListagemTests(PainelBaseTestCase):
+    def setUp(self):
+        super().setUp()
+        self.client.force_login(self.staff)
+        self.pendente = self._criar_pendente()
+        self.aprovado = criar_pedido(
+            itens=[{"ids": [self.bebida.id], "quantidade": 1}],
+            nome="Aprovado",
+            telefone="11977776666",
+            endereco="Rua D, 4",
+            origem=Pedido.Origem.BALCAO,
+            usuario=self.staff,
+        )
+
+    def _post_acao(self, pedido, acao, follow=False, **extra):
+        dados = {"acao": acao}
+        dados.update(extra)
+        return self.client.post(
+            reverse("painel_pedido_acao", args=[pedido.pk]), dados, follow=follow
+        )
+
+    def test_lista_mostra_acoes_apenas_para_pendentes(self):
+        resposta = self.client.get(self.url_lista)
+
+        self.assertContains(
+            resposta, reverse("painel_pedido_acao", args=[self.pendente.pk])
+        )
+        self.assertNotContains(
+            resposta, reverse("painel_pedido_acao", args=[self.aprovado.pk])
+        )
+        self.assertContains(resposta, "Aprovar")
+        self.assertContains(resposta, "Recusar")
+
+    def test_aprova_pela_listagem_e_volta_com_filtros(self):
+        destino = f"{self.url_lista}?status=aguardando_aprovacao"
+
+        resposta = self._post_acao(self.pendente, "aprovar", next=destino)
+
+        self.assertRedirects(resposta, destino)
+        self.pendente.refresh_from_db()
+        self.assertEqual(self.pendente.status, Pedido.Status.APROVADO)
+
+    def test_recusa_pela_listagem_com_motivo(self):
+        resposta = self._post_acao(
+            self.pendente,
+            "recusar",
+            motivo="Pedido de teste",
+            next=self.url_lista,
+        )
+
+        self.assertRedirects(resposta, self.url_lista)
+        self.pendente.refresh_from_db()
+        self.assertEqual(self.pendente.status, Pedido.Status.CANCELADO)
+        self.assertEqual(self.pendente.motivo_cancelamento, "Pedido de teste")
+
+    def test_recusa_pela_listagem_sem_motivo_nao_altera(self):
+        resposta = self._post_acao(
+            self.pendente,
+            "recusar",
+            motivo="",
+            next=self.url_lista,
+            follow=True,
+        )
+
+        self.pendente.refresh_from_db()
+        self.assertEqual(
+            self.pendente.status, Pedido.Status.AGUARDANDO_APROVACAO
+        )
+        self.assertContains(resposta, "Informe o motivo")
+
+    def test_next_externo_e_ignorado(self):
+        resposta = self._post_acao(
+            self.pendente, "aprovar", next="https://exemplo.invalido/x"
+        )
+
+        self.assertRedirects(
+            resposta,
+            reverse("painel_pedido_detalhe", args=[self.pendente.pk]),
+        )

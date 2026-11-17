@@ -45,7 +45,7 @@
             <th scope="col">Total</th>
             <th scope="col">Status</th>
             <th scope="col">Horário</th>
-            <th scope="col">Ação</th>
+            <th scope="col">Ações</th>
           </tr>
         </thead>
         <tbody>
@@ -65,7 +65,30 @@
                 <time datetime="{{ pedido.criado_em|date:'c' }}">{{ pedido.criado_em|date:"d/m/Y H:i" }}</time>
               </td>
               <td data-label="Ação">
-                <a class="link" href="{% url 'painel_pedido_detalhe' pedido.pk %}">Abrir</a>
+                <div class="acoes-linha">
+                  {% if pedido.status == "aguardando_aprovacao" %}
+                    <form method="post" action="{% url 'painel_pedido_acao' pedido.pk %}">
+                      {% csrf_token %}
+                      <input type="hidden" name="acao" value="aprovar">
+                      <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                      <button class="botao botao--primario botao--pequeno" type="submit">Aprovar</button>
+                    </form>
+                    <details class="acao-rapida">
+                      <summary class="botao botao--perigo botao--pequeno">Recusar</summary>
+                      <form class="acao-rapida__form" method="post" action="{% url 'painel_pedido_acao' pedido.pk %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="acao" value="recusar">
+                        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                        <div class="campo">
+                          <label for="motivo-{{ pedido.pk }}">Motivo da recusa</label>
+                          <textarea id="motivo-{{ pedido.pk }}" name="motivo" rows="2" required></textarea>
+                        </div>
+                        <button class="botao botao--perigo botao--pequeno" type="submit">Confirmar recusa</button>
+                      </form>
+                    </details>
+                  {% endif %}
+                  <a class="link" href="{% url 'painel_pedido_detalhe' pedido.pk %}">Abrir</a>
+                </div>
               </td>
             </tr>
           {% endfor %}
