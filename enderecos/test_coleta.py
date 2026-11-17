@@ -1,7 +1,9 @@
+import io
 import tempfile
 import zipfile
 from io import StringIO
 from pathlib import Path
+from unittest import mock
 
 from django.core.management import call_command
 from django.test import SimpleTestCase, TestCase
@@ -15,6 +17,7 @@ from enderecos.coleta import (
 )
 from enderecos.coleta_cnpj import (
     _competencias_de_xml,
+    baixar_arquivo,
     ler_municipio,
     processar_parte,
 )
@@ -156,6 +159,47 @@ class CompetenciaTests(SimpleTestCase):
         self.assertEqual(
             _competencias_de_xml(conteudo), ["2026-10", "2026-11"]
         )
+
+
+class _RespostaFalsa:
+    def __init__(self, conteudo, content_length=None):
+        self._arquivo = io.BytesIO(conteudo)
+        self.headers = {}
+        if content_length is not None:
+            self.headers["Content-Length"] = str(content_length)
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *args):
+        return False
+
+    def read(self, tamanho=-1):
+        return self._arquivo.read(tamanho)
+
+
+class DownloadTests(SimpleTestCase):
+    def _baixar(self, resposta):
+        with tempfile.TemporaryDirectory() as tmp:
+            with mock.patch(
+                "enderecos.coleta_cnpj.urllib.request.urlopen",
+                return_value=resposta,
+            ):
+                with self.assertRaises(RuntimeError):
+                    baixar_arquivo(
+                        "Empresas0.zip",
+                        Path(tmp),
+                        log=lambda *_: None,
+                        tentativas=1,
+                        url_base="https://exemplo.invalido/",
+                    )
+            self.assertFalse((Path(tmp) / "Empresas0.zip").exists())
+
+    def test_rejeita_download_truncado(self):
+        self._baixar(_RespostaFalsa(b"abc", content_length=10))
+
+    def test_rejeita_download_vazio(self):
+        self._baixar(_RespostaFalsa(b"", content_length=10))
 
 
 class OsmTests(SimpleTestCase):

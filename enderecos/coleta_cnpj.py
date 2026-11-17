@@ -91,9 +91,17 @@ def baixar_arquivo(
             with urllib.request.urlopen(
                 requisicao, timeout=180
             ) as resposta, temporario.open("wb") as arquivo:
+                esperado = resposta.headers.get("Content-Length")
                 shutil.copyfileobj(resposta, arquivo, length=1024 * 1024)
+            tamanho = temporario.stat().st_size
+            if tamanho == 0:
+                raise IOError("download vazio")
+            if esperado is not None and int(esperado) != tamanho:
+                raise IOError(
+                    f"download incompleto: {tamanho}/{esperado} bytes"
+                )
             temporario.replace(destino)
-            log(f"ok: {nome} ({destino.stat().st_size} bytes)")
+            log(f"ok: {nome} ({tamanho} bytes)")
             return destino
         except Exception as falha:  # noqa: BLE001 - retry de rede
             erro = falha
